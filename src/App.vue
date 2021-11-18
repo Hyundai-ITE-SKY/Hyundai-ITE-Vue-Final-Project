@@ -1,55 +1,84 @@
+<!-- 컴포넌트 UI 정의 -->
 <template>
   <v-app>
     <v-app-bar
       app
-      color="primary"
+      color="black"
       dark
+      shrink-on-scroll
+      src="@/assets/images/background4.jpg"
+      fade-img-on-scroll
+      scroll-target="#scrolling-techniques-3"
     >
-      <div class="d-flex align-center">
-        <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-        />
+      <template v-slot:img="{ props }">
+        <v-img v-bind="props" gradient="to top right, rgba(0,0,0,.3), rgba(0,0,0,.5)"></v-img>
+      </template>
 
-        <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
-        />
-      </div>
+      <v-app-bar-nav-icon></v-app-bar-nav-icon>
+
+      <v-app-bar-title>Title</v-app-bar-title>
 
       <v-spacer></v-spacer>
 
-      <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-        text
-      >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
+      <v-btn icon>
+        <v-icon>mdi-magnify</v-icon>
       </v-btn>
-    </v-app-bar>
 
-    <v-main>
-      <router-view/>
-    </v-main>
+      <v-btn icon>
+        <v-icon>mdi-heart</v-icon>
+      </v-btn>
+
+      <v-btn icon>
+        <v-icon>mdi-dots-vertical</v-icon>
+      </v-btn>
+
+      <template v-slot:extension>
+        <v-tabs align-with-title>
+          <v-tab>Tab 1</v-tab>
+          <v-tab>Tab 2</v-tab>
+          <v-tab>Tab 3</v-tab>
+        </v-tabs>
+      </template>
+    </v-app-bar>
+    <v-sheet id="scrolling-techniques-3" class="overflow-y-auto" max-height="100vh">
+      <v-container>
+        <div style="width: 90vw; height: 500px; backgroundcolor: blue"></div>
+        <div style="width: 90vw; height: 500px; backgroundcolor: red"></div>
+      </v-container>
+    </v-sheet>
+
+    <v-bottom-navigation
+      app
+      color="black"
+      hide-on-scroll
+      horizontal
+      scroll-target="#scrolling-techniques-3"
+      scroll-threshold="100"
+    >
+      <v-btn>
+        <span>Recents</span>
+
+        <v-icon>mdi-history</v-icon>
+      </v-btn>
+
+      <v-btn>
+        <span>Favorites</span>
+
+        <v-icon>mdi-heart</v-icon>
+      </v-btn>
+
+      <v-btn>
+        <span>Nearby</span>
+
+        <v-icon>mdi-map-marker</v-icon>
+      </v-btn>
+    </v-bottom-navigation>
   </v-app>
 </template>
 
 <script>
-
 export default {
-  name: 'App',
-
-  data: () => ({
-    //
-  }),
+  name: "App",
+  data: () => ({ value: "recent" }),
 };
 </script>
