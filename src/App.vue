@@ -54,9 +54,9 @@
 
       <template v-slot:extension>
         <v-tabs align-with-title>
-          <v-tab @click="model = 0">이벤트</v-tab>
-          <v-tab @click="model = 1">신상품</v-tab>
-          <v-tab @click="model = 2">베스트</v-tab>
+          <v-tab to="/home/event">이벤트</v-tab>
+          <v-tab to="/home/newproduct">신상품</v-tab>
+          <v-tab to="/home/bestproduct">베스트</v-tab>
         </v-tabs>
       </template>
     </v-app-bar>
@@ -77,7 +77,7 @@
       scroll-target="#scrolling-techniques-3"
       scroll-threshold="100"
     >
-      <v-btn to="/">
+      <v-btn to="/home/event">
         <v-icon style="margin: 0px; padding: 0px">mdi-home-outline</v-icon>
       </v-btn>
 
@@ -85,7 +85,7 @@
         <v-icon style="margin: 0px; padding: 0px">mdi-cart-heart</v-icon>
       </v-btn>
 
-      <v-btn to="/">
+      <v-btn to="/home/event">
         <v-icon style="margin: 0px; padding: 0px">mdi-shopping-outline</v-icon>
       </v-btn>
 

@@ -1,6 +1,14 @@
 export default [
   {
-    path: "/",
-    component: () => import(/* webpackChunkName: "home" */ "../views/home/Home"),
+    path: "/home/event",
+    component: () => import(/* webpackChunkName: "home" */ "../views/home/Event"),
+  },
+  {
+    path: "/home/newproduct",
+    component: () => import(/* webpackChunkName: "home" */ "../views/home/NewProduct"),
+  },
+  {
+    path: "/home/bestproduct",
+    component: () => import(/* webpackChunkName: "home" */ "../views/home/BestProduct"),
   },
 ];
