@@ -62,7 +62,7 @@
     </v-app-bar>
 
     <v-sheet id="scrolling-techniques-3" class="overflow-y-auto" max-height="100vh">
-      <v-container fluid style="padding-top: 230px; padding-bottom: 56px">
+      <v-container fluid style="padding-top: 230px; padding-bottom: 56px" class="pl-0 pr-0">
         <template>
           <router-view></router-view>
         </template>
