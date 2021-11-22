@@ -1,6 +1,30 @@
 <!-- 컴포넌트 UI 정의 -->
 <template>
   <v-app>
+    <v-navigation-drawer app color="white" v-model="drawer">
+      <v-avatar>
+        <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
+      </v-avatar>
+      <v-list-item>
+        <v-list-item-content>
+          <v-list-item-title class="text-h6"> Application </v-list-item-title>
+          <v-list-item-subtitle> subtext </v-list-item-subtitle>
+        </v-list-item-content>
+      </v-list-item>
+
+      <v-list dense nav>
+        <v-list-item v-for="item in items" :key="item.title" link>
+          <v-list-item-icon>
+            <v-icon>{{ item.icon }}</v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-content>
+            <v-list-item-title>{{ item.title }}</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
+
     <v-app-bar
       app
       color="black"
@@ -14,9 +38,9 @@
         <v-img v-bind="props" gradient="to top right, rgba(0,0,0,.3), rgba(0,0,0,.5)"></v-img>
       </template>
 
-      <v-app-bar-nav-icon></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
 
-      <v-app-bar-title>Title</v-app-bar-title>
+      <v-app-bar-title app></v-app-bar-title>
 
       <v-spacer></v-spacer>
 
@@ -25,25 +49,23 @@
       </v-btn>
 
       <v-btn icon>
-        <v-icon>mdi-heart</v-icon>
-      </v-btn>
-
-      <v-btn icon>
-        <v-icon>mdi-dots-vertical</v-icon>
+        <v-icon>mdi-cart-outline</v-icon>
       </v-btn>
 
       <template v-slot:extension>
         <v-tabs align-with-title>
-          <v-tab>Tab 1</v-tab>
-          <v-tab>Tab 2</v-tab>
-          <v-tab>Tab 3</v-tab>
+          <v-tab @click="model = 0">이벤트</v-tab>
+          <v-tab @click="model = 1">신상품</v-tab>
+          <v-tab @click="model = 2">베스트</v-tab>
         </v-tabs>
       </template>
     </v-app-bar>
+
     <v-sheet id="scrolling-techniques-3" class="overflow-y-auto" max-height="100vh">
-      <v-container>
-        <div style="width: 90vw; height: 500px; backgroundcolor: blue"></div>
-        <div style="width: 90vw; height: 500px; backgroundcolor: red"></div>
+      <v-container fluid style="padding-top: 230px; padding-bottom: 56px">
+        <template>
+          <router-view></router-view>
+        </template>
       </v-container>
     </v-sheet>
 
@@ -55,22 +77,20 @@
       scroll-target="#scrolling-techniques-3"
       scroll-threshold="100"
     >
-      <v-btn>
-        <span>Recents</span>
-
-        <v-icon>mdi-history</v-icon>
+      <v-btn to="/">
+        <v-icon style="margin: 0px; padding: 0px">mdi-home-outline</v-icon>
       </v-btn>
 
-      <v-btn>
-        <span>Favorites</span>
-
-        <v-icon>mdi-heart</v-icon>
+      <v-btn to="/member/wishlist">
+        <v-icon style="margin: 0px; padding: 0px">mdi-cart-heart</v-icon>
       </v-btn>
 
-      <v-btn>
-        <span>Nearby</span>
+      <v-btn to="/">
+        <v-icon style="margin: 0px; padding: 0px">mdi-shopping-outline</v-icon>
+      </v-btn>
 
-        <v-icon>mdi-map-marker</v-icon>
+      <v-btn to="/member">
+        <v-icon style="margin: 0px; padding: 0px">mdi-account-outline</v-icon>
       </v-btn>
     </v-bottom-navigation>
   </v-app>
@@ -79,6 +99,14 @@
 <script>
 export default {
   name: "App",
-  data: () => ({ value: "recent" }),
+  data: () => ({
+    value: "recent",
+    drawer: false,
+    items: [
+      { title: "Dashboard", icon: "mdi-view-dashboard" },
+      { title: "Photos", icon: "mdi-image" },
+      { title: "About", icon: "mdi-help-box" },
+    ],
+  }),
 };
 </script>
