@@ -10,7 +10,7 @@
           contain
           height="30px"
         />-->
-        <v-icon>mdi-cards-heart</v-icon>
+        <v-icon class="red--text">mdi-cards-heart</v-icon>
       </v-col>
       <v-col cols="auto" class="">
         <span class="text-h6 font-weight-black">WISH LIST</span>
@@ -31,7 +31,7 @@
             브랜드 명
           </v-col>
           <v-col cols="3" align-self="end" class="pb-0 pt-0">
-            <v-icon>mdi-cards-heart-outline</v-icon>
+            <v-icon class="red--text">mdi-cards-heart</v-icon>
           </v-col>
           <v-col cols="9" class="font-weight-black pb-0 pt-0">
               제품명
