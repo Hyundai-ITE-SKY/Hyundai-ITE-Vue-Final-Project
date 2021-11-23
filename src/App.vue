@@ -88,7 +88,7 @@
         <v-icon style="margin: 0px; padding: 0px">mdi-shopping-outline</v-icon>
       </v-btn>
 
-      <v-btn v-if="!onProduct" to="/member">
+      <v-btn v-if="!onProduct" to="/member/mypage">
         <v-icon style="margin: 0px; padding: 0px">mdi-account-outline</v-icon>
       </v-btn>
 

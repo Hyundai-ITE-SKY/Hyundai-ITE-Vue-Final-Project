@@ -1,6 +1,6 @@
 export default [
   {
-    path: "/member",
+    path: "/member/mypage",
     component: () => import(/* webpackChunkName: "member" */ "../views/member/MyPage"),
   },
   {
