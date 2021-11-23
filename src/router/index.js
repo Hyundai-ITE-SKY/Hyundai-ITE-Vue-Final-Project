@@ -5,7 +5,6 @@ import member from "./member";
 import product from "./product";
 import order from "./order";
 
-
 Vue.use(VueRouter);
 
 const routes = [...home, ...product, ...member, ...order];

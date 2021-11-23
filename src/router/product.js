@@ -1,7 +1,7 @@
 export default [
   {
     path: "/product",
-    component: () => import(/* webpackChunkName: "product" */ "../views/product/Product"),
+    component: () => import(/* webpackChunkName: "product" */ "../views/product/ProductList"),
   },
   {
     path: "/product/detail",

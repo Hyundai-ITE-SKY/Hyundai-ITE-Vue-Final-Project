@@ -61,6 +61,7 @@
       <v-container
         fluid
         :style="`padding-top: ${onTabs ? '230px' : '130px'}; padding-bottom: 56px`"
+        class="pl-0 pr-0"
       >
         <template>
           <router-view></router-view>
