@@ -17,7 +17,13 @@
     <v-slide-group class="pa-4" active-class="success">
       <v-slide-item v-for="n in 10" :key="n">
         <div>
-          <v-card color="grey lighten-1" class="ma-2" height="33vw" width="25vw">
+          <v-card
+            to="/product/detail"
+            color="grey lighten-1"
+            class="ma-2"
+            height="33vw"
+            width="25vw"
+          >
             <v-sheet color="white" elevation="0" class="text-center pa-1">{{ n }}</v-sheet>
             <v-img
               lazy-src="@/assets/images/event/eventloader.jpg"
@@ -38,7 +44,13 @@
     <v-slide-group class="pa-4" active-class="success">
       <v-slide-item v-for="n in 10" :key="n">
         <div>
-          <v-card color="grey lighten-1" class="ma-2" height="33vw" width="25vw">
+          <v-card
+            to="/product/detail"
+            color="grey lighten-1"
+            class="ma-2"
+            height="33vw"
+            width="25vw"
+          >
             <v-sheet color="white" elevation="0" class="text-center pa-1">{{ n }}</v-sheet>
             <v-img
               lazy-src="@/assets/images/event/eventloader.jpg"
@@ -59,7 +71,13 @@
     <v-slide-group class="pa-4" active-class="success">
       <v-slide-item v-for="n in 10" :key="n">
         <div>
-          <v-card color="grey lighten-1" class="ma-2" height="33vw" width="25vw">
+          <v-card
+            to="/product/detail"
+            color="grey lighten-1"
+            class="ma-2"
+            height="33vw"
+            width="25vw"
+          >
             <v-sheet color="white" elevation="0" class="text-center pa-1">{{ n }}</v-sheet>
             <v-img
               lazy-src="@/assets/images/event/eventloader.jpg"

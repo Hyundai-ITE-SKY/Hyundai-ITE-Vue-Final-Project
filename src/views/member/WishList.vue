@@ -17,24 +17,21 @@
       <v-col cols="5" class="ml-2">
         <v-img src="@/assets/images/wishlist-sample1.jpg" contain />
         <v-row>
-          <v-col cols="9" class="font-weight-black pb-0"> 브랜드 명 </v-col>
+          <v-col cols="9" class="font-weight-black pb-0"> 브랜드명 </v-col>
           <v-col cols="3" align-self="end" class="pb-0 pt-0">
             <v-icon color="red">mdi-cards-heart</v-icon>
-          </v-col>
-          <v-col cols="9" class="font-weight-black pb-0 pt-0">
-              제품명
           </v-col>
           <v-col cols="9" class="font-weight-black pb-0 pt-0"> 제품명 </v-col>
           <v-col cols="9" class="font-weight-black pt-0"> 100,000 </v-col>
         </v-row>
         <v-col cols="12" class="ma-0 pa-0 text-center">
-          <v-btn class="black white--text font-weight-black">장바구니 담기</v-btn>
+          <v-btn class="black white--text font-weight-black" to="/product/detail">상세보기</v-btn>
         </v-col>
       </v-col>
       <v-col cols="5" class="ml-2 mr-2">
         <v-img src="@/assets/images/wishlist-sample1.jpg" contain />
         <v-row>
-          <v-col cols="9" class="font-weight-black pb-0"> 브랜드 명 </v-col>
+          <v-col cols="9" class="font-weight-black pb-0"> 브랜드명 </v-col>
           <v-col cols="3" align-self="end" class="pb-0 pt-0">
             <v-icon color="red">mdi-cards-heart</v-icon>
           </v-col>
@@ -42,7 +39,7 @@
           <v-col cols="9" class="font-weight-black pt-0"> 100,000 </v-col>
         </v-row>
         <v-col cols="12" class="ma-0 pa-0 text-center">
-          <v-btn class="black white--text font-weight-black">장바구니 담기</v-btn>
+          <v-btn class="black white--text font-weight-black" to="/product/detail">상세보기</v-btn>
         </v-col>
       </v-col>
     </v-row>

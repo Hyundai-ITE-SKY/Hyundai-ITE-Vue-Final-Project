@@ -4,8 +4,8 @@
     <div class="font-weight-bold text-center mt-2">BEST ITEM</div>
 
     <v-btn-toggle tile color="black accent-1" group>
-      <v-btn value="left"> Man </v-btn>
-      <v-btn value="center"> Woman </v-btn>
+      <v-btn value="left"> MAN </v-btn>
+      <v-btn value="center"> WOMAN </v-btn>
       <v-btn value="right"> KIDS </v-btn>
       <v-btn value="justify"> LIFE STYLE </v-btn>
     </v-btn-toggle>
@@ -17,7 +17,7 @@
     <v-slide-group class="pa-4" active-class="success">
       <v-slide-item v-for="n in 10" :key="n">
         <div>
-          <v-card color="grey lighten-1" class="ma-2" height="33vw" width="25vw">
+          <v-card to="/product/detail" color="grey lighten-1" class="ma-2" height="33vw" width="25vw">
             <v-sheet color="white" elevation="0" class="text-center pa-1">{{ n }}</v-sheet>
             <v-img
               lazy-src="@/assets/images/event/eventloader.jpg"
@@ -38,7 +38,7 @@
     <v-slide-group class="pa-4" active-class="success">
       <v-slide-item v-for="n in 10" :key="n">
         <div>
-          <v-card color="grey lighten-1" class="ma-2" height="33vw" width="25vw">
+          <v-card to="/product/detail" color="grey lighten-1" class="ma-2" height="33vw" width="25vw">
             <v-sheet color="white" elevation="0" class="text-center pa-1">{{ n }}</v-sheet>
             <v-img
               lazy-src="@/assets/images/event/eventloader.jpg"
@@ -59,7 +59,7 @@
     <v-slide-group class="pa-4" active-class="success">
       <v-slide-item v-for="n in 10" :key="n">
         <div>
-          <v-card color="grey lighten-1" class="ma-2" height="33vw" width="25vw">
+          <v-card to="/product/detail" color="grey lighten-1" class="ma-2" height="33vw" width="25vw">
             <v-sheet color="white" elevation="0" class="text-center pa-1">{{ n }}</v-sheet>
             <v-img
               lazy-src="@/assets/images/event/eventloader.jpg"

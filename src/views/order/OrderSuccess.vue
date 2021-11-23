@@ -19,8 +19,8 @@
         </div>
       </div>
       <v-expand-transition>
-        <div v-show="showDelivery" style="margin-left:90px;" class="mb-2">
-          <v-card-text class="pa-0" style="color:#5D5D5D">
+        <div v-show="showDelivery" style="margin-left: 90px" class="mb-2">
+          <v-card-text class="pa-0" style="color: #5d5d5d">
             010 - 0000 - 000<br />
             서울시 어쩌구 무슨동<br />
             상세 주소
@@ -30,7 +30,7 @@
 
       <!--주문완료 상품 정보-->
       <div class="d-flex mb-3">
-        <div style="width: 90px;font-weight: bold">상품정보</div>
+        <div style="width: 90px; font-weight: bold">상품정보</div>
         <div class="d-inline-block text-truncate" style="max-width: 200px">카멜 재킷</div>
         <div class="ml-auto">
           <v-icon icon @click="showProduct = !showProduct">
@@ -67,14 +67,14 @@
         <div>1,350,000원</div>
       </div>
 
-      <div class="d-flex  mb-3">
+      <div class="d-flex mb-3">
         <div style="width: 90px; font-weight: bold">결제정보</div>
         <div>우리은행 26958327518299</div>
       </div>
     </div>
     <v-card-actions class="justify-center">
-      <v-btn outlined>주문내역 조회</v-btn>
-      <v-btn color="black" dark>홈으로 가기</v-btn>
+      <v-btn outlined to="/order/list">주문내역 조회</v-btn>
+      <v-btn color="black" dark to="/home/event">홈으로 가기</v-btn>
     </v-card-actions>
   </div>
 </template>
@@ -89,11 +89,15 @@ export default {
   data() {
     return {
       showDelivery: false,
-      showProduct: false
+      showProduct: false,
     };
   },
   //컴포넌트 메서드 정의
   methods: {},
+  created() {
+    this.$store.commit("setOnTabs", false);
+    this.$store.commit("setOnProduct", 0);
+  },
 };
 </script>
 <!--컴포넌트 스타일 정의-->

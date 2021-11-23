@@ -1,6 +1,6 @@
 export default [
   {
-    path: "/order",
+    path: "/order/order",
     component: () => import(/* webpackChunkName: "order" */ "../views/order/Order"),
   },
   {

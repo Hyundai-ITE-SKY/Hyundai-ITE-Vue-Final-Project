@@ -6,8 +6,8 @@
       <v-col
         cols="2"
         class="d-flex flex-column align-center justify-center mx-1 pb-0"
-        v-for="order in orders"
-        :key="order"
+        v-for="(order, i) in orders"
+        :key="i"
       >
         <div v-if="order.value === 0" class="text-h4 grey--text">{{ order.value }}</div>
         <div v-if="order.value !== 0" class="text-h4">{{ order.value }}</div>
@@ -15,8 +15,8 @@
       <v-col
         cols="2"
         class="d-flex flex-column align-center justify-center mx-1 pt-0"
-        v-for="order in orders"
-        :key="order"
+        v-for="(order, i) in orders"
+        :key="i + 1"
       >
         <div class="font-weight-black pl-2">{{ order.status }}</div>
       </v-col>
@@ -36,25 +36,17 @@
         /></v-col>
         <v-col cols="8">
           <v-row>
-            <v-col cols="12" class="font-weight-black pa-0">
-              Brand Name
-            </v-col>
-            <v-col cols="12" class="pa-0 grey--text">
-              Product Name
-            </v-col>
+            <v-col cols="12" class="font-weight-black pa-0"> Brand Name </v-col>
+            <v-col cols="12" class="pa-0 grey--text"> Product Name </v-col>
             <v-col cols="12" class="pa-0 grey--text">
               옵션: COLOR/SIZE {{ product.color }} {{ product.size }}
             </v-col>
-            <v-col cols="12" class="pa-0">
-              100,000￦
-            </v-col>
-            <v-col cols="12" class="pa-0 orange--text font-weight-black">
-              주문접수
-            </v-col>
+            <v-col cols="12" class="pa-0"> 100,000￦ </v-col>
+            <v-col cols="12" class="pa-0 orange--text font-weight-black"> 주문접수 </v-col>
           </v-row>
         </v-col>
       </v-row>
-      <div style="text-align:center">
+      <div style="text-align: center">
         <span class="font-weight-black">주문취소</span>
       </div>
     </div>
@@ -63,7 +55,7 @@
 <script>
 export default {
   //component의 대표 이름(devTools에 나오는 이름)
-  name: "",
+  name: "OrderList",
   //추가하고 싶은 컴포넌트를 등록
   components: {},
   //컴포넌트 데이터 정의
@@ -76,7 +68,7 @@ export default {
         { status: "배송완료", value: 0 },
         { status: "구매확정", value: 12 },
       ],
-      product:{color:'BLUE GRAY', size: 'FREE'},
+      product: { color: "BLUE GRAY", size: "FREE" },
     };
   },
   //컴포넌트 메서드터 정의

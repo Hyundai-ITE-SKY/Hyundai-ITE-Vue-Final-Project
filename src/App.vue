@@ -19,6 +19,10 @@
           }}</v-chip>
         </v-chip-group>
       </v-list-item>
+
+      <v-btn style="margin-left: auto" icon to="/product/list" @click="moveOther()">
+        <v-icon>mdi-arrow-right</v-icon>
+      </v-btn>
     </v-navigation-drawer>
 
     <v-app-bar
@@ -44,11 +48,11 @@
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
 
-      <v-btn icon>
+      <v-btn icon to="/member/cart">
         <v-icon>mdi-cart-outline</v-icon>
       </v-btn>
 
-      <template v-if="onTabs" v-slot:extension>
+      <template v-if="$store.state.onTabs" v-slot:extension>
         <v-tabs align-with-title>
           <v-tab to="/home/event">이벤트</v-tab>
           <v-tab to="/home/newproduct">신상품</v-tab>
@@ -60,7 +64,7 @@
     <v-sheet id="scrolling-techniques-3" class="overflow-y-auto" max-height="100vh">
       <v-container
         fluid
-        :style="`padding-top: ${onTabs ? '230px' : '130px'}; padding-bottom: 56px`"
+        :style="`padding-top: ${$store.state.onTabs ? '230px' : '130px'}; padding-bottom: 56px`"
         class="pl-0 pr-0"
       >
         <template>
@@ -77,30 +81,31 @@
       scroll-target="#scrolling-techniques-3"
       scroll-threshold="0"
     >
-      <v-btn v-if="!onProduct" to="/home/event">
+      <v-btn v-if="$store.state.onProduct == 0" to="/home/event" @click="moveHome()">
         <v-icon style="margin: 0px; padding: 0px">mdi-home-outline</v-icon>
       </v-btn>
-
-      <v-btn v-if="!onProduct" to="/member/wishlist">
+      <v-btn v-if="$store.state.onProduct == 0" to="/member/wishlist" @click="moveOther()">
         <v-icon style="margin: 0px; padding: 0px">mdi-cart-heart</v-icon>
       </v-btn>
-
-      <v-btn v-if="!onProduct" to="/home/event">
+      <v-btn v-if="$store.state.onProduct == 0" to="/order/list" @click="moveOther()">
         <v-icon style="margin: 0px; padding: 0px">mdi-shopping-outline</v-icon>
       </v-btn>
-
-      <v-btn v-if="!onProduct" to="/member/mypage">
+      <v-btn v-if="$store.state.onProduct == 0" to="/member/mypage" @click="moveOther()">
         <v-icon style="margin: 0px; padding: 0px">mdi-account-outline</v-icon>
       </v-btn>
 
-      <v-btn v-if="onProduct" to="/home/event">
+      <v-btn v-if="$store.state.onProduct == 1" to="/order/order">
         <span>BUY NOW</span>
         <v-icon>mdi-shopping-outline</v-icon>
       </v-btn>
-
-      <v-btn v-if="onProduct" to="/member">
+      <v-btn v-if="$store.state.onProduct == 1" to="/member/cart">
         <span>CART</span>
         <v-icon>mdi-cart-outline</v-icon>
+      </v-btn>
+
+      <v-btn v-if="$store.state.onProduct == 2" to="/order/success">
+        <span>결제하기</span>
+        <v-icon>mdi-credit-card-outline</v-icon>
       </v-btn>
     </v-bottom-navigation>
   </v-app>
@@ -117,8 +122,6 @@ export default {
       { title: "Photos", icon: "mdi-image" },
       { title: "About", icon: "mdi-help-box" },
     ],
-    onTabs: true,
-    onProduct: false,
     styles: ["MAN", "WOMAN", "KIDS", "LIFE STYLE"],
     appaels: [
       "아우터",
@@ -132,5 +135,23 @@ export default {
       "키즈",
     ],
   }),
+  methods: {
+    moveHome() {
+      this.$store.commit("setOnTabs", true);
+      this.$store.commit("setOnProduct", 0);
+    },
+    moveOther() {
+      this.$store.commit("setOnTabs", false);
+      this.$store.commit("setOnProduct", 0);
+    },
+    moveProductDetail() {
+      this.$store.commit("setOnTabs", false);
+      this.$store.commit("setOnProduct", 1);
+    },
+    movePayment() {
+      this.$store.commit("setOnTabs", false);
+      this.$store.commit("setOnProduct", 2);
+    },
+  },
 };
 </script>

@@ -6,11 +6,14 @@
         <!-- <v-card height="200">
           <v-img></v-img>
         </v-card> -->
-        <v-card outlined>
+        <v-card outlined to="/product/detail">
           <template slot="progress">
             <v-progress-linear color="deep-purple" height="10" indeterminate></v-progress-linear>
           </template>
-          <v-img height="200" src="http://newmedia.thehandsome.com/MN/2B/FW/MN2B8WJC623WP2_LY_W01.jpg/dims/resize/684x1032/"></v-img>
+          <v-img
+            height="200"
+            src="http://newmedia.thehandsome.com/MN/2B/FW/MN2B8WJC623WP2_LY_W01.jpg/dims/resize/684x1032/"
+          ></v-img>
           <v-card-title class="pa-0 pl-2" style="font-size: 12px">MINE</v-card-title>
           <v-card-text class="pa-0 pl-2" style="font-size: 12px">카멜 재킷</v-card-text>
           <v-card-title class="pa-0 pl-2" style="font-size: 15px">₩ 1,350,000</v-card-title>

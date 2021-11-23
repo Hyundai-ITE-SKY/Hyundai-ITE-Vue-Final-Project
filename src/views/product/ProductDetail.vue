@@ -25,11 +25,8 @@
 
         <v-col cols="11" class="font-weight-black pb-0">Brand</v-col>
         <v-col cols="1" class="pb-0"><v-icon>mdi-share-variant-outline</v-icon></v-col>
-
         <v-col cols="12" class="pt-0 pb-0">Product Name</v-col>
-
         <v-col cols="12" class="font-weight-black pt-0 pb-0">100,000￦</v-col>
-
         <v-col cols="12" class="pt-0 pb-0">Product Code</v-col>
       </v-row>
       <br />
@@ -67,8 +64,12 @@ export default {
       "http://newmedia.thehandsome.com/MN/2B/FW/MN2B8WJC623WP2_RP_C01.jpg/dims/resize/24x24",
     ],
   }),
-  //컴포넌트 메서드터 정의
+  //컴포넌트 메서드 정의
   methods: {},
+  created() {
+    this.$store.commit("setOnTabs", false);
+    this.$store.commit("setOnProduct", 1);
+  },
 };
 </script>
 <!--scoped : 지역변수, 없으면 전역 style이 된다. 붙이는게 좋다

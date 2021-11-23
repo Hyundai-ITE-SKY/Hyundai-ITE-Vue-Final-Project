@@ -27,7 +27,7 @@
     <!--q&a, 개인정보 수정, 찜, 취소/반품-->
     <div class="mb-11">
       <div class="d-flex justify-center">
-        <v-card width="150" outlined>
+        <v-card width="150" outlined to="/member/qna">
           <v-card-title class="justify-center"><v-icon>mdi-help-circle-outline</v-icon></v-card-title>
           <v-card-subtitle class="text-center">Q&A</v-card-subtitle>
         </v-card>
@@ -37,7 +37,7 @@
         </v-card>
       </div>
       <div class="d-flex justify-center">
-        <v-card width="150" outlined>
+        <v-card width="150" outlined to="/member/wishlist">
           <v-card-title class="justify-center"><v-icon>mdi-heart-outline</v-icon></v-card-title>
           <v-card-subtitle class="text-center">찜</v-card-subtitle>
         </v-card>
@@ -53,7 +53,7 @@
 <script>
 export default {
   //컴포넌트의 대표 이름(devtools에 나오는 이름)
-  name: "",
+  name: "MyPage",
   //추가하고 싶은 컴포넌트 등록
   components: {},
   //컴포넌트 데이터 정의

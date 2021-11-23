@@ -1,6 +1,6 @@
 export default [
   {
-    path: "/product",
+    path: "/product/list",
     component: () => import(/* webpackChunkName: "product" */ "../views/product/ProductList"),
   },
   {

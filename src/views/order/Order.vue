@@ -152,17 +152,15 @@ export default {
         "부재 시 집 앞에 놔주세요",
         "파손의 위험이 있는 상품입니다. 배송 시 주의해주세요.",
       ],
-      cards: [
-        "신한카드",
-        "우리카드",
-        "롯데카드",
-        "삼성카드",
-        "기업카드",
-      ]
+      cards: ["신한카드", "우리카드", "롯데카드", "삼성카드", "기업카드"],
     };
   },
   //컴포넌트 메서드 정의
   methods: {},
+  created() {
+    this.$store.commit("setOnTabs", false);
+    this.$store.commit("setOnProduct", 2);
+  },
 };
 </script>
 <!--컴포넌트 스타일 정의-->
