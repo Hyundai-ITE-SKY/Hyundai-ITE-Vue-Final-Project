@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // 기본 경로 설정
-axios.defaults.baseURL = "http://localhost";
+axios.defaults.baseURL = "http://kosa1.iptime.org:50207";
 
 // 요청 HTTP에 Authorization 헤더 추가, 값은 JWT로 설정
 function addAuthHeader(authToken) {
