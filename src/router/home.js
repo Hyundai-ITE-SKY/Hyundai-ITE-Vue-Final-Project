@@ -11,8 +11,4 @@ export default [
     path: "/home/bestproduct",
     component: () => import(/* webpackChunkName: "home" */ "../views/home/BestProduct"),
   },
-  {
-    path: "/login",
-    component: () => import(/* webpackChunkName: "home" */ "../views/home/Login"),
-  },
 ];

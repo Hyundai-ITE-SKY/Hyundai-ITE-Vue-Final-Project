@@ -15,4 +15,8 @@ export default [
     path: "/member/qna",
     component: () => import(/* webpackChunkName: "member" */ "../views/member/QnA"),
   },
+  {
+    path: "/login",
+    component: () => import(/* webpackChunkName: "member" */ "../views/member/Login"),
+  },
 ];
