@@ -64,7 +64,7 @@
 
         <v-col cols="12" class="d-flex align-center justify-center mb-3 pt-0">
           <v-btn dark class="mr-3">옵션/수량</v-btn>
-          <v-btn dark>바로 구매</v-btn>
+          <v-btn dark to="/order/order">바로 구매</v-btn>
         </v-col>
       </v-row>
     </div>

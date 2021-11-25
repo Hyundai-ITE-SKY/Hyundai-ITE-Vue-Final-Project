@@ -7,7 +7,7 @@
         cols="2"
         class="d-flex flex-column align-center justify-center mx-1 pb-0"
         v-for="(order, i) in orders"
-        :key="i"
+        :key="i * 2"
       >
         <div v-if="order.value === 0" class="text-h4 grey--text">{{ order.value }}</div>
         <div v-if="order.value !== 0" class="text-h4">{{ order.value }}</div>
@@ -16,7 +16,7 @@
         cols="2"
         class="d-flex flex-column align-center justify-center mx-1 pt-0"
         v-for="(order, i) in orders"
-        :key="i + 1"
+        :key="i * 2 + 1"
       >
         <div class="font-weight-black pl-2">{{ order.status }}</div>
       </v-col>

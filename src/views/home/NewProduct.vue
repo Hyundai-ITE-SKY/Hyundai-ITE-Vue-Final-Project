@@ -4,8 +4,8 @@
     <div class="font-weight-bold text-center mt-2">NEW ITEM</div>
 
     <v-btn-toggle tile color="black accent-1" group>
-      <v-btn value="left"> Man </v-btn>
-      <v-btn value="center"> Woman </v-btn>
+      <v-btn value="left"> MAN </v-btn>
+      <v-btn value="center"> WOMAN </v-btn>
       <v-btn value="right"> KIDS </v-btn>
       <v-btn value="justify"> LIFE STYLE </v-btn>
     </v-btn-toggle>
@@ -105,6 +105,10 @@ export default {
   },
   // 컴포넌트 메소드 정의
   methods: {},
+  created() {
+    this.$store.commit("setOnTabs", true);
+    this.$store.commit("setOnProduct", 0);
+  },
 };
 </script>
 

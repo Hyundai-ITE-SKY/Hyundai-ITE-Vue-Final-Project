@@ -20,6 +20,10 @@ export default {
   },
   // 컴포넌트 메소드 정의
   methods: {},
+  created() {
+    this.$store.commit("setOnTabs", true);
+    this.$store.commit("setOnProduct", 0);
+  },
 };
 </script>
 
