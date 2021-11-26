@@ -58,6 +58,11 @@ export default {
   },
   // 컴포넌트 메소드 정의
   methods: {},
+  created(){
+    if (this.$store.getters["login/getUserId"] === "") {
+      this.$router.push("/login");
+    }
+  }
 };
 </script>
 

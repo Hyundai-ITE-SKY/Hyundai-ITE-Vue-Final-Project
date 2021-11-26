@@ -34,8 +34,11 @@
         </v-tab-item>
       </v-tabs>
       <template v-slot:append>
-        <div class="pa-2">
-          <v-btn color="black" dark block> Logout </v-btn>
+        <div class="pa-2" v-if="$store.state.login.userId===''">
+          <v-btn color="black" dark block to="/login"> Login </v-btn>
+        </div>
+        <div class="pa-2" v-if="$store.state.login.userId!==''">
+          <v-btn color="black" dark block  to="/" @click="handleLogout()"> Logout </v-btn>
         </div>
       </template>
     </v-navigation-drawer>
@@ -278,6 +281,10 @@ export default {
     },
     movePage(){
       this.$router.push("/product/list");
+    },
+    handleLogout(){
+      this.$store.dispatch("login/deleteAuth");
+      this.$router.push("/home/event");
     }
   },
 };
