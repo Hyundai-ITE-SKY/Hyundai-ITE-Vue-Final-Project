@@ -12,7 +12,10 @@ function join(user) {
 }
 
 function login(user) {
-  return axios.post("http://kosa1.iptime.org:50207/login", `mid=${user.id}&mpassword=${user.password}`);
+  return axios.post(
+    "http://kosa1.iptime.org:50207/login",
+    `mid=${user.id}&mpassword=${user.password}`,
+  );
 }
 
 export default {
