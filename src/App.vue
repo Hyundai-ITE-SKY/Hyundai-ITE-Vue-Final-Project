@@ -13,7 +13,11 @@
         <v-tab-item v-for="n in 4" :key="n">
           <template v-for="(cm, i) in category[n - 1].cmedium">
             <!--대분류 전체 보기-->
-            <v-list-item v-if="i === 0" :key="i">
+            <v-list-item
+              v-if="i === 0"
+              :key="i"
+              @click="moveProductList(category[n - 1].clarge, 'none', 'none')"
+            >
               <v-list-item-title style="font-size: 14px; font-weight: bold">
                 {{ cm.cmedium }}
               </v-list-item-title>
@@ -25,20 +29,26 @@
                   {{ cm.cmedium }}
                 </v-list-item-title>
               </template>
-              <v-list-item v-for="(cs, n) in category[n - 1].cmedium[i].csmall" :key="n">
+              <v-list-item
+                v-for="(cs, k) in category[n - 1].cmedium[i].csmall"
+                :key="k"
+                @click="
+                  moveProductList(category[n - 1].clarge, category[n - 1].cmedium[i].cmedium, cs)
+                "
+              >
                 &nbsp;&nbsp;&nbsp;&nbsp;
-                <v-list-item-title style="font-size: 13px" @click="movePage()">{{ cs }} </v-list-item-title>
+                <v-list-item-title style="font-size: 13px">{{ cs }} </v-list-item-title>
               </v-list-item>
             </v-list-group>
           </template>
         </v-tab-item>
       </v-tabs>
       <template v-slot:append>
-        <div class="pa-2" v-if="$store.state.login.userId===''">
+        <div class="pa-2" v-if="$store.state.login.userId === ''">
           <v-btn color="black" dark block to="/login"> Login </v-btn>
         </div>
-        <div class="pa-2" v-if="$store.state.login.userId!==''">
-          <v-btn color="black" dark block  to="/" @click="handleLogout()"> Logout </v-btn>
+        <div class="pa-2" v-if="$store.state.login.userId !== ''">
+          <v-btn color="black" dark block to="/" @click="handleLogout()"> Logout </v-btn>
         </div>
       </template>
     </v-navigation-drawer>
@@ -146,18 +156,18 @@ export default {
           },
           {
             cmedium: "DRESS",
-            csmall: ["전체보기", "LONG/MAXI DRESS", "MIDI DRESS", "MINI DRESS"],
+            csmall: ["전체보기", "LONG|MAXI DRESS", "MIDI DRESS", "MINI DRESS"],
           },
           {
             cmedium: "FASHION ACC.",
-            csmall: ["전체보기", "BAGS", "ETC", "SCARF/MUFFLER"],
+            csmall: ["전체보기", "BAGS", "ETC", "SCARF|MUFFLER"],
           },
           {
             cmedium: "OUTER",
             csmall: [
               "전체보기",
               "COAT",
-              "Cardigan/Vest",
+              "Cardigan|Vest",
               "DOWN JUMPER",
               "JACKET",
               "JUMPER",
@@ -170,7 +180,7 @@ export default {
           },
           {
             cmedium: "SKIRT",
-            csmall: ["전체보기", "FLARE SKIRT", "LONG/MAXI SKIRT", "MINI SKIRT", "PENCIL SKIRT"],
+            csmall: ["전체보기", "FLARE SKIRT", "LONG|MAXI SKIRT", "MINI SKIRT", "PENCIL SKIRT"],
           },
           {
             cmedium: "SPECIAL SHOP",
@@ -178,7 +188,7 @@ export default {
               "전체보기",
               "FOURM THE STORE : PALETTE",
               "LATT : 2021 FUR WEEK",
-              "O'2nd : M/M (PARIS)",
+              "O'2nd : M|M (PARIS)",
               "O'2nd : WE",
               "TIME : 1993 CLUB",
               "TIME : ONLINE EXCLUSIVE",
@@ -202,7 +212,7 @@ export default {
             cmedium: "OUTER",
             csmall: [
               "전체보기",
-              "CARDIGAN/VEST",
+              "CARDIGAN|VEST",
               "COAT",
               "DOWN JUMPER",
               "JACKET",
@@ -212,7 +222,7 @@ export default {
           },
           {
             cmedium: "PANTS",
-            csmall: ["전체보기", "데님", "루즈/테이퍼드", "쇼츠", "스트레이트", "조거/트랙"],
+            csmall: ["전체보기", "데님", "루즈|테이퍼드", "쇼츠", "스트레이트", "조거|트랙"],
           },
           {
             cmedium: "SPECIAL SHOP",
@@ -236,11 +246,11 @@ export default {
           },
           {
             cmedium: "CLOTHING",
-            csmall: ["BOTTOM", "TOP"],
+            csmall: ["전체보기", "BOTTOM", "TOP"],
           },
           {
             cmedium: "KIDS ACC.",
-            csmall: ["OTHER ACCESSORIES"],
+            csmall: ["전체보기", "OTHER ACCESSORIES"],
           },
         ],
       },
@@ -279,13 +289,19 @@ export default {
       this.$store.commit("setOnTabs", false);
       this.$store.commit("setOnProduct", 2);
     },
-    movePage(){
-      this.$router.push("/product/list");
+    moveProductList(large, medium, small) {
+      large = large === "전체보기" ? "none" : large;
+      medium = medium === "전체보기" ? "none" : medium;
+      small = small === "전체보기" ? "none" : small;
+
+      this.$router
+        .push(`/product/list?large=${large}&medium=${medium}&small=${small}&pageno=1`)
+        .catch(() => {});
     },
-    handleLogout(){
+    handleLogout() {
       this.$store.dispatch("login/deleteAuth");
       this.$router.push("/home/event");
-    }
+    },
   },
 };
 </script>
