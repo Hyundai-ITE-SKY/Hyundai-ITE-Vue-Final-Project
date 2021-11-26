@@ -33,16 +33,16 @@
       </div>
       <div class="mb-1 text-truncate" style="font-size: 0.875rem; color: #333333">{{ pname }}</div>
       <div class="align-center" style="display: flex">
-        <div style="font-size: 1rem; font-weight: bolder">
+        <div class="text-truncate" style="font-size: 1rem; font-weight: bolder">
           {{ ((pprice * (100 - sales)) / 100).toLocaleString() }}원
         </div>
         <div
-          class="text-decoration-line-through ml-auto text--disabled"
+          class="text-decoration-line-through ml-auto text--disabled text-truncate"
           style="font-size: 0.875rem; font-weight: bolder"
         >
           {{ pprice.toLocaleString() }}원
         </div>
-        <div class="ml-auto" style="font-size: 1.1rem; font-weight: bolder; color: #EB7C4C">
+        <div class="ml-auto" style="font-size: 1.1rem; font-weight: bolder; color: #eb7c4c">
           {{ sales }}%
         </div>
       </div>

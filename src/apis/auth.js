@@ -17,7 +17,6 @@ function login(user) {
     `mid=${user.id}&mpassword=${user.password}`,
   );
 }
-
 export default {
   join,
   login,
