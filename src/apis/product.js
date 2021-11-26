@@ -4,6 +4,12 @@ function getCategory(clarge) {
   return axios.get(`/category/${clarge}`);
 }
 
+function getProduct(pid) {
+  const promise = axios.get(`http://kosa1.iptime.org:50202/product/${pid}`);
+
+  return promise;
+}
+
 function getProductList(large, medium, small, pageNo = 1) {
   if (small !== "none") {
     return axios.get(
@@ -18,5 +24,6 @@ function getProductList(large, medium, small, pageNo = 1) {
 
 export default {
   getCategory,
+  getProduct,
   getProductList,
 };
