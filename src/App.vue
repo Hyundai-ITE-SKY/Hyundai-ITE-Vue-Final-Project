@@ -1,28 +1,43 @@
 <!-- 컴포넌트 UI 정의 -->
 <template>
   <v-app>
-    <v-navigation-drawer app color="white" v-model="drawer">
-      <div class="text-center mt-5" style="font-weight: bolder">STYLE</div>
-      <v-list-item>
-        <v-chip-group active-class="primary--text" column>
-          <v-chip v-for="(style, i) in styles" :key="i" style="text-weight: bolder">{{
-            style
-          }}</v-chip>
-        </v-chip-group>
-      </v-list-item>
+    <v-navigation-drawer app v-model="drawer">
+      <v-tabs background-color="transparent" color="black" center-active>
+        <!-- <v-tab @click="setCategoryState(0)">WOMEN</v-tab>
+        <v-tab @click="setCategoryState(1)">MEN</v-tab>
+        <v-tab @click="setCategoryState(2)">KIDS</v-tab>
+        <v-tab @click="setCategoryState(3)">LIFESTYLE</v-tab> -->
 
-      <div class="text-center mt-5" style="font-weight: bolder">APPAREL</div>
-      <v-list-item>
-        <v-chip-group active-class="primary--text" column>
-          <v-chip v-for="(appael, i) in appaels" :key="i" style="text-weight: bolder">{{
-            appael
-          }}</v-chip>
-        </v-chip-group>
-      </v-list-item>
+        <v-tab v-for="(tab, idx) in category" :key="idx">{{ tab.clarge }}</v-tab>
 
-      <v-btn style="margin-left: auto" icon to="/product/list" @click="moveOther()">
-        <v-icon>mdi-arrow-right</v-icon>
-      </v-btn>
+        <v-tab-item v-for="n in 4" :key="n">
+          <template v-for="(cm, i) in category[n - 1].cmedium">
+            <!--대분류 전체 보기-->
+            <v-list-item v-if="i === 0" :key="i">
+              <v-list-item-title style="font-size: 14px; font-weight: bold">
+                {{ cm.cmedium }}
+              </v-list-item-title>
+            </v-list-item>
+            <!--중분류-->
+            <v-list-group v-if="i > 0" :key="i" color="red">
+              <template v-slot:activator>
+                <v-list-item-title style="font-size: 14px; font-weight: bold">
+                  {{ cm.cmedium }}
+                </v-list-item-title>
+              </template>
+              <v-list-item v-for="(cs, n) in category[n - 1].cmedium[i].csmall" :key="n">
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <v-list-item-title style="font-size: 13px" @click="movePage()">{{ cs }} </v-list-item-title>
+              </v-list-item>
+            </v-list-group>
+          </template>
+        </v-tab-item>
+      </v-tabs>
+      <template v-slot:append>
+        <div class="pa-2">
+          <v-btn color="black" dark block> Logout </v-btn>
+        </div>
+      </template>
     </v-navigation-drawer>
 
     <v-app-bar
@@ -117,22 +132,131 @@ export default {
   data: () => ({
     value: "recent",
     drawer: false,
-    items: [
-      { title: "Dashboard", icon: "mdi-view-dashboard" },
-      { title: "Photos", icon: "mdi-image" },
-      { title: "About", icon: "mdi-help-box" },
-    ],
-    styles: ["MAN", "WOMAN", "KIDS", "LIFE STYLE"],
-    appaels: [
-      "아우터",
-      "원피스",
-      "블라우스/셔츠",
-      "티셔츠",
-      "니트웨어",
-      "스커트",
-      "팬츠",
-      "데님",
-      "키즈",
+    categoryState: 0,
+    //여기
+    category: [
+      {
+        clarge: "WOMEN",
+        cmedium: [
+          {
+            cmedium: "전체보기",
+          },
+          {
+            cmedium: "DRESS",
+            csmall: ["전체보기", "LONG/MAXI DRESS", "MIDI DRESS", "MINI DRESS"],
+          },
+          {
+            cmedium: "FASHION ACC.",
+            csmall: ["전체보기", "BAGS", "ETC", "SCARF/MUFFLER"],
+          },
+          {
+            cmedium: "OUTER",
+            csmall: [
+              "전체보기",
+              "COAT",
+              "Cardigan/Vest",
+              "DOWN JUMPER",
+              "JACKET",
+              "JUMPER",
+              "TRENCH COAT",
+            ],
+          },
+          {
+            cmedium: "PANTS",
+            csmall: ["전체보기", "CASUAL", "DENIM", "FORMAL", "SHORTS"],
+          },
+          {
+            cmedium: "SKIRT",
+            csmall: ["전체보기", "FLARE SKIRT", "LONG/MAXI SKIRT", "MINI SKIRT", "PENCIL SKIRT"],
+          },
+          {
+            cmedium: "SPECIAL SHOP",
+            csmall: [
+              "전체보기",
+              "FOURM THE STORE : PALETTE",
+              "LATT : 2021 FUR WEEK",
+              "O'2nd : M/M (PARIS)",
+              "O'2nd : WE",
+              "TIME : 1993 CLUB",
+              "TIME : ONLINE EXCLUSIVE",
+              "TIME SIGNATURE SUIT",
+              "the CASHMERE : WELLNESS LINE",
+            ],
+          },
+          {
+            cmedium: "Top",
+            csmall: ["전체보기", "Blouse", "Knit", "Shirts", "T-Shirts"],
+          },
+        ],
+      },
+      {
+        clarge: "MEN",
+        cmedium: [
+          {
+            cmedium: "전체보기",
+          },
+          {
+            cmedium: "OUTER",
+            csmall: [
+              "전체보기",
+              "CARDIGAN/VEST",
+              "COAT",
+              "DOWN JUMPER",
+              "JACKET",
+              "JUMPER",
+              "TRENCH COAT",
+            ],
+          },
+          {
+            cmedium: "PANTS",
+            csmall: ["전체보기", "데님", "루즈/테이퍼드", "쇼츠", "스트레이트", "조거/트랙"],
+          },
+          {
+            cmedium: "SPECIAL SHOP",
+            csmall: ["전체보기", "TIME HOMME : ONLINE EXCLUSIVE"],
+          },
+          {
+            cmedium: "Suit",
+            csmall: ["전체보기", "DRESS SHIRTS", "SUIT JACKET", "SUIT PANTS"],
+          },
+          {
+            cmedium: "TOP",
+            csmall: ["전체보기", "KNIT", "SHIRTS", "T-SHIRTS"],
+          },
+        ],
+      },
+      {
+        clarge: "KIDS",
+        cmedium: [
+          {
+            cmedium: "전체보기",
+          },
+          {
+            cmedium: "CLOTHING",
+            csmall: ["BOTTOM", "TOP"],
+          },
+          {
+            cmedium: "KIDS ACC.",
+            csmall: ["OTHER ACCESSORIES"],
+          },
+        ],
+      },
+      {
+        clarge: "LIFESTYLE",
+        cmedium: [
+          {
+            cmedium: "전체보기",
+          },
+          {
+            cmedium: "BATH",
+            csmall: ["전체보기", "OTHER ACCESSORIES"],
+          },
+          {
+            cmedium: "HOME",
+            csmall: ["전체보기", "FABRIC", "FRAGRANCE", "OTHER ACCESSORIES"],
+          },
+        ],
+      },
     ],
   }),
   methods: {
@@ -152,6 +276,9 @@ export default {
       this.$store.commit("setOnTabs", false);
       this.$store.commit("setOnProduct", 2);
     },
+    movePage(){
+      this.$router.push("/product/list");
+    }
   },
 };
 </script>
