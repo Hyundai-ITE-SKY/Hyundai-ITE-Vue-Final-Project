@@ -73,7 +73,7 @@
 <script>
 export default {
   //component의 대표 이름(devTools에 나오는 이름)
-  name: "",
+  name: "Cart",
   //추가하고 싶은 컴포넌트를 등록
   components: {},
   //컴포넌트 데이터 정의
@@ -85,6 +85,9 @@ export default {
   //컴포넌트 메서드터 정의
   methods: {},
   created() {
+    if (this.$store.getters["login/getUserId"] === "") {
+      this.$router.push("/login");
+    }
     this.$store.commit("setOnTabs", false);
     this.$store.commit("setOnProduct", 0);
   },

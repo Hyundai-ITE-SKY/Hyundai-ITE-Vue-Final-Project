@@ -73,6 +73,11 @@ export default {
   },
   //컴포넌트 메서드터 정의
   methods: {},
+  created(){
+    if (this.$store.getters["login/getUserId"] === "") {
+      this.$router.push("/login");
+    }
+  }
 };
 </script>
 <!--scoped : 지역변수, 없으면 전역 style이 된다. 붙이는게 좋다

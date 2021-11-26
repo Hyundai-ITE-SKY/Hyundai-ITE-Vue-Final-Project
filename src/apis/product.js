@@ -1,12 +1,21 @@
 import axios from "axios";
 
+function getCategory(clarge) {
+  return axios.get(`/category/${clarge}`);
+}
+
 function getProduct(pid) {
-  //http://kosa1.iptime.org:50202/product/PL2B7WSC004W
   const promise = axios.get(`http://kosa1.iptime.org:50202/product/${pid}`);
 
   return promise;
 }
 
-export default {
-  getProduct,
+function getProductList(pageNo = 1) {
+  return axios.get(`http://kosa1.iptime.org:50202/productlist/WOMEN/${pageNo}`);
 }
+
+export default {
+  getCategory,
+  getProduct,
+  getProductList,
+};
