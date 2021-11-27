@@ -10,6 +10,7 @@
               :pname="item.pname"
               :pprice="item.pprice"
               :colors="item.colors"
+              :isWish="checkIsWish(item.pid)"
             ></product-item>
           </div>
         </v-col>
@@ -79,6 +80,15 @@ export default {
       } else {
         this.category[1].isShow = false;
       }
+    },
+    checkIsWish(pid) {
+      const wishlist = this.$store.getters["product/getUserWishList"];
+      for (let item of wishlist) {
+        if (item.pid === pid) {
+          return true;
+        }
+      }
+      return false;
     },
   },
   created() {

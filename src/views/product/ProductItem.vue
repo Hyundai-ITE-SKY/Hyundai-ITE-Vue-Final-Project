@@ -62,7 +62,10 @@ export default {
   },
   // 컴포넌트 메소드 정의
   methods: {},
-  props: { bname: String, pname: String, pprice: Number, colors: Array },
+  props: { bname: String, pname: String, pprice: Number, colors: Array, isWish: Boolean },
+  created() {
+    this.state = this.isWish;
+  },
 };
 </script>
 
