@@ -18,7 +18,7 @@
       <v-list two-line>
         <!-- 포인트 / 쿠폰 -->
         <v-list-item>
-          <v-row>
+          <v-row no-gutters>
             <v-col cols="6">
               <v-card outlined>
                 <v-card-title>포인트</v-card-title>
@@ -66,7 +66,7 @@
         <v-list-item>
           <v-list-item-content>
             <v-list-item-subtitle>
-              <v-row>
+              <v-row no-gutters>
                 <v-col cols="6">
                   <v-card outlined to="/member/qna">
                     <v-card-title class="justify-center"
