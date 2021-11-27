@@ -1,6 +1,6 @@
 <!--컴포넌트 UI 정의-->
 <template>
-  <v-form ref="form" v-model="valid" class="ml-6 mr-6" lazy-validation>
+  <v-form ref="form" v-model="valid" class="ml-6 mr-6 mt-5" lazy-validation>
     <div class="mb-7">
       <v-text-field
         v-model="user.id"

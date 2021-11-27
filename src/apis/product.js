@@ -6,7 +6,6 @@ function getCategory(clarge) {
 
 function getProduct(pid) {
   const promise = axios.get(`http://kosa1.iptime.org:50202/product/${pid}`);
-
   return promise;
 }
 

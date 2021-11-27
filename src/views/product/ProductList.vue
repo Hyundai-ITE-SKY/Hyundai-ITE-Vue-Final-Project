@@ -11,6 +11,7 @@
               :pprice="item.pprice"
               :colors="item.colors"
               :isWish="checkIsWish(item.pid)"
+              :pid="item.pid"
             ></product-item>
           </div>
         </v-col>

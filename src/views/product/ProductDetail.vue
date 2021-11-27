@@ -1,51 +1,100 @@
 <!-- 컴포넌트 UI 정의 주의할 점 : 루트 Element가 하나만 있어야한다. -->
 <template>
   <div>
-    <v-carousel v-model="model">
-      <v-carousel-item v-for="color in colors" :key="color">
-        <v-sheet :color="color" height="100%" tile>
-          <v-row class="fill-height" align="center" justify="center">
-            <!--<div class="text-h2">Slide {{ i + 1 }}</div>-->
-            <v-img :src="color" height="100%" />
-          </v-row>
-        </v-sheet>
-      </v-carousel-item>
-    </v-carousel>
-
     <div>
-      <v-row class="pl-2 pr-5 d-flex align-center justify-center">
+      <v-carousel :show-arrows="false" hide-delimiter-background cycle dark>
+        <v-carousel-item :src="productInfo.colors[colorIdx].cimage1"></v-carousel-item>
+        <v-carousel-item :src="productInfo.colors[colorIdx].cimage2"></v-carousel-item>
+        <v-carousel-item :src="productInfo.colors[colorIdx].cimage3"></v-carousel-item>
+      </v-carousel>
+    </div>
+    <div style="display: flex" class="justify-center align-center">
+      <div
+        v-for="(color, i) in productInfo.colors"
+        :key="color.ccolorcode"
+        class="ml-1 mr-1 mt-2 mb-2"
+      >
+        <v-img :src="color.ccolorimage" width="18px" height="18px" @click="colorIdx = i"></v-img>
+      </div>
+    </div>
+    <div>
+      <div class="mt-3 ml-3 mr-3 align-center" style="display: flex">
+        <div class="text-truncate" style="font-size: 1rem; font-weight: bolder">
+          {{ productInfo.bname }}
+        </div>
+        <div class="ml-auto" @click="state = !state">
+          <v-icon v-if="!state">mdi-heart-outline</v-icon>
+          <v-icon v-if="state" style="color: red">mdi-heart</v-icon>
+        </div>
+      </div>
+      <div class="mt-1 ml-3 mr-3 align-center" style="display: flex">
+        <div class="text-truncate" style="font-size: 0.875rem; font-weight: bolder; color: #252525">
+          {{ productInfo.pname }}
+        </div>
         <div
-          class="mr-2 d-flex flex-row mt-5"
-          width="50px"
-          v-for="(chip, i) in colorchips"
-          :key="i"
+          class="text-truncate ml-auto text-decoration-line-through text--disabled"
+          style="font-size: 0.875rem; font-weight: bolder"
         >
-          <v-img :src="chip"></v-img>
+          {{ productInfo.pprice.toLocaleString() }}원
         </div>
-
-        <v-col cols="11" class="font-weight-black pb-0">Brand</v-col>
-        <v-col cols="1" class="pb-0"><v-icon>mdi-share-variant-outline</v-icon></v-col>
-        <v-col cols="12" class="pt-0 pb-0">Product Name</v-col>
-        <v-col cols="12" class="font-weight-black pt-0 pb-0">100,000￦</v-col>
-        <v-col cols="12" class="pt-0 pb-0">Product Code</v-col>
-      </v-row>
-      <br />
-      <v-divider></v-divider>
-      <div>
-        <div class="my-2 pl-4 pr-5">
-          Lv1 혜택가 <span class="font-weight-black pt-0 pb-0">90,000￦</span>
+        <div class="text-truncate ml-3" style="font-size: 1rem; font-weight: bolder">
+          {{ ((productInfo.pprice * (100 - sales)) / 100).toLocaleString() }}원
         </div>
       </div>
-      <v-divider></v-divider>
-      <div>
-        <v-col cols="12" class="pb-0 pl-4 pr-5">H.POINT : 100 p (0.1%)</v-col>
-        <v-col cols="12" class="pb-0 pt-1 pl-4 pr-5">배송비 : 30,000원 이상 무료배송</v-col>
+      <div
+        class="mt-2 ml-3 mr-3 pa-3"
+        style="font-size: 0.875rem; color: #252525; background-color: #f7f6f3"
+      >
+        "{{ productInfo.pdetail }}"
       </div>
-      <v-divider></v-divider>
+      <v-divider class="mt-5 mb-3"></v-divider>
+      <div class="ml-3 mr-3 align-center" style="display: flex">
+        <div style="font-size: 0.875rem">회원등급 혜택가</div>
+        <div class="ml-3 text--disabled" style="font-size: 0.7rem; font-weight: bolder">
+          현재 {{ sales }}% 할인 적용 중
+        </div>
+        <div class="ml-auto text-truncate" style="font-size: 1rem; font-weight: bolder">
+          {{ ((productInfo.pprice * (100 - sales)) / 100).toLocaleString() }}원
+        </div>
+      </div>
+      <v-divider class="mt-3 mb-3"></v-divider>
+      <div class="ml-3 mr-3 align-center" style="display: flex">
+        <div style="font-size: 0.875rem">POINT</div>
+        <div class="ml-3 text--disabled" style="font-size: 0.7rem; font-weight: bolder">
+          상품 구매시 원가의 10% 적립
+        </div>
+        <div
+          class="ml-auto text-truncate"
+          style="font-size: 0.875rem; font-weight: bolder; color: #252525"
+        >
+          {{ Math.floor((productInfo.pprice * (100 - sales)) / 10000).toLocaleString() }}p
+        </div>
+      </div>
+      <v-divider class="mt-3 mb-4"></v-divider>
+      <div class="ml-3 mr-3 align-top" style="display: flex">
+        <div style="font-size: 0.7rem; width: 30vw; font-weight: bolder">상품코드</div>
+        <div class="ml-3 text-truncate" style="font-size: 0.7rem; color: #252525">
+          {{ productInfo.pid }}
+        </div>
+      </div>
+      <div class="mt-2 ml-3 mr-3 align-top" style="display: flex">
+        <div style="font-size: 0.7rem; width: 30vw; font-weight: bolder">배송비</div>
+        <div class="ml-3 text-truncate" style="font-size: 0.7rem; color: #252525">
+          30,000 미만 구매시 배송비 3,000원<br />
+          (제주/도서산간 추가 배송비가 발생할 수 있습니다.)
+        </div>
+      </div>
+      <div class="mt-2 ml-3 mr-3 mb-5 align-top" style="display: flex">
+        <div style="font-size: 0.7rem; width: 30vw; font-weight: bolder">배송정보</div>
+        <div class="ml-3 text-truncate" style="font-size: 0.7rem; color: #252525">
+          결제 완료 후 평균 1일 이내 출고(공휴일 제외)
+        </div>
+      </div>
     </div>
   </div>
 </template>
 <script>
+import apiProduct from "@/apis/product";
 export default {
   //component의 대표 이름(devTools에 나오는 이름)
   name: "ProductDetail",
@@ -53,22 +102,66 @@ export default {
   components: {},
   //컴포넌트 데이터 정의
   data: () => ({
-    model: 0,
-    colors: [
-      "http://newmedia.thehandsome.com/MN/2B/FW/MN2B8WJC623WP2_LY_W01.jpg/dims/resize/684x1032/",
-      "http://newmedia.thehandsome.com/MN/2B/FW/MN2B8WJC623WP2_LY_W02.jpg/dims/resize/684x1032/",
-      "http://newmedia.thehandsome.com/MN/2B/FW/MN2B8WJC623WP2_LY_W03.jpg/dims/resize/684x1032/",
-    ],
-    colorchips: [
-      "http://newmedia.thehandsome.com/MN/2B/FW/MN2B8WJC623WP2_LY_C01.jpg/dims/resize/24x24",
-      "http://newmedia.thehandsome.com/MN/2B/FW/MN2B8WJC623WP2_RP_C01.jpg/dims/resize/24x24",
-    ],
+    colorIdx: 0,
+    state: false,
+    sales: 15,
+    productInfo: {
+      pid: "PL2B7WSC004W",
+      bname: "3.1 Phillip Lim",
+      clarge: "WOMEN",
+      cmedium: "SKIRT",
+      csmall: "LONG|MAXI SKIRT",
+      pno: 5491,
+      pname: "[21FW] 믹스 플리츠 스커트",
+      pprice: 950000,
+      pdetail:
+        "밑단이 마치 꽃잎을 연상시키는 이 스커트는 여러가지의 간격과 모양으로 이루어진 플리츠 텍스처로 어디서도 볼 수 없는 3.1 PHILLIP LIM만의 감각이 느껴집니다. 우아하면서도 섬세한 실루엣을 연출하여 룩에 페미닌한 분위기를 불어넣어줍니다.",
+      pseason: "FW",
+      ptotalamount: 0,
+      colors: [
+        {
+          pid: "PL2B7WSC004W",
+          ccolorcode: "NY",
+          cimage1:
+            "http://newmedia.thehandsome.com/PL/2B/FW/PL2B7WSC004W_NY_W01.jpg/dims/resize/684x1032/",
+          cimage2:
+            "http://newmedia.thehandsome.com/PL/2B/FW/PL2B7WSC004W_NY_W02.jpg/dims/resize/684x1032/",
+          cimage3:
+            "http://newmedia.thehandsome.com/PL/2B/FW/PL2B7WSC004W_NY_W03.jpg/dims/resize/684x1032/",
+          ccolorimage: "http://newmedia.thehandsome.com/PL/2B/FW/PL2B7WSC004W_NY_C01.jpg",
+          cmatchpid: "PL2B7KTO004W_NY",
+        },
+        {
+          pid: "PL2B7WSC004W",
+          ccolorcode: "PK",
+          cimage1:
+            "http://newmedia.thehandsome.com/PL/2B/FW/PL2B7WSC004W_PK_W01.jpg/dims/resize/684x1032/",
+          cimage2:
+            "http://newmedia.thehandsome.com/PL/2B/FW/PL2B7WSC004W_PK_W02.jpg/dims/resize/684x1032/",
+          cimage3:
+            "http://newmedia.thehandsome.com/PL/2B/FW/PL2B7WSC004W_PK_W03.jpg/dims/resize/684x1032/",
+          ccolorimage: "http://newmedia.thehandsome.com/PL/2B/FW/PL2B7WSC004W_PK_C01.jpg",
+          cmatchpid: "PL2B7KTO007W_NY",
+        },
+      ],
+    },
   }),
   //컴포넌트 메서드 정의
   methods: {},
   created() {
     this.$store.commit("setOnTabs", false);
     this.$store.commit("setOnProduct", 1);
+
+    let pid = this.$route.query.pid;
+
+    apiProduct
+      .getProduct(pid)
+      .then((response) => {
+        this.productInfo = response.data;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   },
 };
 </script>

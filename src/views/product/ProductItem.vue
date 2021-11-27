@@ -1,7 +1,7 @@
 <!-- 컴포넌트 UI 정의 -->
 <template>
   <v-sheet color="white" elevation="0">
-    <div v-for="(color, i) in colors" :key="color.ccolorcode">
+    <div v-for="(color, i) in colors" :key="color.ccolorcode" @click="moveProductDetail">
       <v-img
         v-show="colorIndex === i"
         :src="colors[i].cimage1"
@@ -61,8 +61,21 @@ export default {
     return { state: false, colorIndex: 0, sales: 15 };
   },
   // 컴포넌트 메소드 정의
-  methods: {},
-  props: { bname: String, pname: String, pprice: Number, colors: Array, isWish: Boolean },
+  methods: {
+    moveProductDetail() {
+      this.$router
+        .push(`/product/detail?pid=${this.pid}`)
+        .catch(() => {});
+    },
+  },
+  props: {
+    bname: String,
+    pname: String,
+    pprice: Number,
+    colors: Array,
+    isWish: Boolean,
+    pid: String,
+  },
   created() {
     this.state = this.isWish;
   },

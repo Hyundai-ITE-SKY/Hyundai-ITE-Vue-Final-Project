@@ -10,6 +10,7 @@
             :pprice="product.pprice"
             :colors="product.colors"
             :isWish="true"
+            :pid="item.pid"
           ></product-item>
         </div>
       </v-col>

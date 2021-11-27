@@ -92,7 +92,7 @@
     <v-sheet id="scrolling-techniques-3" class="overflow-y-auto" max-height="100vh">
       <v-container
         fluid
-        :style="`padding-top: ${$store.state.onTabs ? '230px' : '130px'}; padding-bottom: 56px`"
+        :style="`padding-top: ${$store.state.onTabs ? '230px' : '128px'}; padding-bottom: 56px`"
         class="pl-0 pr-0"
       >
         <template>
