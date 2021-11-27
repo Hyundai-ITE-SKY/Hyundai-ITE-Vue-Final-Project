@@ -10,8 +10,8 @@ function getCoupon(){
   return promise;
 }
 
-function getWishList(mid){
-  const promise = axios.get("http://kosa1.iptime.org:50207/member/wishlist", {params:{mid: mid}});  
+function getWishList(){
+  const promise = axios.get("http://kosa1.iptime.org:50207/member/wishlist");  
   return promise;
 }
 

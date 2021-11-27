@@ -31,6 +31,7 @@
 
 <script>
 import auth from "@/apis/auth";
+import apiMember from "@/apis/member";
 export default {
   //컴포넌트의 대표 이름(devtools에 나오는 이름)
   name: "",
@@ -60,12 +61,14 @@ export default {
     async handleLogin() {
       try {
         const response = await auth.login(this.user);
-        console.log(response);
 
         this.$store.dispatch("login/saveAuth", {
           userId: response.data.mid,
           authToken: response.data.jwt,
         });
+
+        const wishlist = await apiMember.getWishList();
+        this.$store.commit("product/setUserWishList", wishlist.data);
 
         this.$router.push("/member/mypage");
       } catch (err) {

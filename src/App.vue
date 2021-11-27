@@ -303,5 +303,8 @@ export default {
       this.$router.push("/home/event");
     },
   },
+  created() {
+    this.$store.dispatch("login/loadAuth");
+  },
 };
 </script>
