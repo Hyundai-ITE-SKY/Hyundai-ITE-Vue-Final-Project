@@ -13,44 +13,63 @@
       </div>
     </div>
     <!--반복되는 부분-->
-    <v-divider></v-divider>
-    <div class="white d-flex ma-0 pa-0 mb-2 mt-5">
-      <v-row class="ma-0">
-        <v-col cols="1">
-          <v-checkbox></v-checkbox>
-        </v-col>
-        <v-col cols="3" class="pa-0 pl-3">
-          <div style="width: 80px">
-            <v-img src="@/assets/images/wishlist-sample1.jpg" contain />
-          </div>
-        </v-col>
-        <v-col class="ml-2">
-          <v-row>
-            <v-col cols="9" class="pa-0 font-weight-black text-truncate" style="font-size: 15px"
-              >브랜드</v-col
-            >
-            <v-col cols="1" class="mr-2 pa-0"
-              ><v-icon class="red--text">mdi-cards-heart</v-icon></v-col
-            >
-            <v-col cols="1" class="pa-0 pr-1"><v-icon>mdi-close</v-icon></v-col>
-            <v-col cols="12" class="pa-0 text-truncate" style="font-size:15px;">상품명</v-col>
-            <v-col cols="12" class="pa-0" style="font-size:14px;color:grey">옵션 : 색상_사이즈</v-col>
-            <v-col cols="12" class="pa-0"  style="font-size:14px;color:grey">수량 : 1</v-col>
-            <v-col cols="12" class="font-weight-black ma-0 pt-2">100,000 원</v-col>
-          </v-row>
-        </v-col>
+    <div v-for="product in products" :key="product.pid">
+      <div v-for="info in infos" :key="info.pid">
+        <template v-if="product.pid===info.pid">
+        <v-divider></v-divider>
+        <div class="white d-flex ma-0 pa-0 mb-2 mt-5">
+          <v-row class="ma-0">
+            <v-col cols="1">
+              <v-checkbox></v-checkbox>
+            </v-col>
+            <v-col cols="3" class="pa-0 pl-3">
+              <div style="width: 80px">
+                <v-img :src="info.cimage1" contain />
+              </div>
+            </v-col>
+            <v-col class="ml-2">
+              <v-row>
+                <v-col
+                  cols="9"
+                  class="pa-0 font-weight-black text-truncate"
+                  style="font-size: 15px"
+                >{{info.bname}}
+                </v-col>
+                <v-col cols="1" class="mr-2 pa-0">
+                  <v-icon class="red--text">mdi-cards-heart</v-icon>
+                </v-col>
+                <v-col cols="1" class="pa-0 pr-1"><v-icon>mdi-close</v-icon></v-col>
+                <v-col cols="12" class="pa-0 text-truncate" style="font-size: 15px">
+                  {{ info.pname }}
+                </v-col>
+                <v-col cols="12" class="pa-0" style="font-size: 14px; color: grey"
+                  >옵션 : {{ product.pcolor }}_{{ product.psize }}</v-col
+                >
+                <v-col cols="12" class="pa-0" style="font-size: 14px; color: grey"
+                  >수량 : {{ product.pamount }} 개</v-col
+                >
+                <v-col cols="12" class="font-weight-black ma-0 pt-2">{{info.pprice.toLocaleString()}} 원</v-col>
+              </v-row>
+            </v-col>
 
-        <v-layout class="justify-center">
-          <v-card-actions class="mb-3 mt-3 pt-0">
-            <v-btn dark class="mr-3" outlined color="black">옵션/수량</v-btn>
-            <v-btn dark to="/order/order" outlined color="black">바로 구매</v-btn>
-          </v-card-actions>
-        </v-layout>
-      </v-row>
+            <v-layout class="justify-center">
+              <v-card-actions class="mb-3 mt-3 pt-0">
+                <v-btn dark class="mr-3" outlined color="black">옵션/수량</v-btn>
+                <v-btn dark to="/order/order" outlined color="black">바로 구매</v-btn>
+              </v-card-actions>
+            </v-layout>
+          </v-row>
+        </div>
+        </template>
+      </div>
     </div>
+
   </div>
 </template>
 <script>
+import member from "@/apis/member";
+import product from "@/apis/product";
+
 export default {
   //component의 대표 이름(devTools에 나오는 이름)
   name: "Cart",
@@ -58,16 +77,51 @@ export default {
   components: {},
   //컴포넌트 데이터 정의
   data() {
-    return {};
+    return {
+      products: null,
+      infos: [],
+    };
   },
   //컴포넌트 메서드터 정의
-  methods: {},
+  methods: {
+    getCart() {
+      var mid = this.$store.state.login.userId;
+      member
+        .getCart(mid)
+        .then((response) => {
+          this.products = response.data;
+          this.getProductInfo(this.products);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    getProductInfo(products) {
+      var i;
+      for (i of products) {
+        product
+          .getProductInfo(i.pid, i.pcolor)
+          .then((res) => {
+            // console.log(res.data);
+            this.infos.push(res.data);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    },
+    get(){
+      console.log(this.info);
+    }
+  },
   created() {
-    // if (this.$store.getters["login/getUserId"] === "") {
-    //   this.$router.push("/login");
-    // }
+    if (this.$store.getters["login/getUserId"] === "") {
+      this.$router.push("/login");
+    }
     this.$store.commit("setOnTabs", false);
     this.$store.commit("setOnProduct", 0);
+
+    this.getCart();
   },
 };
 </script>

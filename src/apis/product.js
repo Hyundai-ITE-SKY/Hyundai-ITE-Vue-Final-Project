@@ -22,8 +22,14 @@ function getProductList(large, medium, small, pageNo = 1) {
   }
 }
 
+function getProductInfo(pid, colorcode){
+  const promise = axios.get(`http://kosa1.iptime.org:50202/product/info/${pid}/${colorcode}`);
+  return promise;
+}
+
 export default {
   getCategory,
   getProduct,
   getProductList,
+  getProductInfo
 };

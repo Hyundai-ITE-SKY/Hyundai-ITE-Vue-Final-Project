@@ -15,8 +15,14 @@ function getWishList(mid){
   return promise;
 }
 
+function getCart(mid){
+  const promise = axios.get("http://kosa1.iptime.org:50207/member/mycart", {params:{mid:mid}});
+  return promise;
+}
+
 export default{
   getMember,
   getWishList,
   getCoupon,
+  getCart
 }
