@@ -10,7 +10,7 @@
             :pprice="product.pprice"
             :colors="product.colors"
             :isWish="true"
-            :pid="item.pid"
+            :pid="product.pid"
           ></product-item>
         </div>
       </v-col>
@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import product from "@/apis/product";
+import apiProduct from "@/apis/product";
 import ProductItem from "@/views/product/ProductItem.vue";
 
 export default {
@@ -48,7 +48,7 @@ export default {
       for (var item in this.productIds) {
         console.log(this.productIds[item].pid);
 
-        product
+        apiProduct
           .getProduct(this.productIds[item].pid)
           .then((response) => {
             //console.log(response.data);
