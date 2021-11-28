@@ -104,7 +104,7 @@
           </v-list-item-content>
         </v-list-item>
         <div class="text-center">
-          <v-btn color="error" @click="handleLogout"> 로그아웃 </v-btn>
+          <v-btn @click="handleLogout" dark> 로그아웃 </v-btn>
         </div>
       </v-list>
     </div>
