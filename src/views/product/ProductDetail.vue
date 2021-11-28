@@ -22,7 +22,7 @@
         <div class="text-truncate" style="font-size: 1rem; font-weight: bolder">
           {{ productInfo.bname }}
         </div>
-        <div class="ml-auto" @click="state = !state">
+        <div class="ml-auto" @click="WishCreateDelete">
           <v-icon v-if="!state">mdi-heart-outline</v-icon>
           <v-icon v-if="state" style="color: red">mdi-heart</v-icon>
         </div>
@@ -95,6 +95,8 @@
 </template>
 <script>
 import apiProduct from "@/apis/product";
+import apiMember from "@/apis/member";
+
 export default {
   //component의 대표 이름(devTools에 나오는 이름)
   name: "ProductDetail",
@@ -147,7 +149,32 @@ export default {
     },
   }),
   //컴포넌트 메서드 정의
-  methods: {},
+  methods: {
+    /* wishlist의 상품인 경우 state=true */
+    checkIsWish(){
+      const wishlist = this.$store.getters["product/getUserWishList"];
+      for(let wish of wishlist){
+        console.log(wish);
+        console.log(this.productInfo.pid);
+        if(this.productInfo.pid===wish.pid){
+          console.log("checkWish");
+          this.state=true;
+        }
+      }
+    },
+    async WishCreateDelete(){
+      this.state = !this.state;
+      if(!this.state){
+        await apiMember.deleteWishList(this.productInfo.pid);
+      }else{
+        await apiMember.createWishList(this.productInfo.pid);
+      }
+
+      const wishlist = await apiMember.getWishList();
+      this.$store.commit("product/setUserWishList", wishlist.data);
+
+    }
+  },
   created() {
     this.$store.commit("setOnTabs", false);
     this.$store.commit("setOnProduct", 1);
@@ -158,10 +185,13 @@ export default {
       .getProduct(pid)
       .then((response) => {
         this.productInfo = response.data;
+        //제품이 wishlist에 담겨있을 경우 state=true
+        this.checkIsWish();
       })
       .catch((error) => {
         console.log(error);
       });
+    
   },
 };
 </script>

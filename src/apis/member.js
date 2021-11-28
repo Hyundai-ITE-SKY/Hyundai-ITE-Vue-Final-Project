@@ -20,9 +20,21 @@ function getCart(mid){
   return promise;
 }
 
+function createWishList(pid){
+  const promise = axios.post("http://kosa1.iptime.org:50207/member/createwishlist", `pid=${pid}`);
+  return promise;
+}
+
+function deleteWishList(pid){
+  const promise = axios.delete("http://kosa1.iptime.org:50207/member/deletewishlist", {params:{pid:pid}});
+  return promise;
+}
+
 export default{
   getMember,
   getWishList,
   getCoupon,
-  getCart
+  getCart,
+  createWishList,
+  deleteWishList,
 }

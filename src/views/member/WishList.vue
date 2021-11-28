@@ -11,6 +11,7 @@
             :colors="product.colors"
             :isWish="true"
             :pid="product.pid"
+            @productItemHandleWish="WishCreateDelete"
           ></product-item>
         </div>
       </v-col>
@@ -21,6 +22,7 @@
 <script>
 import apiProduct from "@/apis/product";
 import ProductItem from "@/views/product/ProductItem.vue";
+import apiMember from "@/apis/member";
 
 export default {
   // component의 대표 이름(devtools에 표시되는 이름)
@@ -38,12 +40,12 @@ export default {
   },
   // 컴포넌트 메소드 정의
   methods: {
-    //boardlist 사용하기
+    /* wishlist 받아오기 */
     getWishList() {
       this.productIds = this.$store.getters["product/getUserWishList"];
       this.getProduct();
     },
-    /* 장바구니의 product들을 가져온다. */
+    /* 찜의 product들을 가져온다. */
     getProduct() {
       for (var item in this.productIds) {
         console.log(this.productIds[item].pid);
@@ -58,8 +60,20 @@ export default {
             console.log(error);
           });
       }
-      console.log(this.products);
+      
     },
+    /* WishList에 상품 추가/삭제 */
+    async WishCreateDelete(wishState, pid){
+      /*wishState가 false일 경우 wishList 테이블에서 제거*/
+      if(!wishState){
+        await apiMember.deleteWishList(pid);
+      }else{/*wishState가 true일 경우 wishList 테이블에 추가*/
+        await apiMember.createWishList(pid);
+      }
+      
+      const wishlist = await apiMember.getWishList();
+      this.$store.commit("product/setUserWishList", wishlist.data);
+    }
   },
   created() {
     if (this.$store.getters["login/getUserId"] === "") {

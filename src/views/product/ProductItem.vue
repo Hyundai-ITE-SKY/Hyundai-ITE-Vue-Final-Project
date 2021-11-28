@@ -26,7 +26,7 @@
             {{ bname }}
           </div>
         </div>
-        <div class="ml-auto" @click="state = !state">
+        <div class="ml-auto" @click="handleWish(pid)">
           <v-icon v-if="!state">mdi-heart-outline</v-icon>
           <v-icon v-if="state" style="color: red">mdi-heart</v-icon>
         </div>
@@ -67,6 +67,11 @@ export default {
         .push(`/product/detail?pid=${this.pid}`)
         .catch(() => {});
     },
+    handleWish(pid){
+      this.state = !this.state;
+      //좋아요 클릭 시 productItemHandleWish이벤트 발생( 자식 -> 부모 )
+      this.$emit("productItemHandleWish", this.state, pid);
+    }
   },
   props: {
     bname: String,

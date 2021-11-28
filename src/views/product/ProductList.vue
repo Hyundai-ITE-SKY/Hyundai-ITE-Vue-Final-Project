@@ -12,6 +12,7 @@
               :colors="item.colors"
               :isWish="checkIsWish(item.pid)"
               :pid="item.pid"
+              @productItemHandleWish="WishCreateDelete"
             ></product-item>
           </div>
         </v-col>
@@ -40,6 +41,7 @@
 <script>
 import ProductItem from "./ProductItem.vue";
 import apiProduct from "@/apis/product";
+import apiMember from "@/apis/member";
 
 export default {
   //컴포넌트의 대표 이름(devtools에 나오는 이름)
@@ -91,6 +93,26 @@ export default {
       }
       return false;
     },
+    /* WishList에 상품 추가/삭제 */
+    async WishCreateDelete(wishState, pid){
+      console.log(wishState);
+      console.log(pid);
+      /* wishState가 false일 경우 wishList 테이블에서 제거 */
+      if(!wishState){
+        await apiMember.deleteWishList(pid);
+         
+        console.log(this.products);
+      }else{/* wishState가 true일 경우 wishList 테이블에 추가 */
+        await apiMember.createWishList(pid);
+          
+        console.log(this.products);
+      }
+      
+      const wishlist = await apiMember.getWishList();
+      console.log(wishlist.data);
+      this.$store.commit("product/setUserWishList", wishlist.data);
+      //this.getWishList();
+    }
   },
   created() {
     let pageNo = this.$route.query.pageNo;
