@@ -1,20 +1,17 @@
 <!-- 컴포넌트 UI 정의 -->
 <template>
   <div>
-    <v-row justify="center">
-      <v-img
-        lazy-src="@/assets/images/event/eventloader.jpg"
-        src="@/assets/images/event/event1.jpg"
-        width="100vw"
-        :aspect-ratio="78 / 100"
-      >
-        <template v-slot:placeholder>
-          <v-row class="fill-height ma-0" align="center" justify="center">
-            <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
-          </v-row>
-        </template>
-      </v-img>
-    </v-row>
+    <v-img
+      lazy-src="@/assets/images/event/eventloader.jpg"
+      src="@/assets/images/event/event1.jpg"
+      :aspect-ratio="78 / 100"
+    >
+      <template v-slot:placeholder>
+        <v-row class="fill-height ma-0" align="center" justify="center">
+          <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
+        </v-row>
+      </template>
+    </v-img>
   </div>
 </template>
 

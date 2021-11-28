@@ -172,6 +172,7 @@ export default {
       this.$router.push("/login");
       return;
     }
+    this.$store.commit("gnb/setCurrentPage", "mypage");
     this.getMember();
     this.getCoupon();
   },

@@ -3,13 +3,7 @@
   <v-app>
     <v-navigation-drawer app v-model="drawer">
       <v-tabs background-color="transparent" color="black" center-active>
-        <!-- <v-tab @click="setCategoryState(0)">WOMEN</v-tab>
-        <v-tab @click="setCategoryState(1)">MEN</v-tab>
-        <v-tab @click="setCategoryState(2)">KIDS</v-tab>
-        <v-tab @click="setCategoryState(3)">LIFESTYLE</v-tab> -->
-
         <v-tab v-for="(tab, idx) in category" :key="idx">{{ tab.clarge }}</v-tab>
-
         <v-tab-item v-for="n in 4" :key="n">
           <template v-for="(cm, i) in category[n - 1].cmedium">
             <!--대분류 전체 보기-->
@@ -53,85 +47,110 @@
       </template>
     </v-navigation-drawer>
 
-    <v-app-bar
-      app
-      color="black"
-      dark
-      shrink-on-scroll
-      src="@/assets/images/background4.jpg"
-      fade-img-on-scroll
-      scroll-target="#scrolling-techniques-3"
-    >
-      <template v-slot:img="{ props }">
-        <v-img v-bind="props" gradient="to top right, rgba(0,0,0,.3), rgba(0,0,0,.5)"></v-img>
-      </template>
-
+    <v-app-bar app color="black" dense dark extension-height="35px">
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
-
-      <v-app-bar-title app></v-app-bar-title>
-
-      <v-spacer></v-spacer>
-
-      <v-btn icon>
-        <v-icon>mdi-magnify</v-icon>
+      <v-spacer>
+        <div
+          class="text-center"
+          style="font-size: 0.875rem; font-weight: bolder"
+          @click="movePage('main')"
+        >
+          HANDSOME
+        </div>
+      </v-spacer>
+      <v-btn icon @click="movePage('cart')">
+        <v-icon color="white">mdi-cart-outline</v-icon>
       </v-btn>
-
-      <v-btn icon to="/member/cart">
-        <v-icon>mdi-cart-outline</v-icon>
-      </v-btn>
-
-      <template v-if="$store.state.onTabs" v-slot:extension>
-        <v-tabs align-with-title>
-          <v-tab to="/home/event">이벤트</v-tab>
-          <v-tab to="/home/newproduct">신상품</v-tab>
-          <v-tab to="/home/bestproduct">베스트</v-tab>
+      <template v-slot:extension>
+        <v-tabs v-show="$store.state.gnb.currentPage === 'main'" align-with-title>
+          <v-tab style="font-size: 0.7rem; font-weight: bolder" @click="changeMainPage('EVENT')"
+            >EVENT</v-tab
+          >
+          <v-tab style="font-size: 0.7rem; font-weight: bolder" @click="changeMainPage('BEST')"
+            >BEST</v-tab
+          >
+          <v-tab style="font-size: 0.7rem; font-weight: bolder" @click="changeMainPage('NEW')"
+            >NEW</v-tab
+          >
         </v-tabs>
+        <div
+          v-show="$store.state.gnb.currentPage === 'cart'"
+          class="text-center"
+          style="font-size: 0.875rem; font-weight: bolder; width: 100%"
+        >
+          장바구니
+        </div>
       </template>
     </v-app-bar>
 
-    <v-sheet id="scrolling-techniques-3" class="overflow-y-auto" max-height="100vh">
-      <v-container
-        fluid
-        :style="`padding-top: ${$store.state.onTabs ? '230px' : '128px'}; padding-bottom: 56px`"
-        class="pl-0 pr-0"
-      >
-        <template>
-          <router-view></router-view>
-        </template>
-      </v-container>
-    </v-sheet>
+    <div style="padding-top: 83px; padding-bottom: 56px">
+      <router-view></router-view>
+    </div>
 
-    <v-bottom-navigation
-      app
-      color="black"
-      hide-on-scroll
-      horizontal
-      scroll-target="#scrolling-techniques-3"
-      scroll-threshold="0"
-    >
-      <v-btn v-if="$store.state.onProduct == 0" to="/home/event" @click="moveHome()">
+    <v-bottom-navigation app color="black">
+      <v-btn
+        v-show="
+          $store.state.gnb.currentPage !== 'productdetail' &&
+          $store.state.gnb.currentPage !== 'order'
+        "
+        @click="movePage('main')"
+        plain
+      >
         <v-icon style="margin: 0px; padding: 0px">mdi-home-outline</v-icon>
       </v-btn>
-      <v-btn v-if="$store.state.onProduct == 0" to="/member/wishlist" @click="moveOther()">
+      <v-btn
+        v-show="
+          $store.state.gnb.currentPage !== 'productdetail' &&
+          $store.state.gnb.currentPage !== 'order'
+        "
+        @click="movePage('wishlist')"
+        plain
+      >
         <v-icon style="margin: 0px; padding: 0px">mdi-cart-heart</v-icon>
       </v-btn>
-      <v-btn v-if="$store.state.onProduct == 0" to="/order/list" @click="moveOther()">
+      <v-btn
+        v-show="
+          $store.state.gnb.currentPage !== 'productdetail' &&
+          $store.state.gnb.currentPage !== 'order'
+        "
+        @click="movePage('orderlist')"
+        plain
+      >
         <v-icon style="margin: 0px; padding: 0px">mdi-shopping-outline</v-icon>
       </v-btn>
-      <v-btn v-if="$store.state.onProduct == 0" to="/member/mypage" @click="moveOther()">
+      <v-btn
+        v-show="
+          $store.state.gnb.currentPage !== 'productdetail' &&
+          $store.state.gnb.currentPage !== 'order'
+        "
+        @click="movePage('mypage')"
+        plain
+      >
         <v-icon style="margin: 0px; padding: 0px">mdi-account-outline</v-icon>
       </v-btn>
 
-      <v-btn v-if="$store.state.onProduct == 1" to="/order/order">
+      <v-btn
+        v-show="$store.state.gnb.currentPage === 'productdetail'"
+        @click="movePage('order')"
+        plain
+      >
         <span>BUY NOW</span>
         <v-icon>mdi-shopping-outline</v-icon>
       </v-btn>
-      <v-btn v-if="$store.state.onProduct == 1" to="/member/cart">
+      <v-btn
+        v-show="$store.state.gnb.currentPage === 'productdetail'"
+        @click="movePage('cart')"
+        plain
+      >
         <span>CART</span>
         <v-icon>mdi-cart-outline</v-icon>
       </v-btn>
 
-      <v-btn v-if="$store.state.onProduct == 2" to="/order/success">
+      <v-btn
+        v-show="$store.state.gnb.currentPage === 'order'"
+        @click="movePage('ordersuccess')"
+        plain
+      >
         <span>결제하기</span>
         <v-icon>mdi-credit-card-outline</v-icon>
       </v-btn>
@@ -143,10 +162,8 @@
 export default {
   name: "App",
   data: () => ({
-    value: "recent",
     drawer: false,
     categoryState: 0,
-    //여기
     category: [
       {
         clarge: "WOMEN",
@@ -273,21 +290,25 @@ export default {
     ],
   }),
   methods: {
-    moveHome() {
-      this.$store.commit("setOnTabs", true);
-      this.$store.commit("setOnProduct", 0);
+    changeMainPage(page) {
+      this.$store.commit("gnb/setMainPage", page);
     },
-    moveOther() {
-      this.$store.commit("setOnTabs", false);
-      this.$store.commit("setOnProduct", 0);
-    },
-    moveProductDetail() {
-      this.$store.commit("setOnTabs", false);
-      this.$store.commit("setOnProduct", 1);
-    },
-    movePayment() {
-      this.$store.commit("setOnTabs", false);
-      this.$store.commit("setOnProduct", 2);
+    movePage(page) {
+      if (page === "main") {
+        this.$router.push("/home/main").catch(() => {});
+      } else if (page === "wishlist") {
+        this.$router.push("/member/wishlist").catch(() => {});
+      } else if (page === "orderlist") {
+        this.$router.push("/order/list").catch(() => {});
+      } else if (page === "mypage") {
+        this.$router.push("/member/mypage").catch(() => {});
+      } else if (page === "order") {
+        this.$router.push("/order/order").catch(() => {});
+      } else if (page === "cart") {
+        this.$router.push("/member/cart").catch(() => {});
+      } else if (page === "ordersuccess") {
+        this.$router.push("/order/success").catch(() => {});
+      }
     },
     moveProductList(large, medium, small) {
       large = large === "전체보기" ? "none" : large;
@@ -300,7 +321,7 @@ export default {
     },
     handleLogout() {
       this.$store.dispatch("login/deleteAuth");
-      this.$router.push("/home/event");
+      this.$router.push("/home/main").catch(() => {});
     },
   },
   created() {

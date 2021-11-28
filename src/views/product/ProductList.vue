@@ -29,6 +29,7 @@
                 :length="pageLength"
                 circle
                 color="black"
+                :total-visible="pageLength >= 100 ? 5 : 7"
               ></v-pagination>
             </v-container>
           </v-col>
@@ -94,25 +95,19 @@ export default {
       return false;
     },
     /* WishList에 상품 추가/삭제 */
-    async WishCreateDelete(wishState, pid){
-      console.log(wishState);
-      console.log(pid);
+    async WishCreateDelete(wishState, pid) {
       /* wishState가 false일 경우 wishList 테이블에서 제거 */
-      if(!wishState){
+      if (!wishState) {
         await apiMember.deleteWishList(pid);
-         
-        console.log(this.products);
-      }else{/* wishState가 true일 경우 wishList 테이블에 추가 */
+      } else {
+        /* wishState가 true일 경우 wishList 테이블에 추가 */
         await apiMember.createWishList(pid);
-          
-        console.log(this.products);
       }
-      
+
       const wishlist = await apiMember.getWishList();
-      console.log(wishlist.data);
       this.$store.commit("product/setUserWishList", wishlist.data);
       //this.getWishList();
-    }
+    },
   },
   created() {
     let pageNo = this.$route.query.pageNo;
@@ -129,6 +124,8 @@ export default {
       .catch((error) => {
         console.log(error);
       });
+
+    this.$store.commit("gnb/setCurrentPage", "productlist");
   },
   watch: {
     pageNo: function () {

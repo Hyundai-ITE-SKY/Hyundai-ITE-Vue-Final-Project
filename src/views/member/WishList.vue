@@ -79,6 +79,7 @@ export default {
     if (this.$store.getters["login/getUserId"] === "") {
       this.$router.push("/login");
     }
+    this.$store.commit("gnb/setCurrentPage", "wishlist");
     this.getWishList();
   },
 };

@@ -102,9 +102,8 @@ export default {
     if (this.$store.getters["login/getUserId"] === "") {
       this.$router.push("/login");
     }
-    this.$store.commit("setOnTabs", false);
-    this.$store.commit("setOnProduct", 0);
-
+    
+    this.$store.commit("gnb/setCurrentPage", "cart");
     this.getCart();
   },
 };

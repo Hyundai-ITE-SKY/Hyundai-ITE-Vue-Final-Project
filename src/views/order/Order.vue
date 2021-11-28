@@ -158,8 +158,7 @@ export default {
   //컴포넌트 메서드 정의
   methods: {},
   created() {
-    this.$store.commit("setOnTabs", false);
-    this.$store.commit("setOnProduct", 2);
+    this.$store.commit("gnb/setCurrentPage", "order");
   },
 };
 </script>
