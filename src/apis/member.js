@@ -30,6 +30,7 @@ function deleteWishList(pid){
   return promise;
 }
 
+
 export default{
   getMember,
   getWishList,
