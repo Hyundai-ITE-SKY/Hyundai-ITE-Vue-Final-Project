@@ -20,14 +20,14 @@
         <v-list-item>
           <v-row no-gutters>
             <v-col cols="6">
-              <v-card outlined>
-                <v-card-title>포인트</v-card-title>
+              <v-card rounded="0" outlined>
+                <v-card-title class="text-subtitle-1">포인트</v-card-title>
                 <v-card-subtitle>{{ (member.mpoint).toLocaleString('ko-KR', 4) }}P</v-card-subtitle>
               </v-card>
             </v-col>
             <v-col cols="6">
-              <v-card outlined>
-                <v-card-title>쿠폰</v-card-title>
+              <v-card rounded="0" outlined>
+                <v-card-title class="text-subtitle-1">쿠폰</v-card-title>
                 <v-card-subtitle>{{ coupon.length }} 개</v-card-subtitle>
               </v-card>
             </v-col>
@@ -68,15 +68,15 @@
             <v-list-item-subtitle>
               <v-row no-gutters>
                 <v-col cols="6">
-                  <v-card outlined to="/member/qna">
-                    <v-card-title class="justify-center"
-                      ><v-icon>mdi-help-circle-outline</v-icon></v-card-title
-                    >
+                  <v-card rounded="0" outlined to="/member/qna">
+                    <v-card-title class="justify-center">
+                      <v-icon>mdi-help-circle-outline</v-icon>
+                    </v-card-title>
                     <v-card-subtitle class="text-center">Q&A</v-card-subtitle>
                   </v-card>
                 </v-col>
                 <v-col cols="6">
-                  <v-card outlined>
+                  <v-card rounded="0" outlined>
                     <v-card-title class="justify-center">
                       <v-icon>mdi-account-edit-outline</v-icon>
                     </v-card-title>
@@ -84,7 +84,7 @@
                   </v-card>
                 </v-col>
                 <v-col cols="6">
-                  <v-card outlined to="/member/wishlist">
+                  <v-card rounded="0" outlined to="/member/wishlist">
                     <v-card-title class="justify-center"
                       ><v-icon>mdi-heart-outline</v-icon></v-card-title
                     >
@@ -92,10 +92,8 @@
                   </v-card>
                 </v-col>
                 <v-col cols="6">
-                  <v-card outlined>
-                    <v-card-title class="justify-center"
-                      ><v-icon>mdi-archive-cancel-outline</v-icon></v-card-title
-                    >
+                  <v-card rounded="0" outlined>
+                    <v-card-title class="justify-center"><v-icon>mdi-archive-cancel-outline</v-icon></v-card-title>
                     <v-card-subtitle class="text-center">취소/반품</v-card-subtitle>
                   </v-card>
                 </v-col>

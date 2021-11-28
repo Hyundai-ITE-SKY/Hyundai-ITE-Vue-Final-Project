@@ -41,8 +41,12 @@ export default {
   // 컴포넌트 메소드 정의
   methods: {
     /* wishlist 받아오기 */
-    getWishList() {
+    async getWishList() {
+      const wishlist = await apiMember.getWishList();
+      this.$store.commit("product/setUserWishList", wishlist.data);
+
       this.productIds = this.$store.getters["product/getUserWishList"];
+      console.log(this.productIds.data);
       this.getProduct();
     },
     /* 찜의 product들을 가져온다. */
