@@ -2,6 +2,7 @@
     주의할 점 : 루트 Element가 하나만 있어야한다. -->
 <template>
   <div>
+    
     <v-card shaped style="margin-top: -10px; color: #252525; background-color: #f7f6f3">
       <v-img height="100%" v-bind:src="`${event.eimage}`"></v-img>
 
