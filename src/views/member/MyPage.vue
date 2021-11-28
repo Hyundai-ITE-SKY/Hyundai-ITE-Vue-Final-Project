@@ -111,6 +111,7 @@
 
 <script>
 import member from "@/apis/member"
+import apiOrder from "@/apis/order"
 
 export default {
   //컴포넌트의 대표 이름(devtools에 나오는 이름)
@@ -130,12 +131,13 @@ export default {
         cid: "cid",
       },
       orders: [
-        { status: "전체", value: 13 },
-        { status: "결제", value: 1 },
+        { status: "전체", value: 0 },
+        { status: "결제", value: 0 },
         { status: "배송", value: 0 },
         { status: "배송완료", value: 0 },
-        { status: "구매확정", value: 12 },
+        { status: "구매확정", value: 0 },
       ],
+      orderState: [],
     };
   },
   //컴포넌트 메서드 정의
@@ -152,7 +154,6 @@ export default {
       }catch(err){
         console.log(err);
       }
-
     },
     //쿠폰 정보 획득
     getCoupon(){
@@ -163,6 +164,24 @@ export default {
         .catch((error)=>{
           console.log(error);
         });
+    },
+    //주문 정보 획득
+    async getOrderState(){
+      await apiOrder.getOrderState(this.$store.getters["login/getUserId"])
+                .then((response)=>{
+                  this.orderState = response.data;
+                  console.log(this.orderState);
+
+                  for(let item of this.orderState){
+                    console.log(item.ostatus);
+                    console.log(item.count);
+                    this.orders[item.ostatus].value = item.count;
+                  }
+                })
+                .catch((error)=>{
+                  console.log(error);
+                });
+
     }
   },
   created() {
@@ -172,6 +191,7 @@ export default {
     }
     this.getMember();
     this.getCoupon();
+    this.getOrderState();
   },
   mounted(){
     

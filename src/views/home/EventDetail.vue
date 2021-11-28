@@ -2,16 +2,16 @@
     주의할 점 : 루트 Element가 하나만 있어야한다. -->
 <template>
   <div>
-    
     <v-card shaped style="margin-top: -10px; color: #252525; background-color: #f7f6f3">
       <v-img height="100%" v-bind:src="`${event.eimage}`"></v-img>
 
-      <v-card-title>{{event.ename}}</v-card-title>
+      <v-card-title>{{ event.ename }}</v-card-title>
 
       <v-card-text>
         <v-row>
-          <v-col cols="12" class="font-weight-black"> 
-            기간 : {{new Date(event.estartdate).toLocaleDateString()}} - {{new Date(event.eenddate).toLocaleDateString()}} 
+          <v-col cols="12" class="font-weight-black">
+            기간 : {{ new Date(event.estartdate).toLocaleDateString() }} -
+            {{ new Date(event.eenddate).toLocaleDateString() }}
           </v-col>
 
           <v-col cols="12" class="py-0">
@@ -50,21 +50,22 @@ export default {
   },
   //컴포넌트 메서드터 정의
   methods: {
-    async getEventDetail(){
+    async getEventDetail() {
       let eid = this.$route.query.eid;
-      await apiEvent.getEvent(eid)
-              .then((response)=>{
-                this.event = response.data;
-              })
-              .catch((error) => {
-                console.log(error);
-              });
-    }
+      await apiEvent
+        .getEvent(eid)
+        .then((response) => {
+          this.event = response.data;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
   },
-  created(){
+  created() {
     this.getEventDetail();
   },
-  props:[ "eno" ],
+  props: ["eno"],
 };
 </script>
 <!--scoped : 지역변수, 없으면 전역 style이 된다. 붙이는게 좋다
