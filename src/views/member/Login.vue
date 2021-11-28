@@ -84,6 +84,9 @@ export default {
       }
     },
   },
+  created() {
+    this.$store.commit("gnb/setCurrentPage", "login");
+  },
 };
 </script>
 <!--컴포넌트 스타일 정의-->

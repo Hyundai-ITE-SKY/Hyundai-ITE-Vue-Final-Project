@@ -115,6 +115,8 @@ export default {
     let medium = this.$route.query.medium;
     let small = this.$route.query.small;
 
+    this.$store.commit("product/setCategory", [large, medium, small]);
+
     apiProduct
       .getProductList(large, medium, small, pageNo)
       .then((response) => {
@@ -137,6 +139,8 @@ export default {
       let large = to.query.large;
       let medium = to.query.medium;
       let small = to.query.small;
+
+      this.$store.commit("product/setCategory", [large, medium, small]);
 
       if (
         from.query.large === large &&

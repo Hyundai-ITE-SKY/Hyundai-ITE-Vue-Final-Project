@@ -74,11 +74,36 @@
           >
         </v-tabs>
         <div
-          v-show="$store.state.gnb.currentPage === 'cart'"
+          v-show="
+            $store.state.gnb.currentPage === 'cart' ||
+            $store.state.gnb.currentPage === 'wishlist' ||
+            $store.state.gnb.currentPage === 'login' ||
+            $store.state.gnb.currentPage === 'mypage' ||
+            $store.state.gnb.currentPage === 'order' ||
+            $store.state.gnb.currentPage === 'orderlist'
+          "
           class="text-center"
           style="font-size: 0.875rem; font-weight: bolder; width: 100%"
         >
-          장바구니
+          {{ getPageName($store.state.gnb.currentPage) }}
+        </div>
+        <div
+          v-show="$store.state.gnb.currentPage === 'productlist'"
+          class="text-center text-truncate"
+          style="font-size: 0.875rem; font-weight: bolder; width: 100%"
+        >
+          <span v-show="$store.state.product.category[0] === 'none'">전체보기</span>
+          <span v-show="$store.state.product.category[0] !== 'none'">
+            {{ $store.state.product.category[0] }}</span
+          >
+          <span v-show="$store.state.product.category[1] !== 'none'" class="ml-3 mr-3">></span>
+          <span v-show="$store.state.product.category[1] !== 'none'">
+            {{ $store.state.product.category[1] }}</span
+          >
+          <span v-show="$store.state.product.category[2] !== 'none'" class="ml-3 mr-3">></span>
+          <span v-show="$store.state.product.category[2] !== 'none'">
+            {{ $store.state.product.category[2] }}</span
+          >
         </div>
       </template>
     </v-app-bar>
@@ -292,6 +317,21 @@ export default {
   methods: {
     changeMainPage(page) {
       this.$store.commit("gnb/setMainPage", page);
+    },
+    getPageName(page) {
+      if (page === "wishlist") {
+        return "위시리스트";
+      } else if (page === "cart") {
+        return "장바구니";
+      } else if (page === "mypage") {
+        return "마이페이지";
+      } else if (page === "login") {
+        return "로그인";
+      } else if (page === "order") {
+        return "결제하기";
+      } else if (page === "orderlist") {
+        return "주문내역";
+      }
     },
     movePage(page) {
       if (page === "main") {
