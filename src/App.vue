@@ -424,14 +424,17 @@ export default {
       } else if (page === "mypage") {
         this.$router.push("/member/mypage").catch(() => {});
       } else if (page === "order") {
+        this.resetInput();
         this.$router.push("/order/order").catch(() => {});
       } else if (page === "cart") {
+        this.resetInput();
         this.$router.push("/member/cart").catch(() => {});
       } else if (page === "ordersuccess") {
         this.$router.push("/order/success").catch(() => {});
       }
     },
     moveBack() {
+      this.resetInput();
       this.$router.go(-1);
     },
     moveProductList(large, medium, small) {
@@ -442,6 +445,11 @@ export default {
       this.$router
         .push(`/product/list?large=${large}&medium=${medium}&small=${small}&pageno=1`)
         .catch(() => {});
+    },
+    resetInput() {
+      this.inputAmount = 1;
+      this.selectedColor = "none";
+      this.selectedSize = "none";
     },
     handleLogout() {
       this.$store.dispatch("login/deleteAuth");
