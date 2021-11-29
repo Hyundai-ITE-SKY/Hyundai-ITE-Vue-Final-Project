@@ -132,6 +132,26 @@ export default {
             "http://newmedia.thehandsome.com/PL/2B/FW/PL2B7WSC004W_NY_W03.jpg/dims/resize/684x1032/",
           ccolorimage: "http://newmedia.thehandsome.com/PL/2B/FW/PL2B7WSC004W_NY_C01.jpg",
           cmatchpid: "PL2B7KTO004W_NY",
+          stocks: [
+            {
+              pid: "PL2B7WSC004W",
+              ccolorcode: "NY",
+              ssize: "64",
+              samount: 4,
+            },
+            {
+              pid: "PL2B7WSC004W",
+              ccolorcode: "NY",
+              ssize: "67",
+              samount: 2,
+            },
+            {
+              pid: "PL2B7WSC004W",
+              ccolorcode: "NY",
+              ssize: "61",
+              samount: 1,
+            },
+          ],
         },
         {
           pid: "PL2B7WSC004W",
@@ -144,6 +164,20 @@ export default {
             "http://newmedia.thehandsome.com/PL/2B/FW/PL2B7WSC004W_PK_W03.jpg/dims/resize/684x1032/",
           ccolorimage: "http://newmedia.thehandsome.com/PL/2B/FW/PL2B7WSC004W_PK_C01.jpg",
           cmatchpid: "PL2B7KTO007W_NY",
+          stocks: [
+            {
+              pid: "PL2B7WSC004W",
+              ccolorcode: "PK",
+              ssize: "61",
+              samount: 2,
+            },
+            {
+              pid: "PL2B7WSC004W",
+              ccolorcode: "PK",
+              ssize: "64",
+              samount: 2,
+            },
+          ],
         },
       ],
     },

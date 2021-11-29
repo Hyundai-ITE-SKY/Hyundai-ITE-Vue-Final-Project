@@ -79,6 +79,8 @@
             $store.state.gnb.currentPage === 'wishlist' ||
             $store.state.gnb.currentPage === 'login' ||
             $store.state.gnb.currentPage === 'mypage' ||
+            $store.state.gnb.currentPage === 'productdetail' ||
+            $store.state.gnb.currentPage === 'productdetailbuy' ||
             $store.state.gnb.currentPage === 'order' ||
             $store.state.gnb.currentPage === 'orderlist'
           "
@@ -116,6 +118,7 @@
       <v-btn
         v-show="
           $store.state.gnb.currentPage !== 'productdetail' &&
+          $store.state.gnb.currentPage !== 'productdetailbuy' &&
           $store.state.gnb.currentPage !== 'order'
         "
         @click="movePage('main')"
@@ -126,6 +129,7 @@
       <v-btn
         v-show="
           $store.state.gnb.currentPage !== 'productdetail' &&
+          $store.state.gnb.currentPage !== 'productdetailbuy' &&
           $store.state.gnb.currentPage !== 'order'
         "
         @click="movePage('wishlist')"
@@ -136,6 +140,7 @@
       <v-btn
         v-show="
           $store.state.gnb.currentPage !== 'productdetail' &&
+          $store.state.gnb.currentPage !== 'productdetailbuy' &&
           $store.state.gnb.currentPage !== 'order'
         "
         @click="movePage('orderlist')"
@@ -146,6 +151,7 @@
       <v-btn
         v-show="
           $store.state.gnb.currentPage !== 'productdetail' &&
+          $store.state.gnb.currentPage !== 'productdetailbuy' &&
           $store.state.gnb.currentPage !== 'order'
         "
         @click="movePage('mypage')"
@@ -155,21 +161,39 @@
       </v-btn>
 
       <v-btn
-        v-show="$store.state.gnb.currentPage === 'productdetail'"
+        v-show="$store.state.gnb.currentPage === 'productdetailbuy'"
         @click="movePage('order')"
         plain
       >
-        <span>BUY NOW</span>
+        <span>구매하기</span>
         <v-icon>mdi-shopping-outline</v-icon>
       </v-btn>
       <v-btn
-        v-show="$store.state.gnb.currentPage === 'productdetail'"
+        v-show="$store.state.gnb.currentPage === 'productdetailbuy'"
         @click="movePage('cart')"
         plain
       >
-        <span>CART</span>
+        <span>장바구니</span>
         <v-icon>mdi-cart-outline</v-icon>
       </v-btn>
+
+      <v-bottom-sheet v-model="bottomsheet" inset>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            v-show="$store.state.gnb.currentPage === 'productdetail'"
+            v-bind="attrs"
+            v-on="on"
+            plain
+          >
+            <span>옵션 선택</span>
+            <v-icon>mdi-hanger</v-icon>
+          </v-btn>
+        </template>
+        <v-sheet class="text-center" height="200px">
+          <v-btn class="mt-6" text color="error" @click="bottomsheet = !bottomsheet"> close </v-btn>
+          <div class="my-3">This is a bottom sheet using the inset prop</div>
+        </v-sheet>
+      </v-bottom-sheet>
 
       <v-btn
         v-show="$store.state.gnb.currentPage === 'order'"
@@ -188,6 +212,7 @@ export default {
   name: "App",
   data: () => ({
     drawer: false,
+    bottomsheet: false,
     categoryState: 0,
     category: [
       {
@@ -327,6 +352,8 @@ export default {
         return "마이페이지";
       } else if (page === "login") {
         return "로그인";
+      } else if (page === "productdetail" || page === "productdetailbuy") {
+        return "상세보기";
       } else if (page === "order") {
         return "결제하기";
       } else if (page === "orderlist") {
@@ -366,6 +393,15 @@ export default {
   },
   created() {
     this.$store.dispatch("login/loadAuth");
+  },
+  watch: {
+    bottomsheet: function () {
+      if (this.bottomsheet === false) {
+        this.$store.commit("gnb/setCurrentPage", "productdetail");
+      } else {
+        this.$store.commit("gnb/setCurrentPage", "productdetailbuy");
+      }
+    },
   },
 };
 </script>
