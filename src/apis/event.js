@@ -5,7 +5,12 @@ function getEvent(eid){
   return promise;
 }
 
+function updateEvent(eventFormData){
+  const promise = axios.post("http://kosa1.iptime.org:50207/event", eventFormData);
+  return promise;
+}
 
 export default{
   getEvent,
+  updateEvent,
 }

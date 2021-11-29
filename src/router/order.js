@@ -2,6 +2,9 @@ export default [
   {
     path: "/order/order",
     component: () => import(/* webpackChunkName: "order" */ "../views/order/Order"),
+    props: (route) => ({//(route) 사용하면 url이 실행된 이후에 실행된다.
+      oid: route.query.oid,
+    }),
   },
   {
     path: "/order/list",
