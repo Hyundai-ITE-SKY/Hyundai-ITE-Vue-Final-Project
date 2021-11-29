@@ -25,7 +25,7 @@
             :pprice="info.pprice"
             :pamount="product.pamount"
             :psize="product.psize"
-            :checkboxValue="i+1"
+            :checkboxValue="i + 1"
             :isWish="checkIsWish(info.pid)"
             :pcolorList="colors[i]"
             @cartItemHandleWish="WishCreateDelete"
@@ -37,6 +37,21 @@
       </div>
     </div>
     <!--반복 끝-->
+    <div class="mb-15 ml-7 mr-7 mt-8">
+      <div class="mb-2 d-flex justify-space-between" style="font-size: 14px">
+        <div>총 상품금액</div>
+        <div>얼마얼마</div>
+      </div>
+      <div class="mb-2 d-flex justify-space-between" style="font-size: 14px">
+        <div>총 배송비</div>
+        <div>0 원</div>
+      </div>
+      <v-divider></v-divider>
+      <div class="mb-3 mt-3 d-flex justify-space-between" style="font-weight: bold">
+        <div>총 주문금액</div>
+        <div>{{ totalSum }}</div>
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -56,8 +71,8 @@ export default {
       infos: [],
       count: 0,
       selected: [],
-      colors:[],
-      selectedIndex:[]
+      colors: [],
+      totalSum: 0,
     };
   },
   //컴포넌트 메서드터 정의
@@ -71,8 +86,8 @@ export default {
           this.getProductInfo(this.products);
           this.testGetColors(this.products);
           this.count = this.products.length;
-          console.log('###장바구니item개수:', this.count);
-          console.log(this.products);
+          // console.log("###장바구니item개수:", this.count);
+          console.log('mycart :: ',this.products);
         })
         .catch((error) => {
           console.log(error);
@@ -84,7 +99,7 @@ export default {
         apiProduct
           .getProductInfo(i.pid, i.pcolor)
           .then((res) => {
-            // console.log(res.data);
+            console.log(res.data);
             this.infos.push(res.data);
           })
           .catch((error) => {
@@ -93,24 +108,34 @@ export default {
       }
     },
     //카트아이템 컴포넌트의 셀렉트의 상태가 바뀔 때마다 실행되는 함수
-    IsSelected(checkboxValue, newValue){
-      if(newValue!==null){ //넘어온 값이 null이 아니라면 선택된 상품의 인덱스+1이 selected에 들어감
-        if(!this.selected.includes(newValue)){ //해당값이 배열에 없으면 넣어줌
-          this.selected[checkboxValue-1] = newValue;
+    IsSelected(checkboxValue, newValue) {
+      if (newValue !== null) {
+        //넘어온 값이 null이 아니라면 선택된 상품의 인덱스+1이 selected에 들어감
+        if (!this.selected.includes(newValue)) {
+          //해당값이 배열에 없으면 넣어줌
+          this.selected[checkboxValue - 1] = newValue;
+          for (let i = 0; i < this.selected.length; i++) {
+            let pprice = this.infos[this.selected[i] - 1].pprice;
+            this.totalSum += pprice;
+          }
         }
-      }else{//null이라면 해당 값을 삭제 해줘야함  
-        this.selected.splice(checkboxValue-1, 1);
+      } else {
+        //null이라면 해당 값을 삭제 해줘야함
+        this.selected.splice(checkboxValue - 1, 1);
+        for (let i = 0; i < this.selected.length; i++) {
+          let pprice = this.infos[this.selected[i] - 1].pprice;
+          this.totalSum -= pprice;
+        }
       }
       console.log(this.selected);
     },
     /////테스트용테스트용테스트용
-    testGetColors(products){
-      for(var i of products){
-        apiProduct.getProduct(i.pid)
-        .then((res)=>{
+    testGetColors(products) {
+      for (var i of products) {
+        apiProduct.getProduct(i.pid).then((res) => {
           this.colors.push(res.data.colors);
-          console.log('########', this.colors);
-        })
+          console.log("########", this.colors);
+        });
       }
     },
     checkIsWish(pid) {
@@ -136,11 +161,11 @@ export default {
       this.$store.commit("product/setUserWishList", wishlist.data);
     },
     //일괄 삭제
-    CartSelectedDelete(){
+    CartSelectedDelete() {
       console.log(this.products, this.selected);
-      for(let i=0; i<this.selected.length; i++){
+      for (let i = 0; i < this.selected.length; i++) {
         // console.log(this.products[this.selected[i]-1]); //삭제해야 할 상품
-        var item = this.products[this.selected[i]-1];
+        var item = this.products[this.selected[i] - 1];
         // console.log(item.pid, item.pcolor, item.psize);
         this.CartitemDelete(item.pid, item.pcolor, item.psize);
       }
@@ -182,7 +207,7 @@ export default {
     this.$store.commit("setOnProduct", 0);
 
     this.getCart();
-    console.log('selected:', this.selected);
+    console.log("selected:", this.selected);
   },
 };
 </script>
