@@ -13,26 +13,88 @@
       </div>
     </div>
     <!--반복되는 부분-->
-    <div v-for="(product, i) of products" :key="product.pid">
-      <div v-for="info of infos" :key="info.pid">
+    <div v-for="(product, i) of products" :key="i">
+      <div v-for="(info, j) of infos" :key="info.pid">
         <template v-if="product.pid === info.pid">
-          <cart-item
-            :pid="info.pid"
-            :bname="info.bname"
-            :cimage1="info.cimage1"
-            :pcolor="product.pcolor"
-            :pname="info.pname"
-            :pprice="info.pprice"
-            :pamount="product.pamount"
-            :psize="product.psize"
-            :checkboxValue="i + 1"
-            :isWish="checkIsWish(info.pid)"
-            :pcolorList="colors[i]"
-            @cartItemHandleWish="WishCreateDelete"
-            @cartItemHandleDelete="CartitemDelete"
-            @updateSelected="IsSelected"
-          >
-          </cart-item>
+          <div>
+            <v-divider></v-divider>
+            <div class="white d-flex ma-0 pa-0 mb-2 mt-5">
+              <v-row class="ma-0">
+                <v-col cols="1">
+                  <v-checkbox color="black" v-model="selected" :value="i"></v-checkbox>
+                </v-col>
+                <v-col cols="3" class="pa-0 pl-3">
+                  <div style="width: 80px">
+                    <v-img :src="images[j]" contain />
+                  </div>
+                </v-col>
+                <v-col class="ml-2">
+                  <v-row>
+                    <v-col
+                      cols="10"
+                      class="pa-0 font-weight-black text-truncate"
+                      style="font-size: 15px"
+                      >{{ info.bname }}
+                    </v-col>
+                    <v-col cols="2" class="pa-0 pr-1"
+                      ><v-icon @click="handleDelete(product.pid, product.pcolor, product.psize)"
+                        >mdi-close</v-icon
+                      ></v-col
+                    >
+                    <v-col cols="12" class="pa-0 text-truncate" style="font-size: 15px">
+                      {{ info.pname }}
+                    </v-col>
+                    <v-col cols="12" class="pa-0" style="font-size: 14px; color: grey"
+                      >옵션 : {{ product.pcolor }}_{{ product.psize }}</v-col
+                    >
+                    <v-col cols="12" class="pa-0" style="font-size: 14px; color: grey"
+                      >수량 : {{ product.pamount }} 개</v-col
+                    >
+                    <v-col cols="12" class="font-weight-black ma-0 pt-2"
+                      >{{ (info.pprice * product.pamount).toLocaleString() }} 원</v-col
+                    >
+                  </v-row>
+                </v-col>
+
+                <v-layout class="justify-center">
+                  <v-card-actions class="mb-3 mt-3 pt-0">
+                    <v-btn dark class="mr-3" outlined color="black" @click="show = !show">
+                      옵션/수량
+                      <v-icon>{{ show ? "mdi-chevron-up" : "mdi-chevron-down" }}</v-icon>
+                    </v-btn>
+                    <v-btn dark to="/order/order" outlined color="black">바로 구매</v-btn>
+                  </v-card-actions>
+                </v-layout>
+              </v-row>
+            </div>
+            <v-expand-transition>
+              <div v-show="show">
+                <div style="border: 1px solid" class="ml-1 mr-1 mb-3">
+                  <div class="ma-6">
+                    <v-select
+                      :items="colors[j]"
+                      v-model="selectedColor"
+                      label="COLOR 선택"
+                      dense
+                      solo
+                      outlined
+                    ></v-select>
+                    <v-select
+                      :items="sizes[j][selectedColor]"
+                      label="SIZE 선택"
+                      dense
+                      solo
+                      outlined
+                    ></v-select>
+                    <div class="justify-center">
+                      <v-btn>취소</v-btn>
+                      <v-btn>변경사항 저장</v-btn>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </v-expand-transition>
+          </div>
         </template>
       </div>
     </div>
@@ -57,22 +119,26 @@
 <script>
 import apiMember from "@/apis/member";
 import apiProduct from "@/apis/product";
-import CartItem from "./CartItem.vue";
 
 export default {
   //component의 대표 이름(devTools에 나오는 이름)
   name: "Cart",
   //추가하고 싶은 컴포넌트를 등록
-  components: { CartItem },
+  components: {},
   //컴포넌트 데이터 정의
   data() {
     return {
+      state: false,
+      show: false,
       products: null,
       infos: [],
       count: 0,
       selected: [],
       colors: [],
+      sizes: [],
+      images: [],
       totalSum: 0,
+      selectedColor: "none",
     };
   },
   //컴포넌트 메서드터 정의
@@ -84,59 +150,45 @@ export default {
         .then((response) => {
           this.products = response.data;
           this.getProductInfo(this.products);
-          this.testGetColors(this.products);
           this.count = this.products.length;
-          // console.log("###장바구니item개수:", this.count);
-          console.log('mycart :: ',this.products);
+          console.log("###장바구니item개수:", this.count);
+          console.log("mycart :: ", this.products);
         })
         .catch((error) => {
           console.log(error);
         });
     },
     getProductInfo(products) {
-      var i;
-      for (i of products) {
+      for (let i of products) {
         apiProduct
-          .getProductInfo(i.pid, i.pcolor)
+          .getProduct(i.pid)
           .then((res) => {
-            console.log(res.data);
+            console.log("product :: ", res.data);
             this.infos.push(res.data);
+
+            const colorArray = [];
+            const sizesObject = {};
+            sizesObject['none'] = ['색상을 먼저 선택해주세요.']
+
+            for (let color of res.data.colors) {
+              if (color.ccolorcode === i.pcolor) {
+                this.images.push(color.cimage1);
+              }
+              sizesObject[color.ccolorcode] = [];
+              for (let stock of color.stocks) {
+                sizesObject[color.ccolorcode].push(stock.ssize);
+              }
+              colorArray.push(color.ccolorcode);
+            }
+            this.colors.push(colorArray);
+            this.sizes.push(sizesObject);
           })
           .catch((error) => {
             console.log(error);
           });
       }
-    },
-    //카트아이템 컴포넌트의 셀렉트의 상태가 바뀔 때마다 실행되는 함수
-    IsSelected(checkboxValue, newValue) {
-      if (newValue !== null) {
-        //넘어온 값이 null이 아니라면 선택된 상품의 인덱스+1이 selected에 들어감
-        if (!this.selected.includes(newValue)) {
-          //해당값이 배열에 없으면 넣어줌
-          this.selected[checkboxValue - 1] = newValue;
-          for (let i = 0; i < this.selected.length; i++) {
-            let pprice = this.infos[this.selected[i] - 1].pprice;
-            this.totalSum += pprice;
-          }
-        }
-      } else {
-        //null이라면 해당 값을 삭제 해줘야함
-        this.selected.splice(checkboxValue - 1, 1);
-        for (let i = 0; i < this.selected.length; i++) {
-          let pprice = this.infos[this.selected[i] - 1].pprice;
-          this.totalSum -= pprice;
-        }
-      }
-      console.log(this.selected);
-    },
-    /////테스트용테스트용테스트용
-    testGetColors(products) {
-      for (var i of products) {
-        apiProduct.getProduct(i.pid).then((res) => {
-          this.colors.push(res.data.colors);
-          console.log("########", this.colors);
-        });
-      }
+      
+            console.log(this.sizes);
     },
     checkIsWish(pid) {
       const wishlist = this.$store.getters["product/getUserWishList"];
@@ -182,20 +234,20 @@ export default {
           console.log(error);
         });
     },
-    computed: {
-      selectedAll: {
-        set(val) {
-          // this.selected = [];
-          // if (val) {
-          //   for (let i = 0; i < this.count; i++) {
-          //     this.selected.push(i);
-          //   }
-          // }
-          console.log(val, this.selected);
-        },
-        get() {
-          return this.selected.length === this.count;
-        },
+  },
+  computed: {
+    selectedAll: {
+      set(val) {
+        this.selected = [];
+        if (val) {
+          for (let i = 0; i <= this.count; i++) {
+            this.selected.push(i);
+          }
+        }
+        console.log(val, this.selected);
+      },
+      get() {
+        return this.selected.length === this.count;
       },
     },
   },
