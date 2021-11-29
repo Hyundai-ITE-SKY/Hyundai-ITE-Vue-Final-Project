@@ -32,6 +32,19 @@
         ✔ 구매 취소 시 잔여 결제금액이 조건 금액 미만인 경우 &ensp;&ensp;혜택이 취소됩니다.<br />
       </v-card-text>
     </v-card>
+    <v-snackbar v-model="snackbar">
+      {{ snackbarText }}
+      <template v-slot:action="{ attrs }">
+        <v-btn color="pink" text v-bind="attrs" @click="snackbar = false"> Close </v-btn>
+      </template>
+    </v-snackbar>
+
+    <v-snackbar v-model="snackbarLogin">
+      {{ snackbarText }}
+      <template v-slot:action="{ attrs }">
+        <v-btn color="pink" text v-bind="attrs" @click="toLogin"> Close </v-btn>
+      </template>
+    </v-snackbar>
   </div>
 </template>
 <script>
@@ -47,6 +60,9 @@ export default {
   data() {
     return {
       event: [],
+      snackbar: false,
+      snackbarText: "",
+      snackbarLogin: false,
     };
   },
   //컴포넌트 메서드터 정의
@@ -64,18 +80,35 @@ export default {
         });
     },
     async createCoupon() {
-      //로그인 되어있지 않을 경우 로그인 페이지로 이동
+      //로그인 되어있지 않을 경우
+      if (this.$store.getters["login/getUserId"] === "") {
+        this.snackbarText = "로그인이 필요합니다.";
+        this.snackbarLogin = true;
+        return;
+      }
 
-      await apiMember.createCoupon(this.event.eid, this.event.ename, "쿠폰 이름")
-        .then((response)=>{
-          console.log(response.data);
-          //쿠폰 발급 성공했을 경우 (response.data===0)
-
-          //인원 초과인 경우 (response.data===1)
-
-        }).catch((error)=>{          
+      await apiMember
+        .createCoupon(this.event.eid, this.event.ename, "쿠폰 이름")
+        .then((response) => {
+          if (response.data === 1) {
+            //2. 쿠폰 발급 성공
+            this.snackbarText = "쿠폰 발급 성공";
+            this.snackbar = true;
+          } else if (response.data === 0) {
+            //1. 인원 초과로 쿠폰 발급 실패
+            this.snackbarText = "제한 인원을 초과하였습니다.";
+            this.snackbar = true;
+          }
+        })
+        .catch((error) => {
+          //2. 두번째 발급인 경우
+          this.snackbarText = "이미 쿠폰을 발급받으셨습니다.";
+          this.snackbar = true;
           console.log(error);
         });
+    },
+    toLogin(){
+      this.$router.push("/login");
     }
   },
   created() {
