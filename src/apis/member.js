@@ -35,6 +35,11 @@ function createCoupon(eid, ename, cname){
   return promise;
 }
 
+function deleteCartitem(pid, pcolor, psize){
+  const promise = axios.delete(`http://localhost:8081/member/${pid}/${pcolor}_${psize}`);
+  return promise;
+}
+
 export default{
   getMember,
   getWishList,
@@ -43,4 +48,5 @@ export default{
   createWishList,
   deleteWishList,
   createCoupon,
+  deleteCartitem
 }
