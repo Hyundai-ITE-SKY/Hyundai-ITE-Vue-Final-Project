@@ -110,12 +110,13 @@ export default {
     },
   },
   created() {
-    let pageNo = this.$route.query.pageNo;
+    let pageNo = this.$route.query.pageno;
     let large = this.$route.query.large;
     let medium = this.$route.query.medium;
     let small = this.$route.query.small;
 
     this.$store.commit("product/setCategory", [large, medium, small]);
+    this.pageNo = parseInt(pageNo);
 
     apiProduct
       .getProductList(large, medium, small, pageNo)

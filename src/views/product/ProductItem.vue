@@ -34,7 +34,7 @@
       <div class="mb-1 text-truncate" style="font-size: 0.875rem; color: #333333">{{ pname }}</div>
       <div class="align-center" style="display: flex">
         <div class="text-truncate" style="font-size: 1rem; font-weight: bolder">
-          {{ ((pprice * (100 - sales)) / 100).toLocaleString() }}원
+          {{ ((pprice * (100 - $store.state.product.gradeSale)) / 100).toLocaleString() }}원
         </div>
         <div
           class="text-decoration-line-through ml-auto text--disabled text-truncate"
@@ -43,7 +43,7 @@
           {{ pprice.toLocaleString() }}원
         </div>
         <div class="ml-auto" style="font-size: 1.1rem; font-weight: bolder; color: #eb7c4c">
-          {{ sales }}%
+          {{ $store.state.product.gradeSale }}%
         </div>
       </div>
     </div>
@@ -58,20 +58,18 @@ export default {
   components: {},
   // 컴포넌트 데이터 정의
   data: function () {
-    return { state: false, colorIndex: 0, sales: 15 };
+    return { state: false, colorIndex: 0 };
   },
   // 컴포넌트 메소드 정의
   methods: {
     moveProductDetail() {
-      this.$router
-        .push(`/product/detail?pid=${this.pid}`)
-        .catch(() => {});
+      this.$router.push(`/product/detail?pid=${this.pid}`).catch(() => {});
     },
-    handleWish(pid){
+    handleWish(pid) {
       this.state = !this.state;
       //좋아요 클릭 시 productItemHandleWish이벤트 발생( 자식 -> 부모 )
       this.$emit("productItemHandleWish", this.state, pid);
-    }
+    },
   },
   props: {
     bname: String,

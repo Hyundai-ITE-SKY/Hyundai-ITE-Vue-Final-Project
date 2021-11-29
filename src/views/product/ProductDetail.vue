@@ -9,16 +9,15 @@
       </v-carousel>
     </div>
     <div style="display: flex" class="justify-center align-center">
-      <div
-        v-for="(color, i) in productInfo.colors"
-        :key="color.ccolorcode"
-        class="ml-1 mr-1 mt-2 mb-2"
-      >
+      <div v-for="(color, i) in productInfo.colors" :key="color.ccolorcode" class="ml-1 mr-1 mt-2">
         <v-img :src="color.ccolorimage" width="18px" height="18px" @click="colorIdx = i"></v-img>
+        <div class="text-center" style="font-size: 0.7rem; font-weight: bolder">
+          {{ color.ccolorcode }}
+        </div>
       </div>
     </div>
     <div>
-      <div class="mt-3 ml-3 mr-3 align-center" style="display: flex">
+      <div class="mt-2 ml-3 mr-3 align-center" style="display: flex">
         <div class="text-truncate" style="font-size: 1rem; font-weight: bolder">
           {{ productInfo.bname }}
         </div>
@@ -38,7 +37,9 @@
           {{ productInfo.pprice.toLocaleString() }}원
         </div>
         <div class="text-truncate ml-3" style="font-size: 1rem; font-weight: bolder">
-          {{ ((productInfo.pprice * (100 - sales)) / 100).toLocaleString() }}원
+          {{
+            ((productInfo.pprice * (100 - $store.state.product.gradeSale)) / 100).toLocaleString()
+          }}원
         </div>
       </div>
       <div
@@ -51,10 +52,12 @@
       <div class="ml-3 mr-3 align-center" style="display: flex">
         <div style="font-size: 0.875rem">회원등급 혜택가</div>
         <div class="ml-3 text--disabled" style="font-size: 0.7rem; font-weight: bolder">
-          현재 {{ sales }}% 할인 적용 중
+          현재 {{ $store.state.product.gradeSale }}% 할인 적용 중
         </div>
         <div class="ml-auto text-truncate" style="font-size: 1rem; font-weight: bolder">
-          {{ ((productInfo.pprice * (100 - sales)) / 100).toLocaleString() }}원
+          {{
+            ((productInfo.pprice * (100 - $store.state.product.gradeSale)) / 100).toLocaleString()
+          }}원
         </div>
       </div>
       <v-divider class="mt-3 mb-3"></v-divider>
@@ -67,7 +70,11 @@
           class="ml-auto text-truncate"
           style="font-size: 0.875rem; font-weight: bolder; color: #252525"
         >
-          {{ Math.floor((productInfo.pprice * (100 - sales)) / 10000).toLocaleString() }}p
+          {{
+            Math.floor(
+              (productInfo.pprice * (100 - $store.state.product.gradeSale)) / 10000,
+            ).toLocaleString()
+          }}p
         </div>
       </div>
       <v-divider class="mt-3 mb-4"></v-divider>
@@ -106,7 +113,6 @@ export default {
   data: () => ({
     colorIdx: 0,
     state: false,
-    sales: 15,
     productInfo: {
       pid: "PL2B7WSC004W",
       bname: "3.1 Phillip Lim",
@@ -188,10 +194,7 @@ export default {
     checkIsWish() {
       const wishlist = this.$store.getters["product/getUserWishList"];
       for (let wish of wishlist) {
-        console.log(wish);
-        console.log(this.productInfo.pid);
         if (this.productInfo.pid === wish.pid) {
-          console.log("checkWish");
           this.state = true;
         }
       }
@@ -210,21 +213,33 @@ export default {
   },
   created() {
     this.$store.commit("gnb/setCurrentPage", "productdetail");
-
     let pid = this.$route.query.pid;
-
     apiProduct
       .getProduct(pid)
       .then((response) => {
         this.productInfo = response.data;
-        //제품이 wishlist에 담겨있을 경우 state=true
+        this.$store.commit("product/setSelectedProduct", this.productInfo);
+
+        const colorArray = [];
+        const sizeObject = {};
+
+        for (let color of this.productInfo.colors) {
+          colorArray.push(color.ccolorcode);
+          const sizeArray = [];
+          for (let stock of color.stocks) {
+            sizeArray.push(stock.ssize);
+          }
+          sizeObject[color.ccolorcode] = sizeArray;
+        }
+
+        this.$store.commit("product/setColorList", colorArray);
+        this.$store.commit("product/setSizeList", sizeObject);
         this.checkIsWish();
       })
       .catch((error) => {
         console.log(error);
       });
   },
-  
 };
 </script>
 <!--scoped : 지역변수, 없으면 전역 style이 된다. 붙이는게 좋다
