@@ -20,14 +20,14 @@
         <v-list-item>
           <v-row no-gutters>
             <v-col cols="6">
-              <v-card outlined>
-                <v-card-title>포인트</v-card-title>
+              <v-card rounded="0" outlined>
+                <v-card-title class="text-subtitle-1">포인트</v-card-title>
                 <v-card-subtitle>{{ (member.mpoint).toLocaleString('ko-KR', 4) }}P</v-card-subtitle>
               </v-card>
             </v-col>
             <v-col cols="6">
-              <v-card outlined>
-                <v-card-title>쿠폰</v-card-title>
+              <v-card rounded="0" outlined>
+                <v-card-title class="text-subtitle-1">쿠폰</v-card-title>
                 <v-card-subtitle>{{ coupon.length }} 개</v-card-subtitle>
               </v-card>
             </v-col>
@@ -68,15 +68,15 @@
             <v-list-item-subtitle>
               <v-row no-gutters>
                 <v-col cols="6">
-                  <v-card outlined to="/member/qna">
-                    <v-card-title class="justify-center"
-                      ><v-icon>mdi-help-circle-outline</v-icon></v-card-title
-                    >
+                  <v-card rounded="0" outlined to="/member/qna">
+                    <v-card-title class="justify-center">
+                      <v-icon>mdi-help-circle-outline</v-icon>
+                    </v-card-title>
                     <v-card-subtitle class="text-center">Q&A</v-card-subtitle>
                   </v-card>
                 </v-col>
                 <v-col cols="6">
-                  <v-card outlined>
+                  <v-card rounded="0" outlined>
                     <v-card-title class="justify-center">
                       <v-icon>mdi-account-edit-outline</v-icon>
                     </v-card-title>
@@ -84,7 +84,7 @@
                   </v-card>
                 </v-col>
                 <v-col cols="6">
-                  <v-card outlined to="/member/wishlist">
+                  <v-card rounded="0" outlined to="/member/wishlist">
                     <v-card-title class="justify-center"
                       ><v-icon>mdi-heart-outline</v-icon></v-card-title
                     >
@@ -92,10 +92,8 @@
                   </v-card>
                 </v-col>
                 <v-col cols="6">
-                  <v-card outlined>
-                    <v-card-title class="justify-center"
-                      ><v-icon>mdi-archive-cancel-outline</v-icon></v-card-title
-                    >
+                  <v-card rounded="0" outlined>
+                    <v-card-title class="justify-center"><v-icon>mdi-archive-cancel-outline</v-icon></v-card-title>
                     <v-card-subtitle class="text-center">취소/반품</v-card-subtitle>
                   </v-card>
                 </v-col>
@@ -113,6 +111,7 @@
 
 <script>
 import member from "@/apis/member"
+import apiOrder from "@/apis/order"
 
 export default {
   //컴포넌트의 대표 이름(devtools에 나오는 이름)
@@ -132,12 +131,13 @@ export default {
         cid: "cid",
       },
       orders: [
-        { status: "전체", value: 13 },
-        { status: "결제", value: 1 },
+        { status: "전체", value: 0 },
+        { status: "결제", value: 0 },
         { status: "배송", value: 0 },
         { status: "배송완료", value: 0 },
-        { status: "구매확정", value: 12 },
+        { status: "구매확정", value: 0 },
       ],
+      orderState: [],
     };
   },
   //컴포넌트 메서드 정의
@@ -154,7 +154,6 @@ export default {
       }catch(err){
         console.log(err);
       }
-
     },
     //쿠폰 정보 획득
     getCoupon(){
@@ -165,6 +164,20 @@ export default {
         .catch((error)=>{
           console.log(error);
         });
+    },
+    //주문 정보 획득
+    async getOrderState(){
+      await apiOrder.getOrderState(this.$store.getters["login/getUserId"])
+                .then((response)=>{
+                  this.orderState = response.data;
+
+                  for(let item of this.orderState){
+                    this.orders[item.ostatus].value = item.count;
+                  }
+                })
+                .catch((error)=>{
+                  console.log(error);
+                });
     }
   },
   created() {
@@ -175,6 +188,7 @@ export default {
     this.$store.commit("gnb/setCurrentPage", "mypage");
     this.getMember();
     this.getCoupon();
+    this.getOrderState();
   },
   mounted(){
     

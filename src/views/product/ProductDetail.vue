@@ -224,6 +224,7 @@ export default {
         console.log(error);
       });
   },
+  
 };
 </script>
 <!--scoped : 지역변수, 없으면 전역 style이 된다. 붙이는게 좋다

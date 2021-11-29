@@ -3,7 +3,8 @@
   <div>
     <v-img
       lazy-src="@/assets/images/event/eventloader.jpg"
-      src="@/assets/images/event/event1.jpg"
+      v-bind:src="require(`@/assets/images/event/${imgUrl}`)"
+      @click="eventClick(`${eid}`)"
       :aspect-ratio="78 / 100"
     >
       <template v-slot:placeholder>
@@ -26,7 +27,15 @@ export default {
     return {};
   },
   // 컴포넌트 메소드 정의
-  methods: {},
+  methods: {
+    eventClick(eid) {
+      this.$router.push(`/event/eventdetail?eid=${eid}`);
+    },
+  },
+  props: {
+    imgUrl: String,
+    eid: Number,
+  },
 };
 </script>
 
