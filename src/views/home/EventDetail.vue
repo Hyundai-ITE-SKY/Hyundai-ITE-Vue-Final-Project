@@ -18,7 +18,7 @@
             {{ event.edetail }}
           </v-col>
           <v-col cols="12" class="mt-2">
-            <v-btn dark width="100%">쿠폰 발급</v-btn>
+            <v-btn dark width="100%" @click="createCoupon">쿠폰 발급</v-btn>
           </v-col>
         </v-row>
       </v-card-text>
@@ -36,6 +36,7 @@
 </template>
 <script>
 import apiEvent from "@/apis/event";
+import apiMember from "@/apis/member";
 
 export default {
   //component의 대표 이름(devTools에 나오는 이름)
@@ -61,6 +62,20 @@ export default {
           console.log(error);
         });
     },
+    async createCoupon() {
+      //로그인 되어있지 않을 경우 로그인 페이지로 이동
+
+      await apiMember.createCoupon(this.event.eid, this.event.ename, "쿠폰 이름")
+        .then((response)=>{
+          console.log(response.data);
+          //쿠폰 발급 성공했을 경우 (response.data===0)
+
+          //인원 초과인 경우 (response.data===1)
+
+        }).catch((error)=>{          
+          console.log(error);
+        });
+    }
   },
   created() {
     this.getEventDetail();

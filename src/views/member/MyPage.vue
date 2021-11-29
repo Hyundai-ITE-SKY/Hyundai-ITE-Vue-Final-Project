@@ -170,18 +170,14 @@ export default {
       await apiOrder.getOrderState(this.$store.getters["login/getUserId"])
                 .then((response)=>{
                   this.orderState = response.data;
-                  console.log(this.orderState);
 
                   for(let item of this.orderState){
-                    console.log(item.ostatus);
-                    console.log(item.count);
                     this.orders[item.ostatus].value = item.count;
                   }
                 })
                 .catch((error)=>{
                   console.log(error);
                 });
-
     }
   },
   created() {

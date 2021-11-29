@@ -30,6 +30,10 @@ function deleteWishList(pid){
   return promise;
 }
 
+function createCoupon(eid, ename, cname){
+  const promise = axios.post("http://kosa1.iptime.org:50207/member/createcoupon", `eid=${eid}&ename=${ename}&cname=${cname}`);
+  return promise;
+}
 
 export default{
   getMember,
@@ -38,4 +42,5 @@ export default{
   getCart,
   createWishList,
   deleteWishList,
+  createCoupon,
 }

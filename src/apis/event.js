@@ -5,6 +5,7 @@ function getEvent(eid){
   return promise;
 }
 
+
 export default{
   getEvent,
 }
