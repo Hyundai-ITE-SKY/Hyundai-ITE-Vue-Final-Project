@@ -114,7 +114,7 @@
       <router-view></router-view>
     </div>
 
-    <v-bottom-navigation app color="black">
+    <v-bottom-navigation app color="black" class="bottom-nav">
       <v-btn
         v-show="
           $store.state.gnb.currentPage !== 'productdetail' &&
@@ -160,24 +160,12 @@
         <v-icon style="margin: 0px; padding: 0px">mdi-account-outline</v-icon>
       </v-btn>
 
-      <v-btn
-        v-show="$store.state.gnb.currentPage === 'productdetailbuy'"
-        @click="movePage('order')"
-        plain
-      >
-        <span>구매하기</span>
-        <v-icon>mdi-shopping-outline</v-icon>
-      </v-btn>
-      <v-btn
-        v-show="$store.state.gnb.currentPage === 'productdetailbuy'"
-        @click="movePage('cart')"
-        plain
-      >
-        <span>장바구니</span>
-        <v-icon>mdi-cart-outline</v-icon>
+      <v-btn v-show="$store.state.gnb.currentPage === 'productdetail'" plain @click="moveBack">
+        <span>뒤로 가기</span>
+        <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
 
-      <v-bottom-sheet v-model="bottomsheet" inset>
+      <v-bottom-sheet v-model="bottomsheet">
         <template v-slot:activator="{ on, attrs }">
           <v-btn
             v-show="$store.state.gnb.currentPage === 'productdetail'"
@@ -189,9 +177,71 @@
             <v-icon>mdi-hanger</v-icon>
           </v-btn>
         </template>
-        <v-sheet class="text-center" height="200px">
-          <v-btn class="mt-6" text color="error" @click="bottomsheet = !bottomsheet"> close </v-btn>
-          <div class="my-3">This is a bottom sheet using the inset prop</div>
+        <v-sheet width="100vw" color="#FEFEFE">
+          <div class="pa-6">
+            <div class="text-truncate" style="font-size: 1rem; font-weight: bolder">
+              {{ $store.state.product.selectedProduct.bname }}
+            </div>
+            <div
+              class="mt-1 mb-3 text-truncate"
+              style="font-size: 0.875rem; font-weight: bolder; color: #6b6b6b"
+            >
+              {{ $store.state.product.selectedProduct.pname }}
+            </div>
+            <div style="display: flex">
+              <v-select
+                class="mr-6"
+                :items="$store.state.product.colorList"
+                v-model="selectedColor"
+                label="색상"
+                style="font-size: 0.875rem; font-weight: bolder"
+              ></v-select>
+              <v-select
+                class="mr-6"
+                :disabled="selectedColor === 'none'"
+                :items="$store.state.product.sizeList[selectedColor]"
+                v-model="selectedSize"
+                label="사이즈"
+                style="font-size: 0.875rem; font-weight: bolder"
+              ></v-select>
+              <v-text-field
+                label="개수"
+                :disabled="selectedColor === 'none' || selectedSize === 'none'"
+                v-model="inputAmount"
+                style="font-size: 0.875rem; font-weight: bolder"
+                clearable
+              ></v-text-field>
+            </div>
+            <div class="text-right mt-2" style="font-size: 0.875rem">
+              총 상품 금액
+              <span style="font-size: 1rem; font-weight: bolder">{{
+                (
+                  inputAmount *
+                  Math.floor(
+                    ($store.state.product.selectedProduct.pprice *
+                      (100 - $store.state.product.gradeSale)) /
+                      100,
+                  )
+                ).toLocaleString()
+              }}</span
+              >원
+            </div>
+          </div>
+          <v-btn
+            color="#CCCCCC"
+            tile
+            @click="bottomsheet = !bottomsheet"
+            width="30vw"
+            height="48px"
+          >
+            <v-icon class="mr-1">mdi-close</v-icon><span>CANCEL</span>
+          </v-btn>
+          <v-btn color="#333333" dark tile @click="movePage('order')" width="35vw" height="48px">
+            <v-icon class="mr-1">mdi-shopping-outline</v-icon><span>BUY NOW</span>
+          </v-btn>
+          <v-btn color="#1A1A1A" dark tile @click="movePage('cart')" width="35vw" height="48px">
+            <v-icon class="mr-1">mdi-cart-outline</v-icon><span>CART</span>
+          </v-btn>
         </v-sheet>
       </v-bottom-sheet>
 
@@ -214,6 +264,9 @@ export default {
     drawer: false,
     bottomsheet: false,
     categoryState: 0,
+    selectedColor: "none",
+    selectedSize: "none",
+    inputAmount: 1,
     category: [
       {
         clarge: "WOMEN",
@@ -361,6 +414,7 @@ export default {
       }
     },
     movePage(page) {
+      this.bottomsheet = false;
       if (page === "main") {
         this.$router.push("/home/main").catch(() => {});
       } else if (page === "wishlist") {
@@ -376,6 +430,9 @@ export default {
       } else if (page === "ordersuccess") {
         this.$router.push("/order/success").catch(() => {});
       }
+    },
+    moveBack() {
+      this.$router.go(-1);
     },
     moveProductList(large, medium, small) {
       large = large === "전체보기" ? "none" : large;
@@ -401,6 +458,9 @@ export default {
       } else {
         this.$store.commit("gnb/setCurrentPage", "productdetailbuy");
       }
+    },
+    selectedColor: function () {
+      this.selectedSize = "none";
     },
   },
 };
