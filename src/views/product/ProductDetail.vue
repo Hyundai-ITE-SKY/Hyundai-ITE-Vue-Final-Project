@@ -151,33 +151,31 @@ export default {
   //컴포넌트 메서드 정의
   methods: {
     /* wishlist의 상품인 경우 state=true */
-    checkIsWish(){
+    checkIsWish() {
       const wishlist = this.$store.getters["product/getUserWishList"];
-      for(let wish of wishlist){
+      for (let wish of wishlist) {
         console.log(wish);
         console.log(this.productInfo.pid);
-        if(this.productInfo.pid===wish.pid){
+        if (this.productInfo.pid === wish.pid) {
           console.log("checkWish");
-          this.state=true;
+          this.state = true;
         }
       }
     },
-    async WishCreateDelete(){
+    async WishCreateDelete() {
       this.state = !this.state;
-      if(!this.state){
+      if (!this.state) {
         await apiMember.deleteWishList(this.productInfo.pid);
-      }else{
+      } else {
         await apiMember.createWishList(this.productInfo.pid);
       }
 
       const wishlist = await apiMember.getWishList();
       this.$store.commit("product/setUserWishList", wishlist.data);
-
-    }
+    },
   },
   created() {
-    this.$store.commit("setOnTabs", false);
-    this.$store.commit("setOnProduct", 1);
+    this.$store.commit("gnb/setCurrentPage", "productdetail");
 
     let pid = this.$route.query.pid;
 
@@ -191,7 +189,6 @@ export default {
       .catch((error) => {
         console.log(error);
       });
-    
   },
   
 };

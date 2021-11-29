@@ -13,7 +13,7 @@
       </div>
     </div>
     <!--반복되는 부분-->
-    <div v-for="(product,i) in products" :key="product.pid">
+    <div v-for="(product, i) in products" :key="product.pid">
       <div v-for="info in infos" :key="info.pid">
         <template v-if="product.pid === info.pid">
           <cart-item
@@ -49,7 +49,7 @@ export default {
       products: null,
       infos: [],
       count: 0,
-      selected : []
+      selected: [],
     };
   },
   //컴포넌트 메서드터 정의
@@ -62,7 +62,6 @@ export default {
           this.products = response.data;
           this.getProductInfo(this.products);
           this.count = this.products.length;
-          console.log(this.count);
         })
         .catch((error) => {
           console.log(error);
@@ -102,9 +101,8 @@ export default {
     if (this.$store.getters["login/getUserId"] === "") {
       this.$router.push("/login");
     }
-    this.$store.commit("setOnTabs", false);
-    this.$store.commit("setOnProduct", 0);
 
+    this.$store.commit("gnb/setCurrentPage", "cart");
     this.getCart();
   },
 };
