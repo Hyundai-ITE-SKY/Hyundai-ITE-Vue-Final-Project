@@ -13,10 +13,11 @@
       </div>
     </div>
     <!--반복되는 부분-->
-    <div v-for="(product,i) in products" :key="product.pid">
-      <div v-for="info in infos" :key="info.pid">
+    <div v-for="(product, i) of products" :key="product.pid">
+      <div v-for="info of infos" :key="info.pid">
         <template v-if="product.pid === info.pid">
           <cart-item
+            :pid="info.pid"
             :bname="info.bname"
             :cimage1="info.cimage1"
             :pcolor="product.pcolor"
@@ -24,18 +25,23 @@
             :pprice="info.pprice"
             :pamount="product.pamount"
             :psize="product.psize"
-            :selected="false"
-            :checkboxValue="i.toString()"
+            :checkboxValue="i+1"
+            :isWish="checkIsWish(info.pid)"
+            :pcolorList="colors[i]"
+            @cartItemHandleWish="WishCreateDelete"
+            @cartItemHandleDelete="CartitemDelete"
+            @updateSelected="IsSelected"
           >
           </cart-item>
         </template>
       </div>
     </div>
+    <!--반복 끝-->
   </div>
 </template>
 <script>
-import member from "@/apis/member";
-import product from "@/apis/product";
+import apiMember from "@/apis/member";
+import apiProduct from "@/apis/product";
 import CartItem from "./CartItem.vue";
 
 export default {
@@ -49,20 +55,24 @@ export default {
       products: null,
       infos: [],
       count: 0,
-      selected : []
+      selected: [],
+      colors:[],
+      selectedIndex:[]
     };
   },
   //컴포넌트 메서드터 정의
   methods: {
     getCart() {
       var mid = this.$store.state.login.userId;
-      member
+      apiMember
         .getCart(mid)
         .then((response) => {
           this.products = response.data;
           this.getProductInfo(this.products);
+          this.testGetColors(this.products);
           this.count = this.products.length;
-          console.log(this.count);
+          console.log('###장바구니item개수:', this.count);
+          console.log(this.products);
         })
         .catch((error) => {
           console.log(error);
@@ -71,7 +81,7 @@ export default {
     getProductInfo(products) {
       var i;
       for (i of products) {
-        product
+        apiProduct
           .getProductInfo(i.pid, i.pcolor)
           .then((res) => {
             // console.log(res.data);
@@ -82,19 +92,74 @@ export default {
           });
       }
     },
-  },
-  computed: {
-    selectedAll: {
-      set(val) {
-        this.selected = [];
-        if (val) {
-          for (let i = 0; i < this.count; i++) {
-            this.selected.push(i);
-          }
+    //카트아이템 컴포넌트의 셀렉트가 바뀔 때마다 실행되는 함수
+    IsSelected(checkboxValue, newValue){
+      if(newValue!==null){ //넘어온 값이 null이 아니라면 선택된 상품의 인덱스(제일 위가 1번)가 selected에 들어감
+        if(!this.selected.includes(newValue)){
+          this.selected[checkboxValue-1] = newValue;
         }
-      },
-      get() {
-        return this.selected.length === this.count;
+      }else{//null이라면 해당 값을 삭제 해줘야함 -> 해당 값을 알 방법이 
+        this.selected.splice(checkboxValue-1, 1);
+      }
+    },
+    /////테스트용테스트용테스트용
+    testGetColors(products){
+      for(var i of products){
+        apiProduct.getProduct(i.pid)
+        .then((res)=>{
+          this.colors.push(res.data.colors);
+          console.log('########', this.colors);
+        })
+      }
+    },
+    checkIsWish(pid) {
+      const wishlist = this.$store.getters["product/getUserWishList"];
+      for (let item of wishlist) {
+        if (item.pid === pid) {
+          return true;
+        }
+      }
+      return false;
+    },
+    /* WishList에 상품 추가/삭제 */
+    async WishCreateDelete(wishState, pid) {
+      /* wishState가 false일 경우 wishList 테이블에서 제거 */
+      if (!wishState) {
+        await apiMember.deleteWishList(pid);
+      } else {
+        /* wishState가 true일 경우 wishList 테이블에 추가 */
+        await apiMember.createWishList(pid);
+      }
+      const wishlist = await apiMember.getWishList();
+      console.log(wishlist.data);
+      this.$store.commit("product/setUserWishList", wishlist.data);
+    },
+    async CartitemDelete(pid, pcolor, psize) {
+      console.log(pid, pcolor, psize);
+      await apiMember
+        .deleteCartitem(pid, pcolor, psize)
+        .then((response) => {
+          location.reload(true); // 삭제 후 강제 refresh
+          console.log(response.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    computed: {
+      selectedAll: {
+        set(val) {
+          // this.selected = [];
+          // if (val) {
+          //   for (let i = 0; i < this.count; i++) {
+          //     this.selected.push(i);
+          //   }
+          // }
+          console.log(val, this.selected);
+        },
+        get() {
+          return this.selected.length === this.count;
+        },
       },
     },
   },
@@ -106,6 +171,7 @@ export default {
     this.$store.commit("setOnProduct", 0);
 
     this.getCart();
+    console.log('selected:', this.selected);
   },
 };
 </script>

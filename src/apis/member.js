@@ -30,6 +30,11 @@ function deleteWishList(pid){
   return promise;
 }
 
+function deleteCartitem(pid, pcolor, psize){
+  const promise = axios.delete(`http://localhost:8081/member/${pid}/${pcolor}_${psize}`);
+  return promise;
+}
+
 export default{
   getMember,
   getWishList,
@@ -37,4 +42,5 @@ export default{
   getCart,
   createWishList,
   deleteWishList,
+  deleteCartitem
 }
