@@ -58,6 +58,10 @@
               <v-select :items="colorList" label="COLOR 선택" dense solo outlined></v-select>
               <v-select :items="items" label="SIZE 선택" dense solo outlined></v-select>
               <v-select :items="items" label="수량 선택" dense solo outlined></v-select>
+              <div class="justify-center">
+                <v-btn>취소</v-btn>
+                <v-btn>변경사항 저장</v-btn>
+              </div>
             </div>
           </div>
         </div>

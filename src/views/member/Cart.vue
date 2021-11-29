@@ -9,7 +9,7 @@
         </template>
       </v-checkbox>
       <div class="align-center">
-        <a class="grey--text" style="font-size: 14px">선택삭제</a>
+        <a class="grey--text" style="font-size: 14px" @click="CartSelectedDelete">선택삭제</a>
       </div>
     </div>
     <!--반복되는 부분-->
@@ -92,15 +92,16 @@ export default {
           });
       }
     },
-    //카트아이템 컴포넌트의 셀렉트가 바뀔 때마다 실행되는 함수
+    //카트아이템 컴포넌트의 셀렉트의 상태가 바뀔 때마다 실행되는 함수
     IsSelected(checkboxValue, newValue){
-      if(newValue!==null){ //넘어온 값이 null이 아니라면 선택된 상품의 인덱스(제일 위가 1번)가 selected에 들어감
-        if(!this.selected.includes(newValue)){
+      if(newValue!==null){ //넘어온 값이 null이 아니라면 선택된 상품의 인덱스+1이 selected에 들어감
+        if(!this.selected.includes(newValue)){ //해당값이 배열에 없으면 넣어줌
           this.selected[checkboxValue-1] = newValue;
         }
-      }else{//null이라면 해당 값을 삭제 해줘야함 -> 해당 값을 알 방법이 
+      }else{//null이라면 해당 값을 삭제 해줘야함  
         this.selected.splice(checkboxValue-1, 1);
       }
+      console.log(this.selected);
     },
     /////테스트용테스트용테스트용
     testGetColors(products){
@@ -133,6 +134,16 @@ export default {
       const wishlist = await apiMember.getWishList();
       console.log(wishlist.data);
       this.$store.commit("product/setUserWishList", wishlist.data);
+    },
+    //일괄 삭제
+    CartSelectedDelete(){
+      console.log(this.products, this.selected);
+      for(let i=0; i<this.selected.length; i++){
+        // console.log(this.products[this.selected[i]-1]); //삭제해야 할 상품
+        var item = this.products[this.selected[i]-1];
+        // console.log(item.pid, item.pcolor, item.psize);
+        this.CartitemDelete(item.pid, item.pcolor, item.psize);
+      }
     },
     async CartitemDelete(pid, pcolor, psize) {
       console.log(pid, pcolor, psize);
