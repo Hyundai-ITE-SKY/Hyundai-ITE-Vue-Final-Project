@@ -15,8 +15,8 @@ function getWishList(){
   return promise;
 }
 
-function getCart(mid){
-  const promise = axios.get("http://kosa1.iptime.org:50207/member/mycart", {params:{mid:mid}});
+function getCart(){
+  const promise = axios.get("http://kosa1.iptime.org:50207/member/mycart");
   return promise;
 }
 
@@ -36,7 +36,12 @@ function createCoupon(eid, ename, cname){
 }
 
 function deleteCartitem(pid, pcolor, psize){
-  const promise = axios.delete(`http://localhost:8081/member/${pid}/${pcolor}_${psize}`);
+  const promise = axios.delete(`http://kosa1.iptime.org:50207/member/${pid}/${pcolor}_${psize}`);
+  return promise;
+}
+
+function updateCartitem(formData){
+  const promise = axios.post('http://kosa1.iptime.org:50207/member/update', formData);
   return promise;
 }
 
@@ -48,5 +53,6 @@ export default{
   createWishList,
   deleteWishList,
   createCoupon,
-  deleteCartitem
+  deleteCartitem,
+  updateCartitem
 }

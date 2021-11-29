@@ -37,7 +37,7 @@
                       >{{ info.bname }}
                     </v-col>
                     <v-col cols="2" class="pa-0 pr-1"
-                      ><v-icon @click="handleDelete(product.pid, product.pcolor, product.psize)"
+                      ><v-icon @click="CartitemDelete(product.pid, product.pcolor, product.psize)"
                         >mdi-close</v-icon
                       ></v-col
                     >
@@ -81,14 +81,36 @@
                     ></v-select>
                     <v-select
                       :items="sizes[j][selectedColor]"
+                      v-model="selectedSize"
                       label="SIZE 선택"
                       dense
                       solo
                       outlined
                     ></v-select>
-                    <div class="justify-center">
-                      <v-btn>취소</v-btn>
-                      <v-btn>변경사항 저장</v-btn>
+                    <div class="mb-5 d-flex justify-space-between">
+                      <div>수량</div>
+                      <div class="d-flex">
+                        <v-btn x-small dark color="black" fab @click="countPamount('minus')">
+                          <v-icon dark> mdi-minus </v-icon>
+                        </v-btn>
+                        <div class="ml-2 mr-2" id="result">1</div>
+                        <v-btn x-small dark color="black" fab @click="countPamount('plus')">
+                          <v-icon dark> mdi-plus </v-icon>
+                        </v-btn>
+                      </div>
+                    </div>
+                    <div class="d-flex justify-center">
+                      <div class="mr-2">
+                        <v-btn @click="show = !show" outlined>취소</v-btn>
+                      </div>
+                      <div>
+                        <v-btn
+                          @click="updateCartItem(product.pid, product.pcolor, product.psize)"
+                          color="black"
+                          dark
+                          >변경사항 저장</v-btn
+                        >
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -102,7 +124,7 @@
     <div class="mb-15 ml-7 mr-7 mt-8">
       <div class="mb-2 d-flex justify-space-between" style="font-size: 14px">
         <div>총 상품금액</div>
-        <div>얼마얼마</div>
+        <div>{{ totalSum.toLocaleString() }} 원</div>
       </div>
       <div class="mb-2 d-flex justify-space-between" style="font-size: 14px">
         <div>총 배송비</div>
@@ -111,7 +133,7 @@
       <v-divider></v-divider>
       <div class="mb-3 mt-3 d-flex justify-space-between" style="font-weight: bold">
         <div>총 주문금액</div>
-        <div>{{ totalSum }}</div>
+        <div>{{ totalSum.toLocaleString() }} 원</div>
       </div>
     </div>
   </div>
@@ -134,19 +156,21 @@ export default {
       infos: [],
       count: 0,
       selected: [],
+      selectedtemp: [],
       colors: [],
       sizes: [],
       images: [],
       totalSum: 0,
       selectedColor: "none",
+      selectedSize: "none",
     };
   },
   //컴포넌트 메서드터 정의
   methods: {
     getCart() {
-      var mid = this.$store.state.login.userId;
+      // var mid = this.$store.state.login.userId;
       apiMember
-        .getCart(mid)
+        .getCart()
         .then((response) => {
           this.products = response.data;
           this.getProductInfo(this.products);
@@ -168,7 +192,7 @@ export default {
 
             const colorArray = [];
             const sizesObject = {};
-            sizesObject['none'] = ['색상을 먼저 선택해주세요.']
+            sizesObject["none"] = ["색상을 먼저 선택해주세요."];
 
             for (let color of res.data.colors) {
               if (color.ccolorcode === i.pcolor) {
@@ -187,38 +211,14 @@ export default {
             console.log(error);
           });
       }
-      
-            console.log(this.sizes);
-    },
-    checkIsWish(pid) {
-      const wishlist = this.$store.getters["product/getUserWishList"];
-      for (let item of wishlist) {
-        if (item.pid === pid) {
-          return true;
-        }
-      }
-      return false;
-    },
-    /* WishList에 상품 추가/삭제 */
-    async WishCreateDelete(wishState, pid) {
-      /* wishState가 false일 경우 wishList 테이블에서 제거 */
-      if (!wishState) {
-        await apiMember.deleteWishList(pid);
-      } else {
-        /* wishState가 true일 경우 wishList 테이블에 추가 */
-        await apiMember.createWishList(pid);
-      }
-      const wishlist = await apiMember.getWishList();
-      console.log(wishlist.data);
-      this.$store.commit("product/setUserWishList", wishlist.data);
     },
     //일괄 삭제
     CartSelectedDelete() {
       console.log(this.products, this.selected);
       for (let i = 0; i < this.selected.length; i++) {
         // console.log(this.products[this.selected[i]-1]); //삭제해야 할 상품
-        var item = this.products[this.selected[i] - 1];
-        // console.log(item.pid, item.pcolor, item.psize);
+        var item = this.products[this.selected[i]];
+        console.log(item.pid, item.pcolor, item.psize);
         this.CartitemDelete(item.pid, item.pcolor, item.psize);
       }
     },
@@ -234,13 +234,50 @@ export default {
           console.log(error);
         });
     },
+    updateCartItem(pid, pcolor, psize) {
+      //모달창으로 처리할 부분 
+      if (this.selectedColor == "none" || this.selectedSize == "none") {
+        alert("선택해주세요");
+      }
+      // console.log(this.selectedColor, this.selectedSize);
+      // console.log(pid, pcolor, psize);
+      let pamount = document.getElementById('result').innerText;
+      const formData = new FormData();
+      formData.append("pid", pid);
+      formData.append("pcolor", pcolor);
+      formData.append("psize", psize);
+      formData.append("aftercolor", this.selectedColor);
+      formData.append("aftersize", this.selectedSize);
+      formData.append("pamount", pamount);
+      apiMember
+        .updateCartitem(formData)
+        .then((response) => {
+          console.log(response.data);
+          location.reload(true);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    countPamount(type){
+      const result = document.getElementById('result');
+      let number = result.innerText;
+      if(type=='minus'){
+        if(parseInt(number) > 1){
+          number = parseInt(number)-1;
+        }
+      }else{
+        number = parseInt(number)+1;
+      }
+      result.innerText = number;
+    }
   },
   computed: {
     selectedAll: {
       set(val) {
         this.selected = [];
         if (val) {
-          for (let i = 0; i <= this.count; i++) {
+          for (let i = 0; i < this.count; i++) {
             this.selected.push(i);
           }
         }
@@ -251,11 +288,40 @@ export default {
       },
     },
   },
+  watch: {
+    //체크박스 감시
+    selected(newvalue, oldvalue) {
+      //newvalue랑 oldvalue랑 비교해서 없는 애들
+      //oldvalue에 비해 newvalue의 길이가 길어졌다 하면 가격 추가
+      if (newvalue.length > oldvalue.length) {
+        for (let value of newvalue) {
+          for (let info of this.infos) {
+            if (this.products[value].pid == info.pid) {
+              var plusprice = info.pprice;
+            }
+          }
+          var count1 = this.products[value].pamount;
+        }
+        this.totalSum += (plusprice*count1);
+      } else {
+        for (let value of oldvalue) {
+          for (let info of this.infos) {
+            if (this.products[value].pid == info.pid) {
+              var minusprice = info.pprice;
+            }
+          }
+          var count2 = this.products[value].pamount;
+        }
+        this.totalSum -= (minusprice*count2);
+      }
+      console.log("newvalue : ", newvalue);
+      console.log("oldvalue : ", oldvalue);
+    },
+  },
   created() {
     if (this.$store.getters["login/getUserId"] === "") {
       this.$router.push("/login");
     }
-
     this.$store.commit("gnb/setCurrentPage", "cart");
     this.getCart();
     console.log("selected:", this.selected);
