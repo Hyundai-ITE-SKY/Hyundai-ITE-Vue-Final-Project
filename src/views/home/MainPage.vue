@@ -2,9 +2,7 @@
 <template>
   <div>
     <div v-show="getMainPage() === 'EVENT'">
-      <event-banner></event-banner>
-      <event-banner></event-banner>
-      <event-banner></event-banner>
+      <event-component></event-component>
     </div>
     <div v-show="getMainPage() === 'BEST'">
       <best-product></best-product>
@@ -17,13 +15,13 @@
 
 <script>
 import BestProduct from "./BestProduct.vue";
-import EventBanner from "./EventBanner.vue";
+import EventComponent from "./EventComponent.vue";
 import NewProduct from "./NewProduct.vue";
 export default {
   // component의 대표 이름(devtools에 표시되는 이름)
   name: "",
   // 추가하고 싶은 컴포넌트를 등록
-  components: { EventBanner, BestProduct, NewProduct },
+  components: { EventComponent, BestProduct, NewProduct },
   // 컴포넌트 데이터 정의
   data: function () {
     return { page: "NEW" };
