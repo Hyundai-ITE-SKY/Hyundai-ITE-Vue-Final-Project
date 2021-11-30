@@ -21,14 +21,32 @@ function getProductList(large, medium, small, pageNo = 1) {
   }
 }
 
-function getProductInfo(pid, colorcode){
+function getProductInfo(pid, colorcode) {
   const promise = axios.get(`http://kosa1.iptime.org:50202/product/info/${pid}/${colorcode}`);
   return promise;
+}
+
+function getBestProductList(large, medium) {
+  if (medium !== "전체보기") {
+    return axios.get(`http://kosa1.iptime.org:50202/productlist/best/${large}/${medium}`);
+  } else {
+    return axios.get(`http://kosa1.iptime.org:50202/productlist/best/${large}`);
+  }
+}
+
+function getNewProductList(large, medium) {
+  if (medium !== "전체보기") {
+    return axios.get(`http://kosa1.iptime.org:50202/productlist/new/${large}/${medium}`);
+  } else {
+    return axios.get(`http://kosa1.iptime.org:50202/productlist/new/${large}`);
+  }
 }
 
 export default {
   getCategory,
   getProduct,
   getProductList,
-  getProductInfo
+  getProductInfo,
+  getBestProductList,
+  getNewProductList,
 };
