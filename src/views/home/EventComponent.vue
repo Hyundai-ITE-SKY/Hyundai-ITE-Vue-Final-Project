@@ -40,8 +40,6 @@ export default {
   // 컴포넌트 데이터 정의
   data: function () {
     return {
-      colors: ["green", "secondary", "yellow darken-4", "red lighten-2", "orange darken-1"],
-      slides: ["First", "Second", "Third", "Fourth", "Fifth"],
     };
   },
   // 컴포넌트 메소드 정의
