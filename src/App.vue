@@ -58,7 +58,7 @@
           HANDSOME
         </div>
       </v-spacer>
-      <v-btn icon @click="movePage('cart')">
+      <v-btn icon @click="movePage('cartWithNoSave')">
         <v-icon color="white">mdi-cart-outline</v-icon>
       </v-btn>
       <template v-slot:extension>
@@ -236,10 +236,26 @@
           >
             <v-icon class="mr-1">mdi-close</v-icon><span>CANCEL</span>
           </v-btn>
-          <v-btn color="#333333" dark tile @click="movePage('order')" width="35vw" height="48px">
+          <v-btn
+            color="#333333"
+            dark
+            tile
+            @click="movePage('order')"
+            width="35vw"
+            height="48px"
+            :disabled="selectedSize == 'none' || inputAmount < 1"
+          >
             <v-icon class="mr-1">mdi-shopping-outline</v-icon><span>BUY NOW</span>
           </v-btn>
-          <v-btn color="#1A1A1A" dark tile @click="movePage('cart')" width="35vw" height="48px">
+          <v-btn
+            color="#1A1A1A"
+            dark
+            tile
+            @click="movePage('cart')"
+            width="35vw"
+            height="48px"
+            :disabled="selectedSize == 'none' || inputAmount < 1"
+          >
             <v-icon class="mr-1">mdi-cart-outline</v-icon><span>CART</span>
           </v-btn>
         </v-sheet>
@@ -258,6 +274,8 @@
 </template>
 
 <script>
+import apiMember from "@/apis/member";
+
 export default {
   name: "App",
   data: () => ({
@@ -427,6 +445,8 @@ export default {
         this.resetInput();
         this.$router.push("/order/order").catch(() => {});
       } else if (page === "cart") {
+        this.createCartitem(); //장바구니 추가
+      } else if (page === "cartWithNoSave") {
         this.resetInput();
         this.$router.push("/member/cart").catch(() => {});
       } else if (page === "ordersuccess") {
@@ -454,6 +474,23 @@ export default {
     handleLogout() {
       this.$store.dispatch("login/deleteAuth");
       this.$router.push("/home/main").catch(() => {});
+    },
+    async createCartitem() {
+      const formData = new FormData();
+      formData.append("pid", this.$store.state.product.selectedProduct.pid);
+      formData.append("pcolor", this.selectedColor);
+      formData.append("psize", this.selectedSize);
+      formData.append("pamount", this.inputAmount);
+      await apiMember
+        .createCartitem(formData)
+        .then((response) => {
+          console.log(response.data, "성공");
+          this.resetInput();
+          this.$router.push("/member/cart").catch(() => {});
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
   },
   created() {
