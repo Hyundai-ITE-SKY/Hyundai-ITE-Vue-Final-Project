@@ -45,6 +45,11 @@ function updateCartitem(formData){
   return promise;
 }
 
+function createCartitem(formData){
+  const promise = axios.post('http://kosa1.iptime.org:50207/member/createcart', formData);
+  return promise;
+}
+
 export default{
   getMember,
   getWishList,
@@ -54,5 +59,6 @@ export default{
   deleteWishList,
   createCoupon,
   deleteCartitem,
-  updateCartitem
+  updateCartitem,
+  createCartitem
 }
