@@ -82,7 +82,9 @@
             $store.state.gnb.currentPage === 'productdetail' ||
             $store.state.gnb.currentPage === 'productdetailbuy' ||
             $store.state.gnb.currentPage === 'order' ||
-            $store.state.gnb.currentPage === 'orderlist'
+            $store.state.gnb.currentPage === 'orderlist' ||
+            $store.state.gnb.currentPage === 'orderdetail' ||
+            $store.state.gnb.currentPage === 'ordersuccess'
           "
           class="text-center"
           style="font-size: 0.875rem; font-weight: bolder; width: 100%"
@@ -438,6 +440,10 @@ export default {
         return "결제하기";
       } else if (page === "orderlist") {
         return "주문내역";
+      } else if (page === "orderdetail"){
+        return "주문 상세내역"
+      } else if (page === "ordersuccess"){
+        return "주문완료"
       }
     },
     movePage(page) {

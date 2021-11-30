@@ -14,4 +14,8 @@ export default [
     path: "/order/success",
     component: () => import(/* webpackChunkName: "order" */ "../views/order/OrderSuccess"),
   },
+  {
+    path: "/order/detail",
+    component: () => import(/* webpackChunkName: "order" */ "../views/order/OrderDetail"),
+  },
 ];
