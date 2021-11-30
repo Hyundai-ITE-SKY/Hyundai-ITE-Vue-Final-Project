@@ -23,7 +23,7 @@
                 <v-col cols="1">
                   <v-checkbox color="black" v-model="selected" :value="i"></v-checkbox>
                 </v-col>
-                <v-col cols="3" class="pa-0 pl-3">
+                <v-col cols="3" class="pa-0 pl-3" @click="moveProductDetail(product.pid)">
                   <div style="width: 80px">
                     <v-img :src="images[j]" contain />
                   </div>
@@ -41,7 +41,7 @@
                         >mdi-close</v-icon
                       ></v-col
                     >
-                    <v-col cols="12" class="pa-0 text-truncate" style="font-size: 15px">
+                    <v-col cols="12" class="pa-0 text-truncate" style="font-size: 15px" @click="moveProductDetail(product.pid)">
                       {{ info.pname }}
                     </v-col>
                     <v-col cols="12" class="pa-0" style="font-size: 14px; color: grey"
@@ -58,9 +58,9 @@
 
                 <v-layout class="justify-center">
                   <v-card-actions class="mb-3 mt-3 pt-0">
-                    <v-btn dark class="mr-3" outlined color="black" @click="show = !show">
+                    <v-btn dark class="mr-3" outlined color="black" @click="clickOption(i)">
                       옵션/수량
-                      <v-icon>{{ show ? "mdi-chevron-up" : "mdi-chevron-down" }}</v-icon>
+                      <v-icon>{{ show[i] ? "mdi-chevron-up" : "mdi-chevron-down" }}</v-icon>
                     </v-btn>
                     <v-btn dark to="/order/order" outlined color="black">바로 구매</v-btn>
                   </v-card-actions>
@@ -68,7 +68,7 @@
               </v-row>
             </div>
             <v-expand-transition>
-              <div v-show="show">
+              <div v-show="show[i]">
                 <div style="border: 1px solid" class="ml-1 mr-1 mb-3">
                   <div class="ma-6">
                     <v-select
@@ -90,22 +90,22 @@
                     <div class="mb-5 d-flex justify-space-between">
                       <div>수량</div>
                       <div class="d-flex">
-                        <v-btn x-small dark color="black" fab @click="countPamount('minus')">
+                        <v-btn x-small dark color="black" fab @click="countPamount('minus', i)">
                           <v-icon dark> mdi-minus </v-icon>
                         </v-btn>
-                        <div class="ml-2 mr-2" id="result">1</div>
-                        <v-btn x-small dark color="black" fab @click="countPamount('plus')">
+                        <div class="ml-2 mr-2">{{ amounts[i] }}</div>
+                        <v-btn x-small dark color="black" fab @click="countPamount('plus', i)">
                           <v-icon dark> mdi-plus </v-icon>
                         </v-btn>
                       </div>
                     </div>
                     <div class="d-flex justify-center">
                       <div class="mr-2">
-                        <v-btn @click="show = !show" outlined>취소</v-btn>
+                        <v-btn @click="show[i] = !show[i]" outlined>취소</v-btn>
                       </div>
                       <div>
                         <v-btn
-                          @click="updateCartItem(product.pid, product.pcolor, product.psize)"
+                          @click="updateCartItem(product.pid, product.pcolor, product.psize, i)"
                           color="black"
                           dark
                           >변경사항 저장</v-btn
@@ -151,22 +151,28 @@ export default {
   data() {
     return {
       state: false,
-      show: false,
+      show: [],
       products: null,
       infos: [],
       count: 0,
       selected: [],
-      selectedtemp: [],
       colors: [],
       sizes: [],
       images: [],
       totalSum: 0,
       selectedColor: "none",
       selectedSize: "none",
+      amounts: [],
     };
   },
   //컴포넌트 메서드터 정의
   methods: {
+    clickOption(i) {
+      this.show.splice(i, 1, !this.show[i]);
+    },
+    moveProductDetail(pid){
+      this.$router.push(`/product/detail?pid=${pid}`).catch(() => {});
+    },
     getCart() {
       // var mid = this.$store.state.login.userId;
       apiMember
@@ -175,8 +181,11 @@ export default {
           this.products = response.data;
           this.getProductInfo(this.products);
           this.count = this.products.length;
-          console.log("###장바구니item개수:", this.count);
-          console.log("mycart :: ", this.products);
+          for (let i = 0; i < this.products.length; i++) {
+            this.show.push(false);
+            this.amounts.push(1);
+          }
+          console.log(this.show);
         })
         .catch((error) => {
           console.log(error);
@@ -234,14 +243,14 @@ export default {
           console.log(error);
         });
     },
-    updateCartItem(pid, pcolor, psize) {
-      //모달창으로 처리할 부분 
+    updateCartItem(pid, pcolor, psize, i) {
+      //모달창으로 처리할 부분
       if (this.selectedColor == "none" || this.selectedSize == "none") {
         alert("선택해주세요");
       }
       // console.log(this.selectedColor, this.selectedSize);
       // console.log(pid, pcolor, psize);
-      let pamount = document.getElementById('result').innerText;
+      let pamount = this.amounts[i];
       const formData = new FormData();
       formData.append("pid", pid);
       formData.append("pcolor", pcolor);
@@ -259,18 +268,15 @@ export default {
           console.log(error);
         });
     },
-    countPamount(type){
-      const result = document.getElementById('result');
-      let number = result.innerText;
-      if(type=='minus'){
-        if(parseInt(number) > 1){
-          number = parseInt(number)-1;
+    countPamount(type, idx) {
+      if (type == "minus") {
+        if(this.amounts[idx]>1){
+        this.amounts.splice(idx, 1, this.amounts[idx] - 1);
         }
-      }else{
-        number = parseInt(number)+1;
+      } else {
+        this.amounts.splice(idx, 1, this.amounts[idx] + 1);
       }
-      result.innerText = number;
-    }
+    },
   },
   computed: {
     selectedAll: {
@@ -290,32 +296,20 @@ export default {
   },
   watch: {
     //체크박스 감시
-    selected(newvalue, oldvalue) {
-      //newvalue랑 oldvalue랑 비교해서 없는 애들
-      //oldvalue에 비해 newvalue의 길이가 길어졌다 하면 가격 추가
-      if (newvalue.length > oldvalue.length) {
-        for (let value of newvalue) {
+    selected(newvalue) {
+      let sum = 0;
+      let i = 0;
+      for (let product of this.products) {
+        if (newvalue.indexOf(i) > -1) {
           for (let info of this.infos) {
-            if (this.products[value].pid == info.pid) {
-              var plusprice = info.pprice;
+            if (product.pid === info.pid) {
+              sum += info.pprice * product.pamount;
             }
           }
-          var count1 = this.products[value].pamount;
         }
-        this.totalSum += (plusprice*count1);
-      } else {
-        for (let value of oldvalue) {
-          for (let info of this.infos) {
-            if (this.products[value].pid == info.pid) {
-              var minusprice = info.pprice;
-            }
-          }
-          var count2 = this.products[value].pamount;
-        }
-        this.totalSum -= (minusprice*count2);
+        i += 1;
       }
-      console.log("newvalue : ", newvalue);
-      console.log("oldvalue : ", oldvalue);
+      this.totalSum = sum;
     },
   },
   created() {

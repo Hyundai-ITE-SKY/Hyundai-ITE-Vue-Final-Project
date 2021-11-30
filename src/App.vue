@@ -119,7 +119,8 @@
         v-show="
           $store.state.gnb.currentPage !== 'productdetail' &&
           $store.state.gnb.currentPage !== 'productdetailbuy' &&
-          $store.state.gnb.currentPage !== 'order'
+          $store.state.gnb.currentPage !== 'order' &&
+          $store.state.gnb.currentPage !== 'cart'
         "
         @click="movePage('main')"
         plain
@@ -130,7 +131,8 @@
         v-show="
           $store.state.gnb.currentPage !== 'productdetail' &&
           $store.state.gnb.currentPage !== 'productdetailbuy' &&
-          $store.state.gnb.currentPage !== 'order'
+          $store.state.gnb.currentPage !== 'order' &&
+          $store.state.gnb.currentPage !== 'cart'
         "
         @click="movePage('wishlist')"
         plain
@@ -141,7 +143,8 @@
         v-show="
           $store.state.gnb.currentPage !== 'productdetail' &&
           $store.state.gnb.currentPage !== 'productdetailbuy' &&
-          $store.state.gnb.currentPage !== 'order'
+          $store.state.gnb.currentPage !== 'order' &&
+          $store.state.gnb.currentPage !== 'cart'
         "
         @click="movePage('orderlist')"
         plain
@@ -152,7 +155,8 @@
         v-show="
           $store.state.gnb.currentPage !== 'productdetail' &&
           $store.state.gnb.currentPage !== 'productdetailbuy' &&
-          $store.state.gnb.currentPage !== 'order'
+          $store.state.gnb.currentPage !== 'order' &&
+          $store.state.gnb.currentPage !== 'cart'
         "
         @click="movePage('mypage')"
         plain
@@ -268,6 +272,11 @@
       >
         <span>결제하기</span>
         <v-icon>mdi-credit-card-outline</v-icon>
+      </v-btn>
+
+      <v-btn v-show="$store.state.gnb.currentPage === 'cart'" @click="movePage('order')" plain>
+        <span>주문하기</span>
+        <v-icon>mdi-barcode-scan</v-icon>
       </v-btn>
     </v-bottom-navigation>
   </v-app>
