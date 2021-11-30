@@ -1,29 +1,30 @@
 <!-- 컴포넌트 UI 정의
     주의할 점 : 루트 Element가 하나만 있어야한다. -->
 <template>
-  <div>
-    <v-card shaped style="margin-top: -10px; color: #252525; background-color: #f7f6f3">
-      <v-img height="100%" v-bind:src="`${event.eimage}`"></v-img>
-
+  <div style="background-color: black">
+    <v-card shaped style="color: white; background-color: #1a1a1a" dark>
+      <v-img height="100%" v-bind:src="`${event.eimage}`" :aspect-ratio="78 / 100"></v-img>
+    </v-card>
+    <v-card shaped style="color: white; background-color: #1a1a1a" dark>
       <v-card-title>{{ event.ename }}</v-card-title>
-
       <v-card-text>
         <v-row>
-          <v-col cols="12" class="font-weight-black">
+          <v-col cols="12">
             기간 : {{ new Date(event.estartdate).toLocaleDateString() }} -
             {{ new Date(event.eenddate).toLocaleDateString() }}
           </v-col>
-
           <v-col cols="12" class="py-0">
             {{ event.edetail }}
           </v-col>
-          <v-col cols="12" class="mt-2">
-            <v-btn dark width="100%" @click="createCoupon">쿠폰 발급</v-btn>
+          <v-col cols="12" class="mt-2 text-center">
+            <v-btn color="white" style="color: black" width="100%" @click="createCoupon"
+              >쿠폰 발급</v-btn
+            >
           </v-col>
         </v-row>
       </v-card-text>
     </v-card>
-    <v-card outlined class="blue-grey lighten-5 pa-4">
+    <v-card outlined class="pa-4" dark color="black">
       NOTICE
       <v-card-text>
         ✔ 쿠폰은 ID당 1회 발급되며, 유효기간이 만료되면<br />
@@ -107,12 +108,13 @@ export default {
           console.log(error);
         });
     },
-    toLogin(){
+    toLogin() {
       this.$router.push("/login");
-    }
+    },
   },
   created() {
     this.getEventDetail();
+    this.$store.commit("gnb/setCurrentPage", "eventdetail");
   },
   props: ["eno"],
 };

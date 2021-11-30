@@ -21,8 +21,25 @@ function getProductList(large, medium, small, pageNo = 1) {
   }
 }
 
+function getBestProductList(large, medium) {
+  if (medium !== "전체보기") {
+    return axios.get(`http://kosa1.iptime.org:50202/productlist/best/${large}/${medium}`);
+  } else {
+    return axios.get(`http://kosa1.iptime.org:50202/productlist/best/${large}`);
+  }
+}
+
+function getNewProductList(large, medium) {
+  if (medium !== "전체보기") {
+    return axios.get(`http://kosa1.iptime.org:50202/productlist/new/${large}/${medium}`);
+  } else {
+    return axios.get(`http://kosa1.iptime.org:50202/productlist/new/${large}`);
+  }
+}
+
 export default {
   getCategory,
   getProduct,
   getProductList,
+  getBestProductList,getNewProductList
 };

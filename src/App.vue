@@ -78,6 +78,7 @@
             $store.state.gnb.currentPage === 'cart' ||
             $store.state.gnb.currentPage === 'wishlist' ||
             $store.state.gnb.currentPage === 'login' ||
+            $store.state.gnb.currentPage === 'eventdetail' ||
             $store.state.gnb.currentPage === 'mypage' ||
             $store.state.gnb.currentPage === 'productdetail' ||
             $store.state.gnb.currentPage === 'productdetailbuy' ||
@@ -407,6 +408,8 @@ export default {
         return "로그인";
       } else if (page === "productdetail" || page === "productdetailbuy") {
         return "상세보기";
+      } else if (page === "eventdetail") {
+        return "이벤트 상세보기";
       } else if (page === "order") {
         return "결제하기";
       } else if (page === "orderlist") {
