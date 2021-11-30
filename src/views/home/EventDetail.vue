@@ -94,6 +94,10 @@ export default {
             //2. 쿠폰 발급 성공
             this.snackbarText = "쿠폰 발급 성공";
             this.snackbar = true;
+          } else if (response.data === 2) {
+            //2. 두번째 발급인 경우
+            this.snackbarText = "이미 쿠폰을 발급받으셨습니다.";
+            this.snackbar = true;
           } else if (response.data === 0) {
             //1. 인원 초과로 쿠폰 발급 실패
             this.snackbarText = "제한 인원을 초과하였습니다.";
@@ -101,15 +105,12 @@ export default {
           }
         })
         .catch((error) => {
-          //2. 두번째 발급인 경우
-          this.snackbarText = "이미 쿠폰을 발급받으셨습니다.";
-          this.snackbar = true;
           console.log(error);
         });
     },
-    toLogin(){
+    toLogin() {
       this.$router.push("/login");
-    }
+    },
   },
   created() {
     this.getEventDetail();
