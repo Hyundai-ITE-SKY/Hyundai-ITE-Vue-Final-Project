@@ -1,27 +1,10 @@
 <!-- 컴포넌트 UI 정의 -->
 <template>
   <div style="background-color: white">
-    <div
-      class="pa-3 align-center"
-      style="
-        display: flex;
-        background-color: #fafafa;
-        border-top: solid 2px #ededed;
-        border-bottom: solid 2px #ededed;
-      "
-    >
-      <div style="font-weight: bolder; font-size: 0.875rem">2021.11.11</div>
-      <div class="mx-2" style="font-size: 0.875rem; color: #a9a9a9">/</div>
-      <div style="font-size: 0.875rem; color: #636363">V3BEDE32W</div>
-      <v-icon class="ml-auto">mdi-chevron-right</v-icon>
-    </div>
     <div class="px-3 py-6" style="display: flex">
       <div>
-        <template v-for="color of product.colors">
           <v-img
-            :key="color.ccolorcode"
-            v-if="color.ccolorcode === selectedColor"
-            :src="color.cimage1"
+            :src="product.cimage1"
             lazy-src="@/assets/images/event/eventloader.jpg"
             width="100px"
           >
@@ -31,7 +14,6 @@
               </v-row>
             </template>
           </v-img>
-        </template>
       </div>
       <div class="px-3">
         <div class="text-truncate" style="font-size: 0.875rem; font-weight: bolder">
@@ -41,19 +23,19 @@
           {{ product.pname }}
         </div>
         <div class="text-truncate mt-1" style="font-size: 0.875rem; color: #7c7c7c">
-          옵션: {{ selectedColor }} {{ selectedSize }}
+          옵션: {{ order.ccolorcode }} {{ order.psize }}
         </div>
         <div class="text-truncate mt-3" style="font-size: 1rem; font-weight: bolder">
           {{
             (
-              inputAmount *
+              order.oamount *
               Math.floor((product.pprice * (100 - $store.state.product.gradeSale)) / 100)
             ).toLocaleString()
-          }}<span style="font-size: 0.875rem; font-weight: bolder">원/ {{ inputAmount }}개</span>
+          }}<span style="font-size: 0.875rem; font-weight: bolder">원/ {{ order.oamount }}개</span>
         </div>
         <div class="mt-3" style="font-size: 0.875rem; font-weight: bolder; color: #ea7740">
           주문접수
-        </div>
+        </div> 
       </div>
     </div>
   </div>
@@ -62,7 +44,7 @@
 <script>
 export default {
   // component의 대표 이름(devtools에 표시되는 이름)
-  name: "",
+  name: "OrderItem",
   // 추가하고 싶은 컴포넌트를 등록
   components: {},
   // 컴포넌트 데이터 정의
@@ -71,11 +53,13 @@ export default {
   },
   // 컴포넌트 메소드 정의
   methods: {},
+  created(){
+    console.log("######order",this.order);
+    console.log("######product",this.product);
+  },
   props: {
-    selectedColor: String,
-    selectedSize: String,
-    inputAmount: Number,
     product: Object,
+    order : Object,
   },
 };
 </script>

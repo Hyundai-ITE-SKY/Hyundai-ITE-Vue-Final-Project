@@ -10,25 +10,25 @@
       <div class="d-flex justify-space-between">
         <span style="font-size: 14px">입금 금액</span>
         <span style="font-weight: bold; font-size: 14px"
-          >{{ orderlist.ototal.toLocaleString() }}원</span
+          >{{ orderinfo.ototal.toLocaleString() }}원</span
         >
       </div>
     </v-card>
     <!-- 주문한 상품 정보 -->
     <v-card class="mb-3" outlined>
       <div class="d-flex justify-space-between pt-3 pb-3 pl-5 pr-5">
-        <span style="font-size: 13px"> No.{{ orderlist.oid }} </span>
-        <span style="color: grey; font-size: 13px">{{ orderlist.odate }}</span>
+        <span style="font-size: 13px"> No.{{ orderinfo.oid }} </span>
+        <span style="color: grey; font-size: 13px">{{ orderinfo.odate }}</span>
       </div>
       <v-divider></v-divider>
       <!--반복-->
-      <div v-for="item in orderitems" :key="item.pid">
-        <div v-for="i in orderitem" :key="i.pid">
-          <div v-if="item.pid == i.pid" class="px-3 py-3" style="display: flex">
+      <div v-for="(item,i) in orderitems" :key="i">
+        <div v-for="(info,j) in productinfo" :key="j">
+          <div v-if="item.pid==info.pid" class="px-3 py-3" style="display: flex">
             <div>
               <div>
                 <v-img
-                  :src="item.cimage1"
+                  :src="info.cimage1"
                   lazy-src="@/assets/images/event/eventloader.jpg"
                   width="80px"
                 >
@@ -44,17 +44,17 @@
               </div>
             </div>
             <div class="mx-3">
-              <div style="font-size: 0.875rem; font-weight: bolder; color: #ea7740">주문접수</div>
-              <div class="text-truncate" style="font-size: 0.7rem">{{ item.bname }}</div>
+              <div style="font-size: 0.7rem; font-weight: bolder; color: #ea7740">주문접수</div>
+              <div class="text-truncate" style="font-size: 0.7rem">{{ info.bname }}</div>
               <div class="text-truncate" style="font-size: 0.875rem; font-weight: bolder">
-                {{ item.pname }}
+                {{ info.pname }}
               </div>
               <div class="text-truncate mt-1" style="font-size: 0.875rem; color: #7c7c7c">
-                {{ i.ccolorcode }} | {{ i.psize }}
+                {{ item.ccolorcode }} | {{ item.psize }}
               </div>
               <div class="text-truncate mt-3" style="font-size: 1rem; font-weight: bolder">
                 <span style="font-size: 0.875rem; font-weight: bolder"
-                  >{{ (item.pprice*i.oamount).toLocaleString() }}원/ {{ i.oamount }}개</span
+                  >{{ (info.pprice * item.oamount).toLocaleString() }}원/ {{ item.oamount }}개</span
                 >
               </div>
             </div>
@@ -74,17 +74,17 @@
         <div v-show="showAddress" class="pl-5 pr-5 pb-5">
           <div class="d-flex justify-space-between">
             <span style="font-size: 14px">받으시는 분</span>
-            <span style="font-size: 14px">{{ orderlist.oreceiver }}</span>
+            <span style="font-size: 14px">{{ orderinfo.oreceiver }}</span>
           </div>
           <div class="d-flex justify-space-between">
             <span style="font-size: 14px">연락처</span>
-            <span style="font-size: 14px">{{ orderlist.otel }}</span>
+            <span style="font-size: 14px">{{ orderinfo.otel }}</span>
           </div>
           <div class="d-flex justify-space-between">
             <span style="font-size: 14px">배송지</span>
             <span style="font-size: 14px"
-              >({{ orderlist.ozipcode }}) {{ orderlist.oaddress1 }}<br />
-              {{ orderlist.oaddress2 }}</span
+              >({{ orderinfo.ozipcode }}) {{ orderinfo.oaddress1 }}<br />
+              {{ orderinfo.oaddress2 }}</span
             >
           </div>
         </div>
@@ -102,16 +102,16 @@
         <div v-show="showPayment" class="pl-5 pr-5 pb-5">
           <div class="d-flex justify-space-between">
             <span style="font-size: 14px">상품 합계</span>
-            <span style="font-size: 14px">할인 전 금액</span>
+            <span style="font-size: 14px">{{(orderinfo.ototal + orderinfo.odiscounted).toLocaleString()}} 원</span>
           </div>
           <div class="d-flex justify-space-between pb-5">
             <span style="font-size: 14px">할인 합계</span>
-            <span style="font-size: 14px">-할인 금액</span>
+            <span style="font-size: 14px">- {{orderinfo.odiscounted.toLocaleString()}} 원</span>
           </div>
           <v-divider></v-divider>
           <div class="d-flex justify-space-between pt-5" style="font-weight: bold">
             <span>결제 금액</span>
-            <span>총 결제금액</span>
+            <span>{{orderinfo.ototal.toLocaleString()}} 원</span>
           </div>
         </div>
       </v-expand-transition>
@@ -121,7 +121,7 @@
 
 <script>
 import apiProduct from "@/apis/product";
-// import apiOrder from "@/apis/order";
+import apiOrder from "@/apis/order";
 
 export default {
   //컴포넌트의 대표 이름(devtools에 나오는 이름)
@@ -134,58 +134,35 @@ export default {
       showAddress: false,
       showPayment: false,
       orderitems: [],
-      selectedColors: ["SR", "WT"],
-      selectedSizes: ["00", "M"],
-      inputAmounts: [1, 1],
-      orderlist: {
-        oid: "testorder",
-        mid: "mid1",
-        ozipcode: 12345,
-        oaddress1: "address1",
-        oaddress2: "address2",
-        odate: "2021-11-23T10:45:22.000+00:00",
-        oreceiver: "user",
-        otel: "01053705930",
-        ousedmileage: 100,
-        ousedcoupon: 1,
-        opayment: 1,
-        ostatus: 1,
-        oaccountdeadline: "2021-11-23T10:45:22.000+00:00",
-        odiscounted: 0,
-        ototal: 964750,
-      },
-      orderitem: [
-        {
-          oid: "testorder",
-          pid: "CM2B4WPC586WP1",
-          ccolorcode: "CB",
-          psize: "FREE",
-          oamount: 1,
-        },
-        {
-          oid: "testorder",
-          pid: "CM2B4WPC587W",
-          ccolorcode: "GK",
-          psize: "FREE",
-          oamount: 2,
-        },
-      ],
+      orderinfo: [],
+      productinfo:[],
+      beforeDiscounted : 0
     };
   },
   //컴포넌트 메서드 정의
   methods: {
-    async getOrderListItem(){}
-    ,
-    async getProductInfo() {
-      for (let i of this.orderitem) {
-        await apiProduct
-          .getProductInfo(i.pid, i.ccolorcode)
-          .then((response) => {
-            // console.log(response.data);
-            this.orderitems.push(response.data);
-          })
-          .catch(() => {});
-      }
+    //넘긴 oid를 받아서 orderitems와 orderinfo을 불러온다.
+    async getOrderListItem(oid) {
+      await apiOrder
+        .getOrderListItem(oid)
+        .then((response) => {
+          this.orderitems = response.data.orderitem;
+          // console.log("######orderitems",this.orderitems);
+          this.orderinfo = response.data.orderlist;
+          for (let item of this.orderitems) {
+            this.getProductInfo(item.pid, item.ccolorcode);
+          }
+        })
+        .catch(() => {});
+    },
+    async getProductInfo(pid, ccolorcode) {
+      await apiProduct
+        .getProductInfo(pid, ccolorcode)
+        .then((response) => {
+          this.productinfo.push(response.data);
+          // console.log("#####productinfo : ",this.productinfo);
+        })
+        .catch(() => {});
     },
   },
   created() {
@@ -193,7 +170,9 @@ export default {
       this.$router.push("/login");
     }
     this.$store.commit("gnb/setCurrentPage", "orderdetail");
-    this.getProductInfo();
+    var oid = this.$route.query.oid;
+    this.getOrderListItem(oid);
+    // this.getProductInfo();
   },
 };
 </script>

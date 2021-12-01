@@ -3,6 +3,7 @@ import Vuex from "vuex";
 import login from "./login";
 import product from "./product";
 import gnb from "./gnb";
+import cart from "./cart";
 import createPersistedState from 'vuex-persistedstate';
 
 Vue.use(Vuex);
@@ -12,7 +13,7 @@ export default new Vuex.Store({
   getters: {},
   mutations: {},
   actions: {},
-  modules: { login, product, gnb },
+  modules: { login, product, gnb, cart },
   plugins: [
     createPersistedState({
       paths: ['product']

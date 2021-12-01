@@ -46,21 +46,36 @@
         </v-date-picker>
       </v-menu>
     </div>
-    <div>
-      <order-item
-        v-for="(product, i) of products"
-        :key="i"
-        :inputAmount="inputAmounts[i]"
-        :selectedColor="selectedColors[i]"
-        :selectedSize="selectedSizes[i]"
-        :product="product"
-      >
-      </order-item>
+    <div v-for="(order, i) of orderlist" :key="i">
+      <div
+      class="pa-3 align-center"
+      style="
+        display: flex;
+        background-color: #fafafa;
+        border-top: solid 2px #ededed;
+        border-bottom: solid 2px #ededed;
+      "
+    >
+      <div style="font-weight: bolder; font-size: 0.875rem">{{order.odate}}</div>
+      <div class="mx-2" style="font-size: 0.875rem; color: #a9a9a9">/</div>
+      <div style="font-size: 0.875rem; color: #636363">{{order.oid}}</div>
+      <v-icon class="ml-auto" @click="moveToOrderDetail(order.oid)">mdi-chevron-right</v-icon>
+    </div>
+      <div v-for="(item, j) of order.orderitem" :key="j">
+        <div v-for="product of products" :key="product.pid">
+          <template v-if="item.pid == product.pid">
+            <order-item :order="item" :product="product" :key="i"> </order-item>
+          </template>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 <script>
 import OrderItem from "./OrderItem.vue";
+import apiOrder from "@/apis/order";
+import apiProduct from "@/apis/product";
+
 export default {
   //component의 대표 이름(devTools에 나오는 이름)
   name: "OrderList",
@@ -77,133 +92,8 @@ export default {
         { status: "배송완료", value: 0 },
         { status: "구매확정", value: 12 },
       ],
-      selectedColors: ["SR", "WT"],
-      selectedSizes: ["00", "M"],
-      inputAmounts: [1, 3],
-      products: [
-        {
-          pid: "MW2B3KTO014E6A",
-          bname: "CLUB MONACO",
-          clarge: "WOMEN",
-          cmedium: "Top",
-          csmall: "Knit",
-          pno: 4092,
-          pname: "[21SS] 슬리브리스 크롭 니트 탑",
-          pprice: 124740,
-          pdetail:
-            "과감한 실루엣과 패턴이 시선을 사로 잡는 니트 탑으로 하이웨이스트의 하의와 매치하기 좋은 크롭 길이로 이루어져 있습니다. 흔히 볼 수 없는 조합의 컬러가 조화를 이루고 있으며, 같은 소재의 스커트와 셋업하여 연출할 수 있습니다.",
-          pseason: "SS",
-          ptotalamount: 0,
-          colors: [
-            {
-              pid: "MW2B3KTO014E6A",
-              ccolorcode: "SR",
-              cimage1:
-                "http://newmedia.thehandsome.com/MW/2B/SS/MW2B3KTO014E6A_SR_W01.jpg/dims/resize/684x1032/",
-              cimage2:
-                "http://newmedia.thehandsome.com/MW/2B/SS/MW2B3KTO014E6A_SR_W02.jpg/dims/resize/684x1032/",
-              cimage3:
-                "http://newmedia.thehandsome.com/MW/2B/SS/MW2B3KTO014E6A_SR_W03.jpg/dims/resize/684x1032/",
-              ccolorimage: "http://newmedia.thehandsome.com/MW/2B/SS/MW2B3KTO014E6A_SR_C01.jpg",
-              cmatchpid: "MW2B3KSC015E6A_SR",
-              stocks: [
-                {
-                  pid: "MW2B3KTO014E6A",
-                  ccolorcode: "SR",
-                  ssize: "0",
-                  samount: 4,
-                },
-                {
-                  pid: "MW2B3KTO014E6A",
-                  ccolorcode: "SR",
-                  ssize: "00",
-                  samount: 5,
-                },
-              ],
-            },
-          ],
-        },
-        {
-          pid: "MW2B3WSH015E4A",
-          bname: "CLUB MONACO",
-          clarge: "WOMEN",
-          cmedium: "Top",
-          csmall: "Blouse",
-          pno: 4162,
-          pname: "[21SS] 타이 슬리브 탑",
-          pprice: 112140,
-          pdetail:
-            "소맷단의 길게 늘어뜨린 스트랩이 포인트로 독특한 디테일이 돋보이는 탑입니다. 은은한 광택감이 있는 유연하게 흐르는 소재가 한층 세련된 분위기를 연출합니다.",
-          pseason: "SS",
-          ptotalamount: 0,
-          colors: [
-            {
-              pid: "MW2B3WSH015E4A",
-              ccolorcode: "NY",
-              cimage1:
-                "http://newmedia.thehandsome.com/MW/2B/SS/MW2B3WSH015E4A_NY_W01.jpg/dims/resize/684x1032/",
-              cimage2:
-                "http://newmedia.thehandsome.com/MW/2B/SS/MW2B3WSH015E4A_NY_W02.jpg/dims/resize/684x1032/",
-              cimage3:
-                "http://newmedia.thehandsome.com/MW/2B/SS/MW2B3WSH015E4A_NY_W03.jpg/dims/resize/684x1032/",
-              ccolorimage: "http://newmedia.thehandsome.com/MW/2B/SS/MW2B3WSH015E4A_NY_C01.jpg",
-              cmatchpid: "MW2B1NPC001E1P_IV",
-              stocks: [
-                {
-                  pid: "MW2B3WSH015E4A",
-                  ccolorcode: "NY",
-                  ssize: "M",
-                  samount: 3,
-                },
-                {
-                  pid: "MW2B3WSH015E4A",
-                  ccolorcode: "NY",
-                  ssize: "S",
-                  samount: 4,
-                },
-                {
-                  pid: "MW2B3WSH015E4A",
-                  ccolorcode: "NY",
-                  ssize: "XS",
-                  samount: 5,
-                },
-              ],
-            },
-            {
-              pid: "MW2B3WSH015E4A",
-              ccolorcode: "WT",
-              cimage1:
-                "http://newmedia.thehandsome.com/MW/2B/SS/MW2B3WSH015E4A_WT_W01.jpg/dims/resize/684x1032/",
-              cimage2:
-                "http://newmedia.thehandsome.com/MW/2B/SS/MW2B3WSH015E4A_WT_W02.jpg/dims/resize/684x1032/",
-              cimage3:
-                "http://newmedia.thehandsome.com/MW/2B/SS/MW2B3WSH015E4A_WT_W03.jpg/dims/resize/684x1032/",
-              ccolorimage: "http://newmedia.thehandsome.com/MW/2B/SS/MW2B3WSH015E4A_WT_C01.jpg",
-              cmatchpid: "MW2B3WSC014E5E_PK",
-              stocks: [
-                {
-                  pid: "MW2B3WSH015E4A",
-                  ccolorcode: "WT",
-                  ssize: "M",
-                  samount: 4,
-                },
-                {
-                  pid: "MW2B3WSH015E4A",
-                  ccolorcode: "WT",
-                  ssize: "S",
-                  samount: 4,
-                },
-                {
-                  pid: "MW2B3WSH015E4A",
-                  ccolorcode: "WT",
-                  ssize: "XS",
-                  samount: 4,
-                },
-              ],
-            },
-          ],
-        },
-      ],
+      orderlist: null,
+      products: [],
     };
   },
   //컴포넌트 메서드 정의
@@ -214,12 +104,35 @@ export default {
       }
       return "#A3A3A3";
     },
+    async getProductInfo(pid, ccolorcode) {
+      await apiProduct.getProductInfo(pid, ccolorcode).then((response) => {
+        // console.log("#########productinfo", response.data);
+        this.products.push(response.data);
+      });
+    },
+    async getOrderList() {
+      await apiOrder.getOrderList().then((response) => {
+        // console.log(response.data);
+        this.orderlist = response.data;
+        // console.log(this.orderlist);
+        for (let order of this.orderlist) {
+          let item = order.orderitem;
+          for (let i of item) {
+            this.getProductInfo(i.pid, i.ccolorcode);
+          }
+        }
+      });
+    },
+    moveToOrderDetail(oid){
+      this.$router.push(`/order/detail?oid=${oid}`);
+    }
   },
   created() {
     if (this.$store.getters["login/getUserId"] === "") {
       this.$router.push("/login");
     }
     this.$store.commit("gnb/setCurrentPage", "orderlist");
+    this.getOrderList();
   },
   computed: {
     dateRangeText() {
