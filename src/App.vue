@@ -125,7 +125,7 @@
           $store.state.gnb.currentPage !== 'order' &&
           $store.state.gnb.currentPage !== 'cart'
         "
-        @click="[movePage('main'), testCall]"
+        @click="movePage('main')"
         plain
       >
         <v-icon style="margin: 0px; padding: 0px">mdi-home-outline</v-icon>
