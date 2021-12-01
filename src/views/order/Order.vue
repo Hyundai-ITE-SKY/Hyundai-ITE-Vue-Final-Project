@@ -333,7 +333,7 @@ export default {
       atotalPrice: 0,
       btotalPrice: 0,
       discountPrice: 0,
-      sales: 15,
+      sales: this.$store.getters["product/getGradeSale"],
       testArr: [{ value: 1 }, 2, 3],
     };
   },
@@ -537,7 +537,7 @@ export default {
       orderList.append("ousedcoupon", this.order.ousedcoupon);
       orderList.append("ousedmileage", this.order.ousedmileage);
       orderList.append("ozipcode", this.order.ozipcode);
-      orderList.append("ototal", this.order.ototal);
+      orderList.append("ototal", this.atotalPrice);
 
       await apiOrder
         .createOrderList(orderList)
