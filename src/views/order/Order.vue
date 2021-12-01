@@ -46,52 +46,52 @@
       <v-expand-transition>
         <div v-show="showProduct">
           <v-divider></v-divider>
-
-          <div
-            class="pa-1 d-flex justify-center align-center"
-            v-for="item of orderItems"
-            :key="item.pid"
-          >
-            <div style="width: 65px">
-              <v-img
-                v-if="productsInfo"
-                :src="`${productsInfo.find((x) => x.pid === item.pid).cimage1}`"
-                height="100%"
-              >
-              </v-img>
-            </div>
-            <v-card-text
-              style="font-size: 11px; width: 55%; whitespace: nowrap"
-              class="pa-0 pl-2 font-weight-bold text-subtitle-2"
+          <template v-for="item of orderItems">
+            <div
+              class="pa-1 d-flex justify-center align-center"
+              v-if="productsInfo.find((x) => x.pid === item.pid) !== undefined"
+              :key="item.pid"
             >
-              {{ productsInfo.find((x) => x.pid === item.pid).bname }}<br />
-              {{ productsInfo.find((x) => x.pid === item.pid).pname }}<br />
-              <v-card-subtitle
-                style="font-size: 10px; color: grey; whitespace: nowrap"
-                class="pa-0 font-weight-bold text-subtitle-2"
-              >
-                옵션 : {{ item.ccolorcode }} / {{ item.psize }}<br />
-                수량 {{ item.oamount }}개</v-card-subtitle
-              >
-            </v-card-text>
-            <div class="d-flex flex-column justify-center">
-              <div class="font-weight-bold text-subtitle-2">
-                {{
-                  (
-                    (productsInfo.find((x) => x.pid === item.pid).pprice * (100 - sales)) /
-                    100
-                  ).toLocaleString()
-                }}
-                원
+              <div style="width: 65px">
+                <v-img
+                  :src="`${productsInfo.find((x) => x.pid === item.pid).cimage1}`"
+                  height="100%"
+                >
+                </v-img>
               </div>
-              <div class="text-decoration-line-through text-subtitle-2 grey--text">
-                {{ productsInfo.find((x) => x.pid === item.pid).pprice.toLocaleString() }}원
-              </div>
-              <div class="text-subtitle-2" style="font-weight: bolder; color: #eb7c4c">
-                {{ sales }}% 할인
+              <v-card-text
+                style="font-size: 11px; width: 55%; whitespace: nowrap"
+                class="pa-0 pl-2 font-weight-bold text-subtitle-2"
+              >
+                {{ productsInfo.find((x) => x.pid === item.pid).bname }}<br />
+                {{ productsInfo.find((x) => x.pid === item.pid).pname }}<br />
+                <v-card-subtitle
+                  style="font-size: 10px; color: grey; whitespace: nowrap"
+                  class="pa-0 font-weight-bold text-subtitle-2"
+                >
+                  옵션 : {{ item.pcolor }} / {{ item.psize }}<br />
+                  수량 {{ item.pamount }}개</v-card-subtitle
+                >
+              </v-card-text>
+              <div class="d-flex flex-column justify-center">
+                <div class="font-weight-bold text-subtitle-2">
+                  {{
+                    (
+                      (productsInfo.find((x) => x.pid === item.pid).pprice * (100 - sales)) /
+                      100
+                    ).toLocaleString()
+                  }}
+                  원
+                </div>
+                <div class="text-decoration-line-through text-subtitle-2 grey--text">
+                  {{ productsInfo.find((x) => x.pid === item.pid).pprice.toLocaleString() }}원
+                </div>
+                <div class="text-subtitle-2" style="font-weight: bolder; color: #eb7c4c">
+                  {{ sales }}% 할인
+                </div>
               </div>
             </div>
-          </div>
+          </template>
         </div>
       </v-expand-transition>
     </v-card>
@@ -271,7 +271,7 @@ export default {
       cards: ["현대카드", "신한카드", "우리카드", "롯데카드", "삼성카드", "기업카드"],
       accounts: ["현대은행", "국민은행", "농협", "신한은행", "기업은행", "카카오뱅크", "우리은행"],
       member: { mpoint: 1000000 }, //사용자 정보
-      orderItems: [{ ccolorcode: "", oamount: 0, oid: "", pid: "", psize: "" }], //주문 제품 정보들
+      orderItems: [{ mid: "", pcolor: "", pamount: 0, pid: "", psize: "" }], //주문 제품 정보들
       order: {
         mid: "",
         oaccountdeadline: "",
@@ -363,7 +363,7 @@ export default {
       apiOrder
         .getOrderListItem(this.oid)
         .then((response) => {
-          //this.orderItems = response.data.orderitem;
+          this.orderItems = response.data.orderitem;
           this.order = response.data.orderlist;
           console.log("orderItems : ", this.orderItems);
           console.log("order : ", this.order);
@@ -378,11 +378,11 @@ export default {
     getProductInfo() {
       this.productsInfo = [];
       for (let item of this.orderItems) {
-        let pid = item.pid;
         apiProduct
-          .getProductInfo(pid, item.ccolorcode)
+          .getProductInfo(item.pid, item.pcolor)
           .then((res) => {
             this.productsInfo.push(res.data);
+            console.log("for문 안", res);
             //price 초기 세팅
             this.initPrice();
           })
@@ -410,7 +410,7 @@ export default {
       this.discountPrice = 0;
 
       for (let info of this.productsInfo) {
-        let amount = this.orderItems.find((x) => x.pid === info.pid).oamount;
+        let amount = this.orderItems.find((x) => x.pid === info.pid).pamount;
         this.btotalPrice += info.pprice * amount;
         this.atotalPrice += ((info.pprice * (100 - this.sales)) / 100) * amount;
       }
@@ -550,9 +550,9 @@ export default {
             const orderItem = new FormData();
             orderItem.append("oid", oid);
             orderItem.append("pid", item.pid);
-            orderItem.append("ccolorcode", item.ccolorcode);
+            orderItem.append("ccolorcode", item.pcolor);
             orderItem.append("psize", item.psize);
-            orderItem.append("oamount", item.oamount);
+            orderItem.append("oamount", item.pamount);
 
             //orderItem에 데이터 삽입
             apiOrder
@@ -571,9 +571,7 @@ export default {
     },
   },
   created() {
-    this.orderItems.splice(0, 1, this.$store.getters["cart/getProductToBuy"]);
-    console.log("####", this.orderItems);
-
+    this.orderItems.splice(0, 1, ...this.$store.getters["cart/getProductToBuy"]);
     this.$store.commit("gnb/setCurrentPage", "order");
     if (this.$store.getters["login/getUserId"] === "") {
       this.$router.push("/login");
@@ -583,8 +581,9 @@ export default {
     this.getCoupon();
     this.isUsedCoupon = false;
     //oid 받기
-    this.oid = this.$route.query.oid; //이거 지워야해
-    this.getOrderListItem(); //이거 지워야해
+    //this.oid = this.$route.query.oid; //이거 지워야해
+    //this.getOrderListItem(); //이거 지워야해
+    this.getProductInfo();
   },
   watch: {
     "order.ousedmileage"(newValue) {
