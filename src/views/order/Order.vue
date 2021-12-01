@@ -77,14 +77,14 @@
                 <div class="font-weight-bold text-subtitle-2">
                   {{
                     (
-                      (productsInfo.find((x) => x.pid === item.pid).pprice * (100 - sales)) /
+                      (productsInfo.find((x) => x.pid === item.pid).pprice * item.pamount * (100 - sales)) /
                       100
                     ).toLocaleString()
                   }}
                   원
                 </div>
                 <div class="text-decoration-line-through text-subtitle-2 grey--text">
-                  {{ productsInfo.find((x) => x.pid === item.pid).pprice.toLocaleString() }}원
+                  {{ (productsInfo.find((x) => x.pid === item.pid).pprice*item.pamount).toLocaleString() }}원
                 </div>
                 <div class="text-subtitle-2" style="font-weight: bolder; color: #eb7c4c">
                   {{ sales }}% 할인

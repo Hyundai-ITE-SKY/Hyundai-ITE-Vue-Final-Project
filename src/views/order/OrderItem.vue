@@ -1,19 +1,21 @@
 <!-- 컴포넌트 UI 정의 -->
 <template>
-  <div style="background-color: white">
+  <div
+    style="background-color: white"
+  >
     <div class="px-3 py-6" style="display: flex">
       <div>
-          <v-img
-            :src="product.cimage1"
-            lazy-src="@/assets/images/event/eventloader.jpg"
-            width="100px"
-          >
-            <template v-slot:placeholder>
-              <v-row class="fill-height ma-0" align="center" justify="center">
-                <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
-              </v-row>
-            </template>
-          </v-img>
+        <v-img
+          :src="product.cimage1"
+          lazy-src="@/assets/images/event/eventloader.jpg"
+          width="100px"
+        >
+          <template v-slot:placeholder>
+            <v-row class="fill-height ma-0" align="center" justify="center">
+              <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
+            </v-row>
+          </template>
+        </v-img>
       </div>
       <div class="px-3">
         <div class="text-truncate" style="font-size: 0.875rem; font-weight: bolder">
@@ -35,7 +37,7 @@
         </div>
         <div class="mt-3" style="font-size: 0.875rem; font-weight: bolder; color: #ea7740">
           주문접수
-        </div> 
+        </div>
       </div>
     </div>
   </div>
@@ -53,13 +55,13 @@ export default {
   },
   // 컴포넌트 메소드 정의
   methods: {},
-  created(){
-    console.log("######order",this.order);
-    console.log("######product",this.product);
+  created() {
+    console.log("######order", this.order);
+    console.log("######product", this.product);
   },
   props: {
     product: Object,
-    order : Object,
+    order: Object,
   },
 };
 </script>
