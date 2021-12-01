@@ -508,6 +508,36 @@ export default {
           console.log(error);
         });
     },
+    async CartitemDelete(pid, pcolor, psize) {
+      await apiMember
+        .deleteCartitem(pid, pcolor, psize)
+        .then(() => {
+          location.reload(true);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    async updateCoupon(ccode, cstate) {
+      await apiMember
+        .updateCoupon(ccode, cstate)
+        .then((response) => {
+          console.log(response.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    async updatePoint(point) {
+      await apiMember
+        .updatePoint(point)
+        .then((response) => {
+          console.log(response.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
     async orderSuccess() {
       /* orderList 삽입 데이터 세팅 */
       this.order.odiscounted = this.discountPrice;
@@ -563,6 +593,19 @@ export default {
               .catch((error) => {
                 console.log(error);
               });
+
+            this.CartitemDelete(item.pid, item.pcolor, item.psize);
+
+            if (this.isUsedCoupon) {
+              //쿠폰 업데이트
+              console.log("coupon update");
+              this.updateCoupon(this.order.ousedcoupon, 1);
+            }
+            if (!this.isApplyPoint) {
+              //마일리지 업데이트
+              console.log("mpoint update");
+              this.updatePoint(this.member.mpoint);
+            }
           }
         })
         .catch((error) => {

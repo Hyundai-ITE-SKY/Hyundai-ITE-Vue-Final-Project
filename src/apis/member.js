@@ -50,6 +50,17 @@ function createCartitem(formData){
   return promise;
 }
 
+function updatePoint(point){
+  const promise = axios.post('http://localhost/member/updatepoint', `point=${point}`);
+  return promise;
+}
+
+function updateCoupon(ccode, cstate){
+  const promise = axios.post('http://localhost/member/updatecoupon', `ccode=${ccode}&cstate=${cstate}`);
+  return promise;
+}
+
+
 export default{
   getMember,
   getWishList,
@@ -60,5 +71,7 @@ export default{
   createCoupon,
   deleteCartitem,
   updateCartitem,
-  createCartitem
+  createCartitem,
+  updatePoint,
+  updateCoupon,
 }
