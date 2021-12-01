@@ -1,67 +1,74 @@
 import axios from "axios";
 
-function getMember(){
+function getMember() {
   const promise = axios.get("http://kosa1.iptime.org:50207/member/info");
   return promise;
 }
 
-function getCoupon(){
+function getCoupon() {
   const promise = axios.get("http://kosa1.iptime.org:50207/member/coupon");
   return promise;
 }
 
-function getWishList(){
-  const promise = axios.get("http://kosa1.iptime.org:50207/member/wishlist");  
+function getWishList() {
+  const promise = axios.get("http://kosa1.iptime.org:50207/member/wishlist");
   return promise;
 }
 
-function getCart(){
+function getCart() {
   const promise = axios.get("http://kosa1.iptime.org:50207/member/mycart");
   return promise;
 }
 
-function createWishList(pid){
+function createWishList(pid) {
   const promise = axios.post("http://kosa1.iptime.org:50207/member/createwishlist", `pid=${pid}`);
   return promise;
 }
 
-function deleteWishList(pid){
-  const promise = axios.delete("http://kosa1.iptime.org:50207/member/deletewishlist", {params:{pid:pid}});
+function deleteWishList(pid) {
+  const promise = axios.delete("http://kosa1.iptime.org:50207/member/deletewishlist", {
+    params: { pid: pid },
+  });
   return promise;
 }
 
-function createCoupon(eid, ename, cname){
-  const promise = axios.post("http://kosa1.iptime.org:50207/member/createcoupon", `eid=${eid}&ename=${ename}&cname=${cname}`);
+function createCoupon(eid, ename, cname) {
+  const promise = axios.post(
+    "http://kosa1.iptime.org:50207/member/createcoupon",
+    `eid=${eid}&ename=${ename}&cname=${cname}`,
+  );
   return promise;
 }
 
-function deleteCartitem(pid, pcolor, psize){
+function deleteCartitem(pid, pcolor, psize) {
   const promise = axios.delete(`http://kosa1.iptime.org:50207/member/${pid}/${pcolor}_${psize}`);
   return promise;
 }
 
-function updateCartitem(formData){
-  const promise = axios.post('http://kosa1.iptime.org:50207/member/update', formData);
+function updateCartitem(formData) {
+  const promise = axios.post("http://kosa1.iptime.org:50207/member/update", formData);
   return promise;
 }
 
-function createCartitem(formData){
-  const promise = axios.post('http://kosa1.iptime.org:50207/member/createcart', formData);
+function createCartitem(formData) {
+  const promise = axios.post("http://kosa1.iptime.org:50207/member/createcart", formData);
   return promise;
 }
 
-function updatePoint(point){
-  const promise = axios.post('http://localhost/member/updatepoint', `point=${point}`);
+function updatePoint(point) {
+  const promise = axios.post("http://kosa1.iptime.org:50202/member/updatepoint", `point=${point}`);
   return promise;
 }
 
-function updateCoupon(ccode, cstate){
-  const promise = axios.post('http://localhost/member/updatecoupon', `ccode=${ccode}&cstate=${cstate}`);
+function updateCoupon(ccode, cstate) {
+  const promise = axios.post(
+    "http://kosa1.iptime.org:50202/member/updatecoupon",
+    `ccode=${ccode}&cstate=${cstate}`,
+  );
   return promise;
 }
 
-
-export default{
+export default {
   getMember,
   getWishList,
   getCoupon,
@@ -74,4 +81,4 @@ export default{
   createCartitem,
   updatePoint,
   updateCoupon,
-}
+};
