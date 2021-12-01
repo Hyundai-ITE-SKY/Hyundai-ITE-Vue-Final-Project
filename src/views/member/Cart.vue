@@ -55,9 +55,31 @@
                     <v-col cols="12" class="pa-0" style="font-size: 14px; color: grey"
                       >수량 : {{ product.pamount }} 개</v-col
                     >
-                    <v-col cols="12" class="font-weight-black ma-0 pt-2"
+                    <div class="pt-2">
+                      <div class="text-truncate" style="font-size: 1rem; font-weight: bolder">
+                        {{
+                          (
+                            ((info.pprice * (100 - $store.state.product.gradeSale)) / 100) *
+                            product.pamount
+                          ).toLocaleString()
+                        }}원
+                      </div>
+                      <span
+                        class="text-decoration-line-through ml-auto text--disabled text-truncate"
+                        style="font-size: 0.875rem; font-weight: bolder"
+                      >
+                        {{ (info.pprice * product.pamount).toLocaleString() }}원
+                      </span>
+                      <span
+                        class="ml-auto"
+                        style="font-size: 0.8rem; font-weight: bolder; color: #eb7c4c"
+                      >
+                        &nbsp;{{ $store.state.product.gradeSale }}%
+                      </span>
+                    </div>
+                    <!-- <v-col cols="12" class="font-weight-black ma-0 pt-2"
                       >{{ (info.pprice * product.pamount).toLocaleString() }} 원</v-col
-                    >
+                    > -->
                   </v-row>
                 </v-col>
 
@@ -67,7 +89,7 @@
                       옵션/수량
                       <v-icon>{{ show[i] ? "mdi-chevron-up" : "mdi-chevron-down" }}</v-icon>
                     </v-btn>
-                    <v-btn dark to="/order/order" outlined color="black">바로 구매</v-btn>
+                    <v-btn dark @click="buyNow(product)" outlined color="black">바로 구매</v-btn>
                   </v-card-actions>
                 </v-layout>
               </v-row>
@@ -283,6 +305,13 @@ export default {
         this.amounts.splice(idx, 1, this.amounts[idx] + 1);
       }
     },
+    buyNow(product) {
+      //console.log(product);
+      var buyProduct = [];
+      buyProduct.push(product);
+      this.$store.commit("cart/setProductToBuy", buyProduct);
+      this.$router.push("/order/order");
+    },
   },
   computed: {
     selectedAll: {
@@ -309,7 +338,9 @@ export default {
         if (newvalue.indexOf(i) > -1) {
           for (let info of this.infos) {
             if (product.pid === info.pid) {
-              sum += info.pprice * product.pamount;
+              sum +=
+                ((info.pprice * (100 - this.$store.state.product.gradeSale)) / 100) *
+                product.pamount;
             }
           }
         }
@@ -330,6 +361,7 @@ export default {
     if (this.$store.getters["login/getUserId"] === "") {
       this.$router.push("/login");
     }
+    this.$store.commit("cart/setProductToBuy", []);
     this.$store.commit("gnb/setCurrentPage", "cart");
     this.getCart();
     // console.log("selected:", this.selected);

@@ -277,7 +277,7 @@
         <v-icon>mdi-credit-card-outline</v-icon>
       </v-btn>
 
-      <v-btn v-show="$store.state.gnb.currentPage === 'cart'" @click="movePage('order')" plain>
+      <v-btn v-show="$store.state.gnb.currentPage === 'cart'" :disabled="$store.getters['cart/getProductToBuy'].length === 0" @click="movePage('order')" plain>
         <span>주문하기</span>
         <v-icon>mdi-barcode-scan</v-icon>
       </v-btn>
@@ -460,7 +460,6 @@ export default {
       } else if (page === "mypage") {
         this.$router.push("/member/mypage").catch(() => {});
       } else if (page === "order") {
-        this.resetInput();
         this.$router.push("/order/order").catch(() => {});
       } else if (page === "cart") {
         this.createCartitem(); //장바구니 추가
@@ -469,6 +468,7 @@ export default {
         this.$router.push("/member/cart").catch(() => {});
       } else if (page === "ordersuccess") {
         this.$refs.childRef.orderSuccess();
+        this.$store.commit("cart/setProductToBuy", []);
         this.$router.push("/order/success").catch(() => {});
       }
     },

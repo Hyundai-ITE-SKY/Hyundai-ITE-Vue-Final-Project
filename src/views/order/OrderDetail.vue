@@ -18,7 +18,7 @@
     <v-card class="mb-3" outlined>
       <div class="d-flex justify-space-between pt-3 pb-3 pl-5 pr-5">
         <span style="font-size: 13px"> No.{{ orderinfo.oid }} </span>
-        <span style="color: grey; font-size: 13px">{{ orderinfo.odate }}</span>
+        <span style="color: grey; font-size: 13px">{{ getKoreanTime(orderinfo.odate) }}</span>
       </div>
       <v-divider></v-divider>
       <!--반복-->
@@ -82,10 +82,10 @@
           </div>
           <div class="d-flex justify-space-between">
             <span style="font-size: 14px">배송지</span>
-            <span style="font-size: 14px"
-              >({{ orderinfo.ozipcode }}) {{ orderinfo.oaddress1 }}<br />
-              {{ orderinfo.oaddress2 }}</span
-            >
+            <div align="right" style="font-size: 14px"
+              >({{ orderinfo.ozipcode }}) {{ orderinfo.oaddress1 }}<br/>
+              {{ orderinfo.oaddress2 }}</div>
+            
           </div>
         </div>
       </v-expand-transition>
@@ -164,6 +164,11 @@ export default {
         })
         .catch(() => {});
     },
+    getKoreanTime(date) {
+      let time = new Date(date);
+      return time.toLocaleString();
+    }
+    
   },
   created() {
     if (this.$store.getters["login/getUserId"] === "") {

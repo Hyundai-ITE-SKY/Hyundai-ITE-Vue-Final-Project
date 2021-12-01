@@ -56,13 +56,13 @@
         border-bottom: solid 2px #ededed;
       "
     >
-      <div style="font-weight: bolder; font-size: 0.875rem">{{order.odate}}</div>
+      <div style="font-weight: bolder; font-size: 0.875rem">{{getKoreanTime(order.odate)}}</div>
       <div class="mx-2" style="font-size: 0.875rem; color: #a9a9a9">/</div>
       <div style="font-size: 0.875rem; color: #636363">{{order.oid}}</div>
       <v-icon class="ml-auto" @click="moveToOrderDetail(order.oid)">mdi-chevron-right</v-icon>
     </div>
       <div v-for="(item, j) of order.orderitem" :key="j">
-        <div v-for="product of products" :key="product.pid">
+        <div v-for="(product,k) of products" :key="k">
           <template v-if="item.pid == product.pid">
             <order-item :order="item" :product="product" :key="i"> </order-item>
           </template>
@@ -104,6 +104,11 @@ export default {
       }
       return "#A3A3A3";
     },
+    getKoreanTime(date) {
+      let time = new Date(date);
+      return time.toLocaleString();
+    }
+    ,
     async getProductInfo(pid, ccolorcode) {
       await apiProduct.getProductInfo(pid, ccolorcode).then((response) => {
         // console.log("#########productinfo", response.data);
@@ -114,6 +119,10 @@ export default {
       await apiOrder.getOrderList().then((response) => {
         // console.log(response.data);
         this.orderlist = response.data;
+        this.orderlist = this.orderlist.sort(function (a, b) {
+          return b.oid - a.oid;
+        });
+
         // console.log(this.orderlist);
         for (let order of this.orderlist) {
           let item = order.orderitem;
