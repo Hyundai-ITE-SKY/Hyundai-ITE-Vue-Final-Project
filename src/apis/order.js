@@ -10,7 +10,13 @@ function getOrderListItem(oid){
   return promise;
 }
 
+function getOrderList(){
+  const promise = axios.get(`http://kosa1.iptime.org:50211/order/orderlist`);
+  return promise;
+}
+
 export default{
   getOrderState,
   getOrderListItem,
+  getOrderList
 }
