@@ -88,7 +88,7 @@ export default {
       }
 
       await apiMember
-        .createCoupon(this.event.eid, this.event.ename, "쿠폰 이름")
+        .createCoupon(this.event.eid, this.event.ename, "30% 할인 쿠폰")
         .then((response) => {
           if (response.data === 1) {
             //2. 쿠폰 발급 성공

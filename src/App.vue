@@ -111,7 +111,7 @@
     </v-app-bar>
 
     <div style="padding-top: 83px; padding-bottom: 56px">
-      <router-view></router-view>
+      <router-view ref="childRef"></router-view>
     </div>
 
     <v-bottom-navigation app color="black">
@@ -121,7 +121,7 @@
           $store.state.gnb.currentPage !== 'productdetailbuy' &&
           $store.state.gnb.currentPage !== 'order'
         "
-        @click="movePage('main')"
+        @click="[movePage('main'), testCall]"
         plain
       >
         <v-icon style="margin: 0px; padding: 0px">mdi-home-outline</v-icon>
@@ -374,6 +374,7 @@ export default {
       } else if (page === "cart") {
         this.$router.push("/member/cart").catch(() => {});
       } else if (page === "ordersuccess") {
+        this.$refs.childRef.orderSuccess();
         this.$router.push("/order/success").catch(() => {});
       }
     },
