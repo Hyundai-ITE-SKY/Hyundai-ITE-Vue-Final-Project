@@ -191,7 +191,7 @@ export default {
             this.show.push(false);
             this.amounts.push(1);
           }
-          console.log(this.show);
+          // console.log(this.show);
         })
         .catch((error) => {
           console.log(error);
@@ -202,7 +202,7 @@ export default {
         apiProduct
           .getProduct(i.pid)
           .then((res) => {
-            console.log("product :: ", res.data);
+            // console.log("product :: ", res.data);
             this.infos.push(res.data);
 
             const colorArray = [];
@@ -229,21 +229,21 @@ export default {
     },
     //일괄 삭제
     CartSelectedDelete() {
-      console.log(this.products, this.selected);
+      // console.log(this.products, this.selected);
       for (let i = 0; i < this.selected.length; i++) {
         // console.log(this.products[this.selected[i]-1]); //삭제해야 할 상품
         var item = this.products[this.selected[i]];
-        console.log(item.pid, item.pcolor, item.psize);
+        // console.log(item.pid, item.pcolor, item.psize);
         this.CartitemDelete(item.pid, item.pcolor, item.psize);
       }
     },
     async CartitemDelete(pid, pcolor, psize) {
-      console.log(pid, pcolor, psize);
+      // console.log(pid, pcolor, psize);
       await apiMember
         .deleteCartitem(pid, pcolor, psize)
-        .then((response) => {
+        .then(() => {
           location.reload(true); // 삭제 후 강제 refresh
-          console.log(response.data);
+          // console.log(response.data);
         })
         .catch((error) => {
           console.log(error);
@@ -266,8 +266,8 @@ export default {
       formData.append("pamount", pamount);
       apiMember
         .updateCartitem(formData)
-        .then((response) => {
-          console.log(response.data);
+        .then(() => {
+          // console.log(response.data);
           location.reload(true);
         })
         .catch((error) => {
@@ -293,7 +293,7 @@ export default {
             this.selected.push(i);
           }
         }
-        console.log(val, this.selected);
+        // console.log(val, this.selected);
       },
       get() {
         return this.selected.length === this.count;
@@ -321,8 +321,9 @@ export default {
       for (let select of this.selected) {
         // console.log(this.products[select]);
         this.cartToOrder.push(this.products[select]);
-        this.$store.commit("cart/setProductToBuy", this.cartToOrder);
       }
+
+      this.$store.commit("cart/setProductToBuy", this.cartToOrder);
     },
   },
   created() {
@@ -331,7 +332,7 @@ export default {
     }
     this.$store.commit("gnb/setCurrentPage", "cart");
     this.getCart();
-    console.log("selected:", this.selected);
+    // console.log("selected:", this.selected);
   },
 };
 </script>

@@ -363,7 +363,7 @@ export default {
       apiOrder
         .getOrderListItem(this.oid)
         .then((response) => {
-          this.orderItems = response.data.orderitem;
+          //this.orderItems = response.data.orderitem;
           this.order = response.data.orderlist;
           console.log("orderItems : ", this.orderItems);
           console.log("order : ", this.order);
@@ -498,13 +498,15 @@ export default {
         this.order.opayment = 1;
       }
     },
-    async getOrderListByMid(){
-      await apiOrder.getOrderList()
-        .then((response)=>{
+    async getOrderListByMid() {
+      await apiOrder
+        .getOrderList()
+        .then((response) => {
           console.log("getOrderListByMid", response.data);
-        }).catch((error)=>{
-          console.log(error);
         })
+        .catch((error) => {
+          console.log(error);
+        });
     },
     async orderSuccess() {
       /* orderList 삽입 데이터 세팅 */
@@ -542,7 +544,7 @@ export default {
         .then((response) => {
           console.log(response.data);
           //oid 가져오기
-          let oid=response.data.oid;
+          let oid = response.data.oid;
           /* orderItems 삽입 데이터 세팅 */
           for (let item of this.orderItems) {
             const orderItem = new FormData();
@@ -551,12 +553,14 @@ export default {
             orderItem.append("ccolorcode", item.ccolorcode);
             orderItem.append("psize", item.psize);
             orderItem.append("oamount", item.oamount);
-            
+
             //orderItem에 데이터 삽입
-            apiOrder.createOrderItem(orderItem)
-              .then((response)=>{
+            apiOrder
+              .createOrderItem(orderItem)
+              .then((response) => {
                 console.log(response.data);
-              }).catch((error)=>{
+              })
+              .catch((error) => {
                 console.log(error);
               });
           }
@@ -567,6 +571,9 @@ export default {
     },
   },
   created() {
+    this.orderItems.splice(0, 1, this.$store.getters["cart/getProductToBuy"]);
+    console.log("####", this.orderItems);
+
     this.$store.commit("gnb/setCurrentPage", "order");
     if (this.$store.getters["login/getUserId"] === "") {
       this.$router.push("/login");
