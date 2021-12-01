@@ -31,17 +31,22 @@
             >
               <div class="mx-2 text-center">
                 <div style="width: 150px" @click="moveProductDetail(item.pid)">
-                  <div
-                    class="pa-2"
-                    style="background-color: black; color: white; font-weight: bolder"
-                  >
-                    {{ i + 1 }}
-                  </div>
                   <div class="mx-auto">
                     <v-img
                       :src="item.colors[0].cimage1"
                       lazy-src="@/assets/images/event/eventloader.jpg"
                     >
+                      <div
+                        class="py-2 text-center"
+                        style="
+                          width: 40px;
+                          background-color: black;
+                          color: white;
+                          font-weight: bolder;
+                        "
+                      >
+                        {{ i + 1 }}
+                      </div>
                       <template v-slot:placeholder>
                         <v-row class="fill-height fill-width ma-0" align="center" justify="center">
                           <v-progress-circular

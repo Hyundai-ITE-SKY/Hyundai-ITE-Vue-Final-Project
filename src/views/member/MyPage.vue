@@ -1,117 +1,45 @@
 <!--컴포넌트 UI 정의-->
 <template>
-  <div v-if="$store.state.userId !== ''">
-    <div max-width="375" width="100%" style="margin-top: -6px">
-      <v-img src="@/assets/images/background4.jpg" height="300px" dark>
-        <v-row class="fill-height">
-          <v-spacer></v-spacer>
-          <!-- 사용자 이름과 등급 -->
-          <v-card-title class="white--text pt-12">
-            <span class="text-h5 pt-12">
-              {{ member.mid }} 님의
-              <br /><span class="text-h6">회원 등급은 {{ member.mgrade }} 입니다</span>
-            </span>
-          </v-card-title>
-        </v-row>
-      </v-img>
-
-      <v-list two-line>
-        <!-- 포인트 / 쿠폰 -->
-        <v-list-item>
-          <v-row no-gutters>
-            <v-col cols="6">
-              <v-card rounded="0" outlined>
-                <v-card-title class="text-subtitle-1">포인트</v-card-title>
-                <v-card-subtitle>{{ (member.mpoint).toLocaleString('ko-KR', 4) }}P</v-card-subtitle>
-              </v-card>
-            </v-col>
-            <v-col cols="6">
-              <v-card rounded="0" outlined>
-                <v-card-title class="text-subtitle-1">쿠폰</v-card-title>
-                <v-card-subtitle>{{ coupon.length }} 개</v-card-subtitle>
-              </v-card>
-            </v-col>
-          </v-row>
-        </v-list-item>
-
-        <!-- 주문/배송 조회 -->
-        <v-list-item>
-          <v-list-item-content>
-            <v-list-item-title class="font-weight-black">주문/배송 조회</v-list-item-title>
-            <v-list-item-subtitle>
-              <v-row class="d-flex align-center justify-center my-2">
-                <v-col
-                  cols="2"
-                  class="d-flex flex-column align-center justify-center mx-1 pb-0"
-                  v-for="(order, i) in orders"
-                  :key="i * 2"
-                >
-                  <div v-if="order.value === 0" class="text-h5 grey--text">{{ order.value }}</div>
-                  <div v-if="order.value !== 0" class="text-h5">{{ order.value }}</div>
-                </v-col>
-                <v-col
-                  cols="2"
-                  class="d-flex flex-column align-center justify-center mx-1 pt-0"
-                  v-for="(order, i) in orders"
-                  :key="i * 2 + 1"
-                >
-                  <div class="font-weight-black pl-2 text-body-2">{{ order.status }}</div>
-                </v-col>
-              </v-row>
-            </v-list-item-subtitle>
-          </v-list-item-content>
-        </v-list-item>
-
-        <!--q&a, 개인정보 수정, 찜, 취소/반품-->
-        <v-list-item>
-          <v-list-item-content>
-            <v-list-item-subtitle>
-              <v-row no-gutters>
-                <v-col cols="6">
-                  <v-card rounded="0" outlined to="/member/qna">
-                    <v-card-title class="justify-center">
-                      <v-icon>mdi-help-circle-outline</v-icon>
-                    </v-card-title>
-                    <v-card-subtitle class="text-center">Q&A</v-card-subtitle>
-                  </v-card>
-                </v-col>
-                <v-col cols="6">
-                  <v-card rounded="0" outlined>
-                    <v-card-title class="justify-center">
-                      <v-icon>mdi-account-edit-outline</v-icon>
-                    </v-card-title>
-                    <v-card-subtitle class="text-center">개인정보 수정</v-card-subtitle>
-                  </v-card>
-                </v-col>
-                <v-col cols="6">
-                  <v-card rounded="0" outlined to="/member/wishlist">
-                    <v-card-title class="justify-center"
-                      ><v-icon>mdi-heart-outline</v-icon></v-card-title
-                    >
-                    <v-card-subtitle class="text-center">찜</v-card-subtitle>
-                  </v-card>
-                </v-col>
-                <v-col cols="6">
-                  <v-card rounded="0" outlined>
-                    <v-card-title class="justify-center"><v-icon>mdi-archive-cancel-outline</v-icon></v-card-title>
-                    <v-card-subtitle class="text-center">취소/반품</v-card-subtitle>
-                  </v-card>
-                </v-col>
-              </v-row>
-            </v-list-item-subtitle>
-          </v-list-item-content>
-        </v-list-item>
-        <div class="text-center">
-          <v-btn @click="handleLogout" dark> 로그아웃 </v-btn>
+  <div>
+    <div class="align-center pa-3" style="display: flex; border-bottom: solid 8px #f1f1f1">
+      <div class="py-3 pr-3">
+        <v-avatar :size="70">
+          <img src="https://cdn.vuetifyjs.com/images/john.jpg" />
+        </v-avatar>
+      </div>
+      <div>
+        <div style="font-size: 1.5rem; font-weight: bolder">홍길동</div>
+        <div>
+          {{ member.mgrade }}
         </div>
-      </v-list>
+      </div>
+      <v-btn rounded text outlined color="#868686" elevation="0" class="ml-auto">
+        <v-icon>mdi-cog</v-icon>
+      </v-btn>
+    </div>
+    <div class="align-center pa-3" style="display: flex">
+      <div class="text-center">
+        <v-icon :size="36" color="black">mdi-alpha-p-circle-outline</v-icon>
+        <div style="font-size: 0.875rem; font-weight: bolder">포인트</div>
+        <div class="mt-2" style="font-size: 1rem; font-weight: bolder">{{ member.mpoint.toLocaleString() }}P</div>
+      </div>
+      <div class="text-center">
+        <v-icon :size="36" color="black">mdi-cash-multiple</v-icon>
+        <div style="font-size: 0.875rem; font-weight: bolder">총 결제 금액</div>
+        <div class="mt-2" style="font-size: 1rem; font-weight: bolder">{{ member.mpoint.toLocaleString() }}원</div>
+      </div>
+      <div class="text-center">
+        <v-icon :size="36" color="black">mdi-ticket-percent-outline</v-icon>
+        <div style="font-size: 0.875rem; font-weight: bolder">보유 쿠폰</div>
+        <div class="mt-2" style="font-size: 1rem; font-weight: bolder">{{ member.mpoint.toLocaleString() }}원</div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import member from "@/apis/member"
-import apiOrder from "@/apis/order"
+import member from "@/apis/member";
+import apiOrder from "@/apis/order";
 
 export default {
   //컴포넌트의 대표 이름(devtools에 나오는 이름)
@@ -127,7 +55,7 @@ export default {
         mgrade: "Lv6",
         mpoint: 0,
       },
-      coupon:{
+      coupon: {
         cid: "cid",
       },
       orders: [
@@ -147,38 +75,40 @@ export default {
       this.$router.push("/home/event");
     },
     //member 정보 획득
-    async getMember(){
-      try{
+    async getMember() {
+      try {
         const response = await member.getMember();
         this.member = response.data;
-      }catch(err){
+      } catch (err) {
         console.log(err);
       }
     },
     //쿠폰 정보 획득
-    getCoupon(){
-      member.getCoupon()
-        .then((response)=>{
+    getCoupon() {
+      member
+        .getCoupon()
+        .then((response) => {
           this.coupon = response.data;
         })
-        .catch((error)=>{
+        .catch((error) => {
           console.log(error);
         });
     },
     //주문 정보 획득
-    async getOrderState(){
-      await apiOrder.getOrderState(this.$store.getters["login/getUserId"])
-                .then((response)=>{
-                  this.orderState = response.data;
+    async getOrderState() {
+      await apiOrder
+        .getOrderState(this.$store.getters["login/getUserId"])
+        .then((response) => {
+          this.orderState = response.data;
 
-                  for(let item of this.orderState){
-                    this.orders[item.ostatus].value = item.count;
-                  }
-                })
-                .catch((error)=>{
-                  console.log(error);
-                });
-    }
+          for (let item of this.orderState) {
+            this.orders[item.ostatus].value = item.count;
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
   },
   created() {
     if (this.$store.getters["login/getUserId"] === "") {
@@ -190,9 +120,7 @@ export default {
     this.getCoupon();
     this.getOrderState();
   },
-  mounted(){
-    
-  },
+  mounted() {},
 };
 </script>
 <!--컴포넌트 스타일 정의-->
