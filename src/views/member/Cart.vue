@@ -41,7 +41,12 @@
                         >mdi-close</v-icon
                       ></v-col
                     >
-                    <v-col cols="12" class="pa-0 text-truncate" style="font-size: 15px" @click="moveProductDetail(product.pid)">
+                    <v-col
+                      cols="12"
+                      class="pa-0 text-truncate"
+                      style="font-size: 15px"
+                      @click="moveProductDetail(product.pid)"
+                    >
                       {{ info.pname }}
                     </v-col>
                     <v-col cols="12" class="pa-0" style="font-size: 14px; color: grey"
@@ -163,6 +168,7 @@ export default {
       selectedColor: "none",
       selectedSize: "none",
       amounts: [],
+      cartToOrder: [],
     };
   },
   //컴포넌트 메서드터 정의
@@ -170,7 +176,7 @@ export default {
     clickOption(i) {
       this.show.splice(i, 1, !this.show[i]);
     },
-    moveProductDetail(pid){
+    moveProductDetail(pid) {
       this.$router.push(`/product/detail?pid=${pid}`).catch(() => {});
     },
     getCart() {
@@ -270,8 +276,8 @@ export default {
     },
     countPamount(type, idx) {
       if (type == "minus") {
-        if(this.amounts[idx]>1){
-        this.amounts.splice(idx, 1, this.amounts[idx] - 1);
+        if (this.amounts[idx] > 1) {
+          this.amounts.splice(idx, 1, this.amounts[idx] - 1);
         }
       } else {
         this.amounts.splice(idx, 1, this.amounts[idx] + 1);
@@ -310,6 +316,13 @@ export default {
         i += 1;
       }
       this.totalSum = sum;
+      // console.log(this.selected);
+      this.cartToOrder = [];
+      for (let select of this.selected) {
+        // console.log(this.products[select]);
+        this.cartToOrder.push(this.products[select]);
+        this.$store.commit("cart/setProductToBuy", this.cartToOrder);
+      }
     },
   },
   created() {
