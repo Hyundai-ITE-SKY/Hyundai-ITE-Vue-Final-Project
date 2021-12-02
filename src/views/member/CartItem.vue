@@ -94,7 +94,6 @@ export default {
       this.$emit("cartItemHandleWish", this.state, pid);
     },
     handleDelete(pid, pcolor, psize) {
-      // console.log(pid, pcolor, psize);
       this.$emit("cartItemHandleDelete", pid, pcolor, psize);
     },
   },
@@ -113,7 +112,6 @@ export default {
   },
   created() {
     this.state = this.isWish;
-    // console.log('확인햐 : ',this.pcolorList);
   },
   computed: {
     selected: {
@@ -127,7 +125,6 @@ export default {
   },
   watch: {
     pcolorList: function () {
-      console.log("####### 여기는 cartitem : ", this.pcolorList);
       for (var p of this.pcolorList) {
         this.colorList.push(p.ccolorcode);
       }

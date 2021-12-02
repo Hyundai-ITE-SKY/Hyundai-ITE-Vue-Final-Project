@@ -3,17 +3,15 @@
 <template>
   <div style="background-color: #fafafa">
     <div style="display: flex" class="justify-space-between px-6 pt-6">
-      <div class="text-center" style="width: 48px; height: 48px; color: #266df6">
-        <div style="font-size: 1.5rem; font-weight: bolder; color: #266df6">13</div>
-        <div style="font-size: 0.7rem; color: #266df6">전체</div>
-      </div>
       <div
-        v-for="order of orders"
+        v-for="(order, i) of orders"
         :key="order.status"
         class="text-center"
         style="width: 48px; height: 48px; color: black"
       >
-        <div :style="`font-size: 1.5rem; font-weight: bolder; color: ${getFontColor(order.value)}`">
+        <div
+          :style="`font-size: 1.5rem; font-weight: bolder; color: ${getFontColor(order.value, i)}`"
+        >
           {{ order.value }}
         </div>
         <div style="font-size: 0.7rem">{{ order.status }}</div>
@@ -63,7 +61,8 @@
       </div>
       <div v-for="(item, j) of order.orderitem" :key="j">
         <div v-if="products.find((x) => x.pid === item.pid) !== undefined">
-          <order-item :order="item" :product="products.find((x) => x.pid === item.pid)"> </order-item>
+          <order-item :order="item" :product="products.find((x) => x.pid === item.pid)">
+          </order-item>
         </div>
       </div>
     </div>
@@ -85,18 +84,24 @@ export default {
       dates: ["2021-11-01", "2021-12-02"],
       menu: false,
       orders: [
-        { status: "결제", value: 1 },
+        { status: "전체", value: 0 },
+        { status: "결제", value: 0 },
         { status: "배송", value: 0 },
         { status: "배송완료", value: 0 },
-        { status: "구매확정", value: 12 },
+        { status: "구매확정", value: 0 },
       ],
+      orderState: [],
       orderlist: null,
       products: [],
     };
   },
   //컴포넌트 메서드 정의
   methods: {
-    getFontColor(value) {
+    getFontColor(value, i) {
+      if (i == 0) {
+        return "#266df6";
+      }
+
       if (value > 0) {
         return "black";
       }
@@ -106,21 +111,33 @@ export default {
       let time = new Date(date);
       return time.toLocaleString();
     },
+    //주문 정보 획득
+    async getOrderState() {
+      await apiOrder
+        .getOrderState(this.$store.getters["login/getUserId"])
+        .then((response) => {
+          this.orderState = response.data;
+
+          for (let item of this.orderState) {
+            this.orders[item.ostatus].value = item.count;
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
     async getProductInfo(pid, ccolorcode) {
       await apiProduct.getProductInfo(pid, ccolorcode).then((response) => {
-        // console.log("#########productinfo", response.data);
         this.products.push(response.data);
       });
     },
     async getOrderList() {
       await apiOrder.getOrderList().then((response) => {
-        // console.log(response.data);
         this.orderlist = response.data;
         this.orderlist = this.orderlist.sort(function (a, b) {
           return b.oid - a.oid;
         });
 
-        // console.log(this.orderlist);
         for (let order of this.orderlist) {
           let item = order.orderitem;
           for (let i of item) {
@@ -139,6 +156,7 @@ export default {
     }
     this.$store.commit("gnb/setCurrentPage", "orderlist");
     this.getOrderList();
+    this.getOrderState();
   },
   computed: {
     dateRangeText() {

@@ -1,8 +1,6 @@
 <!-- 컴포넌트 UI 정의 -->
 <template>
-  <div
-    style="background-color: white"
-  >
+  <div style="background-color: white">
     <div class="px-3 py-6" style="display: flex">
       <div>
         <v-img
@@ -55,10 +53,6 @@ export default {
   },
   // 컴포넌트 메소드 정의
   methods: {},
-  created() {
-    console.log("######order", this.order);
-    console.log("######product", this.product);
-  },
   props: {
     product: Object,
     order: Object,

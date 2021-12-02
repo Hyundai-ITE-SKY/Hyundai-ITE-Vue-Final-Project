@@ -74,7 +74,7 @@
     </div>
     <v-card-actions class="justify-center">
       <v-btn outlined to="/order/list">주문내역 조회</v-btn>
-      <v-btn color="black" dark to="/home/event">홈으로 가기</v-btn>
+      <v-btn color="black" dark to="/">홈으로 가기</v-btn>
     </v-card-actions>
   </div>
 </template>

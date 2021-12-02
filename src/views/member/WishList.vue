@@ -52,32 +52,29 @@ export default {
     /* 찜의 product들을 가져온다. */
     getProduct() {
       for (var item in this.productIds) {
-        console.log(this.productIds[item].pid);
-
         apiProduct
           .getProduct(this.productIds[item].pid)
           .then((response) => {
-            //console.log(response.data);
             this.products.push(response.data);
           })
           .catch((error) => {
             console.log(error);
           });
       }
-      
     },
     /* WishList에 상품 추가/삭제 */
-    async WishCreateDelete(wishState, pid){
+    async WishCreateDelete(wishState, pid) {
       /*wishState가 false일 경우 wishList 테이블에서 제거*/
-      if(!wishState){
+      if (!wishState) {
         await apiMember.deleteWishList(pid);
-      }else{/*wishState가 true일 경우 wishList 테이블에 추가*/
+      } else {
+        /*wishState가 true일 경우 wishList 테이블에 추가*/
         await apiMember.createWishList(pid);
       }
-      
+
       const wishlist = await apiMember.getWishList();
       this.$store.commit("product/setUserWishList", wishlist.data);
-    }
+    },
   },
   created() {
     if (this.$store.getters["login/getUserId"] === "") {

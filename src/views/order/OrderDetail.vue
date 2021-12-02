@@ -22,9 +22,9 @@
       </div>
       <v-divider></v-divider>
       <!--반복-->
-      <div v-for="(item,i) in orderitems" :key="i">
-        <div v-for="(info,j) in productinfo" :key="j">
-          <div v-if="item.pid==info.pid" class="px-3 py-3" style="display: flex">
+      <div v-for="(item, i) in orderitems" :key="i">
+        <div v-for="(info, j) in productinfo" :key="j">
+          <div v-if="item.pid == info.pid" class="px-3 py-3" style="display: flex">
             <div>
               <div>
                 <v-img
@@ -64,7 +64,7 @@
     </v-card>
     <!--배송지 정보-->
     <v-card class="mb-3" outlined>
-      <div class="d-flex justify-space-between pl-5 pr-5 pt-2 pb-2">
+      <div class="d-flex justify-space-between align-center pl-5 pr-5 pt-2 pb-2">
         <span style="font-weight: bold; font-size: 18px" class="align-center">배송지 정보</span>
         <v-btn icon @click="showAddress = !showAddress">
           <v-icon>{{ showAddress ? "mdi-chevron-up" : "mdi-chevron-down" }}</v-icon>
@@ -82,17 +82,17 @@
           </div>
           <div class="d-flex justify-space-between">
             <span style="font-size: 14px">배송지</span>
-            <div align="right" style="font-size: 14px"
-              >({{ orderinfo.ozipcode }}) {{ orderinfo.oaddress1 }}<br/>
-              {{ orderinfo.oaddress2 }}</div>
-            
+            <div align="right" style="font-size: 14px">
+              ({{ orderinfo.ozipcode }}) {{ orderinfo.oaddress1 }}<br />
+              {{ orderinfo.oaddress2 }}
+            </div>
           </div>
         </div>
       </v-expand-transition>
     </v-card>
     <!--최종 결제 정보-->
     <v-card class="mb-3" outlined>
-      <div class="d-flex justify-space-between pl-5 pr-5 pt-2 pb-2">
+      <div class="d-flex justify-space-between align-center pl-5 pr-5 pt-2 pb-2">
         <span style="font-weight: bold; font-size: 18px" class="align-center">최종 결제 정보</span>
         <v-btn icon @click="showPayment = !showPayment">
           <v-icon>{{ showPayment ? "mdi-chevron-up" : "mdi-chevron-down" }}</v-icon>
@@ -102,16 +102,18 @@
         <div v-show="showPayment" class="pl-5 pr-5 pb-5">
           <div class="d-flex justify-space-between">
             <span style="font-size: 14px">상품 합계</span>
-            <span style="font-size: 14px">{{(orderinfo.ototal + orderinfo.odiscounted).toLocaleString()}} 원</span>
+            <span style="font-size: 14px"
+              >{{ (orderinfo.ototal + orderinfo.odiscounted).toLocaleString() }} 원</span
+            >
           </div>
           <div class="d-flex justify-space-between pb-5">
             <span style="font-size: 14px">할인 합계</span>
-            <span style="font-size: 14px">- {{orderinfo.odiscounted.toLocaleString()}} 원</span>
+            <span style="font-size: 14px">- {{ orderinfo.odiscounted.toLocaleString() }} 원</span>
           </div>
           <v-divider></v-divider>
           <div class="d-flex justify-space-between pt-5" style="font-weight: bold">
             <span>결제 금액</span>
-            <span>{{orderinfo.ototal.toLocaleString()}} 원</span>
+            <span>{{ orderinfo.ototal.toLocaleString() }} 원</span>
           </div>
         </div>
       </v-expand-transition>
@@ -135,8 +137,8 @@ export default {
       showPayment: false,
       orderitems: [],
       orderinfo: [],
-      productinfo:[],
-      beforeDiscounted : 0
+      productinfo: [],
+      beforeDiscounted: 0,
     };
   },
   //컴포넌트 메서드 정의
@@ -147,7 +149,6 @@ export default {
         .getOrderListItem(oid)
         .then((response) => {
           this.orderitems = response.data.orderitem;
-          // console.log("######orderitems",this.orderitems);
           this.orderinfo = response.data.orderlist;
           for (let item of this.orderitems) {
             this.getProductInfo(item.pid, item.ccolorcode);
@@ -160,15 +161,13 @@ export default {
         .getProductInfo(pid, ccolorcode)
         .then((response) => {
           this.productinfo.push(response.data);
-          // console.log("#####productinfo : ",this.productinfo);
         })
         .catch(() => {});
     },
     getKoreanTime(date) {
       let time = new Date(date);
       return time.toLocaleString();
-    }
-    
+    },
   },
   created() {
     if (this.$store.getters["login/getUserId"] === "") {

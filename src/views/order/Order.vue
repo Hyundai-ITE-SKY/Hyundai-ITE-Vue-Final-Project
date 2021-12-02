@@ -77,14 +77,20 @@
                 <div class="font-weight-bold text-subtitle-2">
                   {{
                     (
-                      (productsInfo.find((x) => x.pid === item.pid).pprice * item.pamount * (100 - sales)) /
+                      (productsInfo.find((x) => x.pid === item.pid).pprice *
+                        item.pamount *
+                        (100 - sales)) /
                       100
                     ).toLocaleString()
                   }}
                   원
                 </div>
                 <div class="text-decoration-line-through text-subtitle-2 grey--text">
-                  {{ (productsInfo.find((x) => x.pid === item.pid).pprice*item.pamount).toLocaleString() }}원
+                  {{
+                    (
+                      productsInfo.find((x) => x.pid === item.pid).pprice * item.pamount
+                    ).toLocaleString()
+                  }}원
                 </div>
                 <div class="text-subtitle-2" style="font-weight: bolder; color: #eb7c4c">
                   {{ sales }}% 할인
@@ -351,8 +357,6 @@ export default {
           this.order.oaddress2 = this.member.maddress2;
           this.order.mid = this.member.mid;
           this.originMpoint = this.member.mpoint;
-          console.log("member : ", response.data);
-          console.log("orderMember : ", this.order);
         })
         .catch((error) => {
           console.log(error);
@@ -365,8 +369,6 @@ export default {
         .then((response) => {
           this.orderItems = response.data.orderitem;
           this.order = response.data.orderlist;
-          console.log("orderItems : ", this.orderItems);
-          console.log("order : ", this.order);
 
           this.getProductInfo();
         })
@@ -382,15 +384,12 @@ export default {
           .getProductInfo(item.pid, item.pcolor)
           .then((res) => {
             this.productsInfo.push(res.data);
-            console.log("for문 안", res);
-            //price 초기 세팅
             this.initPrice();
           })
           .catch((err) => {
             console.log(err);
           });
       }
-      console.log("productsInfo : ", this.productsInfo);
     },
     //쿠폰 정보 획득
     getCoupon() {
@@ -418,13 +417,11 @@ export default {
     },
     //배송지 주소 변경사항 받아오기
     SetDelivery(newDelivery) {
-      console.log(newDelivery);
       this.order.oreceiver = newDelivery.receiver;
       this.order.otel = newDelivery.tel;
       this.order.ozipcode = newDelivery.zipcode;
       this.order.oaddress1 = newDelivery.address1;
       this.order.oaddress2 = newDelivery.address2;
-      console.log(this.order);
     },
     SetUseCoupon(cid, cname) {
       if (cid != 1) {
@@ -445,8 +442,6 @@ export default {
       }
     },
     useAllPoint() {
-      console.log(this.atotalPrice);
-      console.log(this.originMpoint);
       if (parseInt(this.atotalPrice) < parseInt(this.originMpoint)) {
         this.order.ousedmileage = this.atotalPrice;
         this.member.mpoint = this.originMpoint - this.atotalPrice;
@@ -456,13 +451,6 @@ export default {
       }
     },
     applyPoint() {
-      //유효성 검사
-      /*if(typeof(this.order.ousedmileage) !== 'number'){
-        console.log(typeof(this.order.ousedmileage));
-      }else{
-        console.log("숫자입니다.");
-      }*/
-
       if (this.isApplyPoint) {
         //포인트 적용
         this.isApplyPoint = false;
@@ -483,7 +471,6 @@ export default {
       }
     },
     paymentClick(paymentMethod) {
-      console.log(paymentMethod);
       if (paymentMethod === "card") {
         this.isCard = true;
         this.isAccount = false;
@@ -572,7 +559,6 @@ export default {
       await apiOrder
         .createOrderList(orderList)
         .then((response) => {
-          console.log(response.data);
           //oid 가져오기
           let oid = response.data.oid;
           /* orderItems 삽입 데이터 세팅 */
@@ -597,13 +583,9 @@ export default {
             this.CartitemDelete(item.pid, item.pcolor, item.psize);
 
             if (this.isUsedCoupon) {
-              //쿠폰 업데이트
-              console.log("coupon update");
               this.updateCoupon(this.order.ousedcoupon, 1);
             }
             if (!this.isApplyPoint) {
-              //마일리지 업데이트
-              console.log("mpoint update");
               this.updatePoint(this.member.mpoint);
             }
           }
@@ -623,16 +605,10 @@ export default {
     this.getMember();
     this.getCoupon();
     this.isUsedCoupon = false;
-    //oid 받기
-    //this.oid = this.$route.query.oid; //이거 지워야해
-    //this.getOrderListItem(); //이거 지워야해
     this.getProductInfo();
   },
   watch: {
     "order.ousedmileage"(newValue) {
-      //console.log(newValue);
-      //console.log(this.order.ousedmileage);
-
       if (this.originMpoint < newValue) {
         this.order.ousedmileage = this.originMpoint;
         this.member.mpoint = 0;
@@ -650,5 +626,4 @@ export default {
   },
 };
 </script>
-<!--컴포넌트 스타일 정의-->
 <style scoped></style>

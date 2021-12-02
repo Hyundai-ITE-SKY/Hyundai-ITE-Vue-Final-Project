@@ -72,9 +72,6 @@ export default {
       this.dialog = false;
     },
   },
-  mounted() {
-    console.log("coupons", this.coupons);
-  },
   props: {
     coupons: Array,
   },

@@ -277,7 +277,12 @@
         <v-icon>mdi-credit-card-outline</v-icon>
       </v-btn>
 
-      <v-btn v-show="$store.state.gnb.currentPage === 'cart'" :disabled="$store.getters['cart/getProductToBuy'].length === 0" @click="movePage('order')" plain>
+      <v-btn
+        v-show="$store.state.gnb.currentPage === 'cart'"
+        :disabled="$store.getters['cart/getProductToBuy'].length === 0"
+        @click="movePage('order')"
+        plain
+      >
         <span>주문하기</span>
         <v-icon>mdi-barcode-scan</v-icon>
       </v-btn>
@@ -443,16 +448,16 @@ export default {
         return "결제하기";
       } else if (page === "orderlist") {
         return "주문내역";
-      } else if (page === "orderdetail"){
-        return "주문 상세내역"
-      } else if (page === "ordersuccess"){
-        return "주문완료"
+      } else if (page === "orderdetail") {
+        return "주문 상세내역";
+      } else if (page === "ordersuccess") {
+        return "주문완료";
       }
     },
     movePage(page) {
       this.bottomsheet = false;
       if (page === "main") {
-        this.$router.push("/home/main").catch(() => {});
+        this.$router.push("/").catch(() => {});
       } else if (page === "wishlist") {
         this.$router.push("/member/wishlist").catch(() => {});
       } else if (page === "orderlist") {
@@ -492,7 +497,7 @@ export default {
     },
     handleLogout() {
       this.$store.dispatch("login/deleteAuth");
-      this.$router.push("/home/main").catch(() => {});
+      this.$router.push("/").catch(() => {});
     },
     async createCartitem() {
       const formData = new FormData();
@@ -503,7 +508,7 @@ export default {
       await apiMember
         .createCartitem(formData)
         .then((response) => {
-          console.log(response.data, "성공");
+          console.log(response.data);
           this.resetInput();
           this.$router.push("/member/cart").catch(() => {});
         })

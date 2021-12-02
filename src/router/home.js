@@ -1,6 +1,6 @@
 export default [
   {
-    path: "/home/main",
+    path: "/",
     component: () => import(/* webpackChunkName: "home" */ "../views/home/MainPage"),
   },
   {

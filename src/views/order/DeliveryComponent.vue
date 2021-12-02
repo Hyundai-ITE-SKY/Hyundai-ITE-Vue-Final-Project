@@ -26,7 +26,9 @@
               </v-col>
               <v-col cols="5" class="ml-4">
                 <v-btn v-show="isReceiver" dark @click="getMemberInfo('same')">사용자와 동일</v-btn>
-                <v-btn v-show="!isReceiver" dark @click="getMemberInfo('remove')">사용자 정보 제거</v-btn>
+                <v-btn v-show="!isReceiver" dark @click="getMemberInfo('remove')"
+                  >사용자 정보 제거</v-btn
+                >
               </v-col>
               <v-col cols="12">
                 <v-text-field
@@ -140,17 +142,13 @@ export default {
       }
     },
     saveDelivery() {
-      //빈칸이 존재하지 않을 경우 실행
-      console.log("saveDelivery", this.delivery.receiver);
       let del = this.delivery;
       if (del.receiver === "" || del.tel === "" || del.address1 === "" || del.zipcode === "") {
-        console.log("빈칸이 존재");
         this.snackbarText = "입력값이 올바르지 않습니다.";
         this.snackbar = true;
       } else {
         this.$refs.form.resetValidation();
         this.dialog = false;
-        console.log("saveDelivery");
         this.$emit("HandleDelivery", this.delivery);
       }
     },
