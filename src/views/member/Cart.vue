@@ -14,8 +14,7 @@
     </div>
     <!--반복되는 부분-->
     <div v-for="(product, i) of products" :key="i">
-      <div v-for="(info, j) of infos" :key="info.pid">
-        <template v-if="product.pid === info.pid">
+      <div v-if="infos.find((x) => x.pid === product.pid) !== undefined">
           <div>
             <v-divider></v-divider>
             <div class="white d-flex ma-0 pa-0 mb-2 mt-5">
@@ -25,7 +24,7 @@
                 </v-col>
                 <v-col cols="3" class="pa-0 pl-3" @click="moveProductDetail(product.pid)">
                   <div style="width: 80px">
-                    <v-img :src="images[j]" contain />
+                    <v-img :src="images[infos.findIndex((x) => x.pid === product.pid)]" contain />
                   </div>
                 </v-col>
                 <v-col class="ml-2">
@@ -34,7 +33,7 @@
                       cols="10"
                       class="pa-0 font-weight-black text-truncate"
                       style="font-size: 15px"
-                      >{{ info.bname }}
+                      >{{ infos.find((x) => x.pid === product.pid).bname }}
                     </v-col>
                     <v-col cols="2" class="pa-0 pr-1"
                       ><v-icon @click="CartitemDelete(product.pid, product.pcolor, product.psize)"
@@ -47,7 +46,7 @@
                       style="font-size: 15px"
                       @click="moveProductDetail(product.pid)"
                     >
-                      {{ info.pname }}
+                      {{ infos.find((x) => x.pid === product.pid).pname }}
                     </v-col>
                     <v-col cols="12" class="pa-0" style="font-size: 14px; color: grey"
                       >옵션 : {{ product.pcolor }}_{{ product.psize }}</v-col
@@ -59,7 +58,7 @@
                       <div class="text-truncate" style="font-size: 1rem; font-weight: bolder">
                         {{
                           (
-                            ((info.pprice * (100 - $store.state.product.gradeSale)) / 100) *
+                            ((infos.find((x) => x.pid === product.pid).pprice * (100 - $store.state.product.gradeSale)) / 100) *
                             product.pamount
                           ).toLocaleString()
                         }}원
@@ -68,7 +67,7 @@
                         class="text-decoration-line-through ml-auto text--disabled text-truncate"
                         style="font-size: 0.875rem; font-weight: bolder"
                       >
-                        {{ (info.pprice * product.pamount).toLocaleString() }}원
+                        {{ (infos.find((x) => x.pid === product.pid).pprice * product.pamount).toLocaleString() }}원
                       </span>
                       <span
                         class="ml-auto"
@@ -99,7 +98,7 @@
                 <div style="border: 1px solid" class="ml-1 mr-1 mb-3">
                   <div class="ma-6">
                     <v-select
-                      :items="colors[j]"
+                      :items="colors[infos.findIndex((x) => x.pid === product.pid)]"
                       v-model="selectedColor"
                       label="COLOR 선택"
                       dense
@@ -107,7 +106,7 @@
                       outlined
                     ></v-select>
                     <v-select
-                      :items="sizes[j][selectedColor]"
+                      :items="sizes[infos.findIndex((x) => x.pid === product.pid)][selectedColor]"
                       v-model="selectedSize"
                       label="SIZE 선택"
                       dense
@@ -144,7 +143,6 @@
               </div>
             </v-expand-transition>
           </div>
-        </template>
       </div>
     </div>
     <!--반복 끝-->
@@ -184,6 +182,7 @@ export default {
       count: 0,
       selected: [],
       colors: [],
+      colorIndex: [],
       sizes: [],
       images: [],
       totalSum: 0,
@@ -224,8 +223,8 @@ export default {
         apiProduct
           .getProduct(i.pid)
           .then((res) => {
-            // console.log("product :: ", res.data);
             this.infos.push(res.data);
+            console.log("product :: ", res.data);
 
             const colorArray = [];
             const sizesObject = {};
@@ -234,6 +233,7 @@ export default {
             for (let color of res.data.colors) {
               if (color.ccolorcode === i.pcolor) {
                 this.images.push(color.cimage1);
+                this.colorIndex.push(color.ccolorcode);
               }
               sizesObject[color.ccolorcode] = [];
               for (let stock of color.stocks) {
