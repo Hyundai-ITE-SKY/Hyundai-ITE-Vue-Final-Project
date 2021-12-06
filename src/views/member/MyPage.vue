@@ -4,7 +4,7 @@
     <div class="align-center pa-6" style="display: flex; border-bottom: solid 8px #f1f1f1">
       <div class="py-3 pr-3">
         <v-avatar :size="70">
-          <img src="https://cdn.vuetifyjs.com/images/john.jpg" />
+          <img src="@/assets/images/profile.png" />
         </v-avatar>
       </div>
       <div>
