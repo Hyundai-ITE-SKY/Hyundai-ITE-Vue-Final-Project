@@ -583,11 +583,14 @@ export default {
             this.CartitemDelete(item.pid, item.pcolor, item.psize);
 
             if (this.isUsedCoupon) {
+              //쿠폰 적용
               this.updateCoupon(this.order.ousedcoupon, 1);
             }
             if (!this.isApplyPoint) {
+              //마일리지 적용
               this.updatePoint(this.member.mpoint);
             }
+            //상품 데이터 변경
           }
         })
         .catch((error) => {
