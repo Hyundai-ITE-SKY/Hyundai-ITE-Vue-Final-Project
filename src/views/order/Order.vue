@@ -158,6 +158,7 @@
         </div>
       </v-expand-transition>
     </v-card>
+    <button class="btn btn-sm btn-info" @click="updateStock()">수량 증가 테스트</button>
 
     <v-card class="mx-auto mb-5" outlined>
       <div class="d-flex justify-space-between pa-3">
@@ -525,6 +526,23 @@ export default {
           console.log(error);
         });
     },
+     updateStock() {
+       for(let item of this.orderItems){
+         const stock = new FormData();
+         stock.append("pid", item.pid);
+         stock.append("ccolorcode", item.pcolor);
+         stock.append("ssize", item.psize);
+         stock.append("samount", item.pamount);
+
+         apiProduct.updateStock(stock)
+        .then((response) => {
+          console.log(response.data);
+        }).catch((error) => {
+          console.log(error);
+        })
+       }
+      
+    },
     async orderSuccess() {
       /* orderList 삽입 데이터 세팅 */
       this.order.odiscounted = this.discountPrice;
@@ -556,6 +574,9 @@ export default {
       orderList.append("ozipcode", this.order.ozipcode);
       orderList.append("ototal", this.atotalPrice);
 
+      //product 재고 수정 (재고 없을 경우 종료)
+
+
       await apiOrder
         .createOrderList(orderList)
         .then((response) => {
@@ -575,22 +596,19 @@ export default {
               .createOrderItem(orderItem)
               .then((response) => {
                 console.log(response.data);
+
+                if (this.isUsedCoupon) {
+                  this.updateCoupon(this.order.ousedcoupon, 1);
+                }
+                if (!this.isApplyPoint) {
+                  this.updatePoint(this.member.mpoint);
+                }
               })
               .catch((error) => {
                 console.log(error);
               });
 
             this.CartitemDelete(item.pid, item.pcolor, item.psize);
-
-            if (this.isUsedCoupon) {
-              //쿠폰 적용
-              this.updateCoupon(this.order.ousedcoupon, 1);
-            }
-            if (!this.isApplyPoint) {
-              //마일리지 적용
-              this.updatePoint(this.member.mpoint);
-            }
-            //상품 데이터 변경
           }
         })
         .catch((error) => {

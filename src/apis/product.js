@@ -42,6 +42,11 @@ function getNewProductList(large, medium) {
   }
 }
 
+function updateStock(stock){
+  const promise = axios.post(`http://kosa1.iptime.org:50202/product/updatestock`, stock);
+  return promise;
+}
+
 export default {
   getCategory,
   getProduct,
@@ -49,4 +54,5 @@ export default {
   getProductInfo,
   getBestProductList,
   getNewProductList,
+  updateStock,
 };

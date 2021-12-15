@@ -56,7 +56,7 @@ function createCartitem(formData) {
 }
 
 function updatePoint(point) {
-  const promise = axios.post("http://kosa1.iptime.org:50202/member/updatepoint", `point=${point}`);
+  const promise = axios.post("http://kosa1.iptime.org:50207/member/updatepoint", `point=${point}`);
   return promise;
 }
 
