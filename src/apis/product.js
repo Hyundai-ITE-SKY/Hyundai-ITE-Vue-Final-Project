@@ -42,8 +42,8 @@ function getNewProductList(large, medium) {
   }
 }
 
-function updateStock(stock){
-  const promise = axios.post(`http://kosa1.iptime.org:50202/product/updatestock`, stock);
+function updateStock(stock){//http://kosa1.iptime.org:50202/product/updatestock
+  const promise = axios.post(`http://localhost/product/updatestock`, stock);
   return promise;
 }
 
