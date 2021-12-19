@@ -6,7 +6,7 @@ function getCategory(clarge) {
 
 function getProduct(pid) {
   const promise = axios.get(`http://kosa1.iptime.org:50202/product/${pid}`);
-  return promise;
+  return promise; 
 }
 
 function getProductList(large, medium, small, pageNo = 1) {
@@ -42,6 +42,11 @@ function getNewProductList(large, medium) {
   }
 }
 
+function updateStock(stock){//http://kosa1.iptime.org:50202/product/updatestock
+  const promise = axios.post(`http://localhost/product/updatestock`, stock);
+  return promise;
+}
+
 export default {
   getCategory,
   getProduct,
@@ -49,4 +54,5 @@ export default {
   getProductInfo,
   getBestProductList,
   getNewProductList,
+  updateStock,
 };

@@ -474,7 +474,6 @@ export default {
       } else if (page === "ordersuccess") {
         this.$refs.childRef.orderSuccess();
         this.$store.commit("cart/setProductToBuy", []);
-        this.$router.push("/order/success").catch(() => {});
       }
     },
     moveBack() {

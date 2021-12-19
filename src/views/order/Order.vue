@@ -239,6 +239,13 @@
         </div>
       </v-card-text>
     </v-card>
+
+    <v-snackbar v-model="snackbar">
+      {{ snackbarText }}
+      <template v-slot:action="{ attrs }">
+        <v-btn color="pink" text v-bind="attrs" @click="toMain"> Close </v-btn>
+      </template>
+    </v-snackbar>
   </div>
 </template>
 <script>
@@ -341,6 +348,8 @@ export default {
       discountPrice: 0,
       sales: this.$store.getters["product/getGradeSale"],
       testArr: [{ value: 1 }, 2, 3],
+      snackbar: false,
+      snackbarText: "",
     };
   },
   //컴포넌트 메서드 정의
@@ -499,7 +508,7 @@ export default {
       await apiMember
         .deleteCartitem(pid, pcolor, psize)
         .then(() => {
-          location.reload(true);
+          //location.reload(true);
         })
         .catch((error) => {
           console.log(error);
@@ -524,6 +533,9 @@ export default {
         .catch((error) => {
           console.log(error);
         });
+    },
+    toMain(){
+      this.$router.push("/");
     },
     async orderSuccess() {
       /* orderList 삽입 데이터 세팅 */
@@ -556,6 +568,28 @@ export default {
       orderList.append("ozipcode", this.order.ozipcode);
       orderList.append("ototal", this.atotalPrice);
 
+      this.order.ototal=this.atotalPrice;
+      //product 재고 수정 (재고 없을 경우 종료)
+      for(let item of this.orderItems){
+         const stock = new FormData();
+         stock.append("pid", item.pid);
+         stock.append("ccolorcode", item.pcolor);
+         stock.append("ssize", item.psize);
+         stock.append("samount", item.pamount);
+         
+         apiProduct.updateStock(stock)
+        .then((response) => {
+          console.log(response.data+typeof(response.data));
+          if(response.data===0){
+            this.snackbar = true;
+            this.snackbarText = "상품의 수량이 부족합니다.";
+            return;
+          }
+        }).catch((error) => {
+          console.log(error);
+        })
+       }
+
       await apiOrder
         .createOrderList(orderList)
         .then((response) => {
@@ -575,27 +609,28 @@ export default {
               .createOrderItem(orderItem)
               .then((response) => {
                 console.log(response.data);
+
+                if (this.isUsedCoupon) {
+                  this.updateCoupon(this.order.ousedcoupon, 1);
+                }
+                if (!this.isApplyPoint) {
+                  this.updatePoint(this.member.mpoint);
+                }
               })
               .catch((error) => {
                 console.log(error);
               });
 
             this.CartitemDelete(item.pid, item.pcolor, item.psize);
-
-            if (this.isUsedCoupon) {
-              //쿠폰 적용
-              this.updateCoupon(this.order.ousedcoupon, 1);
-            }
-            if (!this.isApplyPoint) {
-              //마일리지 적용
-              this.updatePoint(this.member.mpoint);
-            }
-            //상품 데이터 변경
+            /* 상태 저장 */
+            this.$store.commit("order/setOrderItems", this.orderItems);
+            this.$store.commit("order/setOrder", this.order);
           }
         })
         .catch((error) => {
           console.log(error);
         });
+        this.$router.push("/order/success").catch(() => {});
     },
   },
   created() {
