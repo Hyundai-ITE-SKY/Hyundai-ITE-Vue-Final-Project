@@ -555,6 +555,7 @@ export default {
       orderList.append("ousedmileage", this.order.ousedmileage);
       orderList.append("ozipcode", this.order.ozipcode);
       orderList.append("ototal", this.atotalPrice);
+      orderList.append("orderItem", this.atotalPrice);
 
       await apiOrder
         .createOrderList(orderList)
