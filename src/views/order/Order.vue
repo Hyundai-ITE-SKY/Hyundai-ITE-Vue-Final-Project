@@ -567,6 +567,7 @@ export default {
       orderList.append("ousedmileage", this.order.ousedmileage);
       orderList.append("ozipcode", this.order.ozipcode);
       orderList.append("ototal", this.atotalPrice);
+      orderList.append("orderItem", this.atotalPrice);
 
       this.order.ototal=this.atotalPrice;
       //product 재고 수정 (재고 없을 경우 종료)
