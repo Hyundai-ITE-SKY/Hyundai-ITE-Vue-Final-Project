@@ -71,11 +71,13 @@
         </v-badge>
       </v-btn>
       <template v-slot:extension>
+
         <v-tabs v-show="$store.state.gnb.currentPage === 'main'" align-with-title>
           <v-tab v-for="(exhibition) in exhibitions" :key="exhibition.exid" style="font-size: 0.7rem; font-weight: bolder" @click="changeMainPage(exhibition.exid)">
             {{ exhibition.exid }}
           </v-tab>
         </v-tabs>
+
         <div
           v-show="
             $store.state.gnb.currentPage === 'cart' ||
@@ -536,7 +538,8 @@ export default {
       await apiProduct.getExhibition()
         .then((response)=>{
           this.exhibitions = [];
-          let res = response.data.exhibitions;
+          let res = response.data;
+          console.log(response.data);
           for(let data of res){
             this.exhibitions.push(data);
           }
