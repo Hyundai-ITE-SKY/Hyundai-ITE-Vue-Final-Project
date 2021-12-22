@@ -62,9 +62,14 @@ function updatePoint(point) {
 
 function updateCoupon(ccode, cstate) {
   const promise = axios.post(
-    "http://kosa1.iptime.org:50202/member/updatecoupon",
+    "http://kosa1.iptime.org:50207/member/updatecoupon",
     `ccode=${ccode}&cstate=${cstate}`,
   );
+  return promise;
+}
+
+function getMycartAmount(){
+  const promise = axios.get("http://kosa1.iptime.org:50207/member/mycartNum");
   return promise;
 }
 
@@ -81,4 +86,5 @@ export default {
   createCartitem,
   updatePoint,
   updateCoupon,
+  getMycartAmount
 };
