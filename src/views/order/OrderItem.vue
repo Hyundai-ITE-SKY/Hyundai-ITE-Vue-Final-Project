@@ -1,8 +1,8 @@
 <!-- 컴포넌트 UI 정의 -->
 <template>
   <div style="background-color: white">
-    <div class="px-3 py-6" style="display: flex">
-      <div>
+    <div class="px-3 py-6 d-flex">
+      <div @click="moveProductDetail(product)">
         <v-img
           :src="product.cimage1"
           lazy-src="@/assets/images/event/eventloader.jpg"
@@ -37,6 +37,13 @@
           주문접수
         </div>
       </div>
+      <div
+        class="ml-auto"
+        style="font-size: 0.7rem; color: #1c1c1c"
+        @click="moveToCreateReview(product, order)"
+      >
+        리뷰 작성
+      </div>
     </div>
   </div>
 </template>
@@ -52,7 +59,17 @@ export default {
     return {};
   },
   // 컴포넌트 메소드 정의
-  methods: {},
+  methods: {
+    moveProductDetail(product) {
+      this.$router.push(`/product/detail?pid=${product.pid}`).catch(() => {});
+    },
+    moveToCreateReview(product, order) {
+      this.$store.commit("product/setReviewImage", product.cimage1);
+      this.$router.push(
+        `/product/review?pid=${product.pid}&pname=${product.pname}&pcolor=${order.ccolorcode}&psize=${order.psize}`,
+      );
+    },
+  },
   props: {
     product: Object,
     order: Object,
