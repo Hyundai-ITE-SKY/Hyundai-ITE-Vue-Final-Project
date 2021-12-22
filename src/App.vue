@@ -63,15 +63,9 @@
       </v-btn>
       <template v-slot:extension>
         <v-tabs v-show="$store.state.gnb.currentPage === 'main'" align-with-title>
-          <v-tab style="font-size: 0.7rem; font-weight: bolder" @click="changeMainPage('EVENT')"
-            >EVENT</v-tab
-          >
-          <v-tab style="font-size: 0.7rem; font-weight: bolder" @click="changeMainPage('BEST')"
-            >BEST</v-tab
-          >
-          <v-tab style="font-size: 0.7rem; font-weight: bolder" @click="changeMainPage('NEW')"
-            >NEW</v-tab
-          >
+          <v-tab v-for="(exhibition) in exhibitions" :key="exhibition.exid" style="font-size: 0.7rem; font-weight: bolder" @click="changeMainPage(exhibition.exid)">
+            {{ exhibition.exid }}
+          </v-tab>
         </v-tabs>
         <div
           v-show="
@@ -292,6 +286,7 @@
 
 <script>
 import apiMember from "@/apis/member";
+import apiProduct from "@/apis/product";
 
 export default {
   name: "App",
@@ -426,6 +421,13 @@ export default {
         ],
       },
     ],
+    exhibitions:[
+      {
+        exid: "EVENT",
+        orderno: 0,
+        eximg: "https://user-images.githubusercontent.com/55488114/145777063-c003d4ce-41db-41db-b078-cc599650643d.jpg"
+      }
+    ],
   }),
   methods: {
     changeMainPage(page) {
@@ -515,9 +517,23 @@ export default {
           console.log(error);
         });
     },
+    async getExhibition(){
+      await apiProduct.getExhibition()
+        .then((response)=>{
+          this.exhibitions = [];
+          let res = response.data.exhibitions;
+          for(let data of res){
+            this.exhibitions.push(data);
+          }
+        })
+        .catch((error)=>{
+          console.log(error);
+        })
+    }
   },
   created() {
     this.$store.dispatch("login/loadAuth");
+    this.getExhibition();
   },
   watch: {
     bottomsheet: function () {
