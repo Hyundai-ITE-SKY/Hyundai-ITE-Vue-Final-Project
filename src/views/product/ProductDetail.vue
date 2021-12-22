@@ -98,21 +98,47 @@
         </div>
       </div>
     </div>
+    <div style="background-color: #eeeeee; height: 15px" class="mb-3"></div>
+    <div class="ml-3" style="font-weight: bolder; font-size: 0.875rem">상품평</div>
+    <v-divider class="mt-3 mb-3"></v-divider>
+    <div>
+      <div class="px-3 mb-4">
+        <product-review v-for="review of reviewArray" :key="review.rno" :review="review"></product-review>
+      </div>
+    </div>
   </div>
 </template>
 <script>
 import apiProduct from "@/apis/product";
 import apiMember from "@/apis/member";
+import ProductReview from "./ProductReview.vue";
 
 export default {
   //component의 대표 이름(devTools에 나오는 이름)
   name: "ProductDetail",
   //추가하고 싶은 컴포넌트를 등록
-  components: {},
+  components: { ProductReview },
   //컴포넌트 데이터 정의
   data: () => ({
     colorIdx: 0,
     state: false,
+    reviewArray: [
+      {
+        rno: 1,
+        mid: "mid1",
+        mname: "고길동",
+        pid: "TH2B3NPC677NP1",
+        pname: "뉴스트레이트 크롭 데님 팬츠",
+        pcolor: "CR",
+        psize: "86",
+        rdate: "2021-12-22T10:02:40.000+00:00",
+        rrate: 5,
+        rprice: 0,
+        rcomfortable: 0,
+        rtitle: "만족합니다",
+        rcontent: "가격에 비해 품질이 좋네요~ ^^",
+      },
+    ],
     productInfo: {
       pid: "PL2B7WSC004W",
       bname: "3.1 Phillip Lim",
@@ -235,6 +261,15 @@ export default {
         this.$store.commit("product/setColorList", colorArray);
         this.$store.commit("product/setSizeList", sizeObject);
         this.checkIsWish();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    apiProduct
+      .getReview(pid)
+      .then((response) => {
+        console.log(response.data);
+        this.reviewArray = response.data;
       })
       .catch((error) => {
         console.log(error);

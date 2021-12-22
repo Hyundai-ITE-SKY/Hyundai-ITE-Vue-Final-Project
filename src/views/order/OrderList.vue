@@ -52,19 +52,14 @@
     <div v-for="(order, i) of orderlist" :key="i">
       <div
         class="pa-3 align-center"
-        style="
-          display: flex;
-          background-color: #fafafa;
-          border-top: solid 2px #ededed;
-          border-bottom: solid 2px #ededed;
-        "
+        style="display: flex; background-color: #fafafa; border-top: solid 2px #ededed"
       >
         <div style="font-weight: bolder; font-size: 0.875rem">{{ getKoreanTime(order.odate) }}</div>
         <div class="mx-2" style="font-size: 0.875rem; color: #a9a9a9">/</div>
         <div style="font-size: 0.875rem; color: #636363">{{ order.oid }}</div>
         <v-icon class="ml-auto" @click="moveToOrderDetail(order.oid)">mdi-chevron-right</v-icon>
       </div>
-      <div v-for="(item, j) of order.orderitem" :key="j">
+      <div v-for="(item, j) of order.orderitem" :key="j" style="border-top: solid 2px #ededed">
         <div v-if="products.find((x) => x.pid === item.pid) !== undefined">
           <order-item :order="item" :product="products.find((x) => x.pid === item.pid)">
           </order-item>

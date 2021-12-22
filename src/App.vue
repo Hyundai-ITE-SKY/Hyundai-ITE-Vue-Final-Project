@@ -59,7 +59,16 @@
         </div>
       </v-spacer>
       <v-btn icon @click="movePage('cartWithNoSave')">
-        <v-icon color="white">mdi-cart-outline</v-icon>
+        <v-badge
+            bordered
+            color="red darken-2"
+            bottom
+            overlap
+            v-if="$store.state.login.userId !== ''"
+          >
+          <span slot="badge">{{cartAmount}}</span>
+          <v-icon color="white">mdi-cart-outline</v-icon>
+        </v-badge>
       </v-btn>
       <template v-slot:extension>
         <v-tabs v-show="$store.state.gnb.currentPage === 'main'" align-with-title>
@@ -76,6 +85,7 @@
             $store.state.gnb.currentPage === 'mypage' ||
             $store.state.gnb.currentPage === 'productdetail' ||
             $store.state.gnb.currentPage === 'productdetailbuy' ||
+            $store.state.gnb.currentPage === 'productreview' ||
             $store.state.gnb.currentPage === 'order' ||
             $store.state.gnb.currentPage === 'orderlist' ||
             $store.state.gnb.currentPage === 'orderdetail' ||
@@ -293,10 +303,10 @@ export default {
   data: () => ({
     drawer: false,
     bottomsheet: false,
-    categoryState: 0,
     selectedColor: "none",
     selectedSize: "none",
     inputAmount: 1,
+    cartAmount : 0,
     category: [
       {
         clarge: "WOMEN",
@@ -454,6 +464,8 @@ export default {
         return "주문 상세내역";
       } else if (page === "ordersuccess") {
         return "주문완료";
+      } else if (page === "productreview") {
+        return "리뷰 작성";
       }
     },
     movePage(page) {
@@ -469,12 +481,15 @@ export default {
       } else if (page === "order") {
         this.$router.push("/order/order").catch(() => {});
       } else if (page === "cart") {
+        this.getCartAmount();
         this.createCartitem(); //장바구니 추가
       } else if (page === "cartWithNoSave") {
         this.resetInput();
+        this.getCartAmount();
         this.$router.push("/member/cart").catch(() => {});
       } else if (page === "ordersuccess") {
         this.$refs.childRef.orderSuccess();
+        this.getCartAmount();
         this.$store.commit("cart/setProductToBuy", []);
       }
     },
@@ -529,11 +544,18 @@ export default {
         .catch((error)=>{
           console.log(error);
         })
+    },
+    async getCartAmount(){
+      await apiMember.getMycartAmount()
+      .then((response)=>{
+        this.cartAmount = response.data;
+      });
     }
   },
   created() {
     this.$store.dispatch("login/loadAuth");
     this.getExhibition();
+    this.getCartAmount();
   },
   watch: {
     bottomsheet: function () {
@@ -545,7 +567,7 @@ export default {
     },
     selectedColor: function () {
       this.selectedSize = "none";
-    },
+    }
   },
 };
 </script>
