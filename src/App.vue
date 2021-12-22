@@ -58,12 +58,13 @@
           HANDSOME
         </div>
       </v-spacer>
-      <v-btn icon @click="movePage('cartWithNoSave')"  v-if="$store.state.login.userId !== ''">
+      <v-btn icon @click="movePage('cartWithNoSave')">
         <v-badge
             bordered
             color="red darken-2"
             bottom
             overlap
+            v-if="$store.state.login.userId !== ''"
           >
           <span slot="badge">{{cartAmount}}</span>
           <v-icon color="white">mdi-cart-outline</v-icon>
