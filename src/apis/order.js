@@ -25,10 +25,16 @@ function getOrderList(){
   return promise;
 }
 
+function getOrderListByOdate(start, end){
+  const promise = axios.get(`http://kosa1.iptime.org:50211/order/search/${start}/${end}`);
+  return promise;
+}
+
 export default{
   getOrderState,
   getOrderListItem,
   createOrderList,
   createOrderItem,
   getOrderList,
+  getOrderListByOdate
 }

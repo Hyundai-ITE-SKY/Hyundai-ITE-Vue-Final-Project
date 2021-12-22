@@ -43,6 +43,11 @@
           <v-btn text color="black" @click="$refs.menu.save(dates)"> OK </v-btn>
         </v-date-picker>
       </v-menu>
+      <div class="d-flex justify-center mb-5">
+        <v-btn rounded dark color="black" @click="searchOdate()">날짜 검색</v-btn>
+      </div>
+      <span id="searchText" style="font-size:0.75rem; font-weight: bolder;">
+      </span>
     </div>
     <div v-for="(order, i) of orderlist" :key="i">
       <div
@@ -76,7 +81,7 @@ export default {
   //컴포넌트 데이터 정의
   data() {
     return {
-      dates: ["2021-11-01", "2021-12-02"],
+      dates: ["2021-12-01", "2021-12-31"],
       menu: false,
       orders: [
         { status: "전체", value: 0 },
@@ -143,6 +148,24 @@ export default {
     },
     moveToOrderDetail(oid) {
       this.$router.push(`/order/detail?oid=${oid}`);
+    },
+    // 주문일자 범위로 검색하기
+    async searchOdate() {
+      await apiOrder.getOrderListByOdate(this.dates[0], this.dates[1]).then((response) => {
+        this.orderlist = response.data;
+        this.orderlist = this.orderlist.sort(function (a, b) {
+          return b.oid - a.oid;
+        });
+
+        for (let order of this.orderlist) {
+          let item = order.orderitem;
+          for (let i of item) {
+            this.getProductInfo(i.pid, i.ccolorcode);
+          }
+        }
+        var resultText = document.querySelector("#searchText");
+        resultText.innerHTML = `총 ${this.orderlist.length}건의 결과가 검색되었습니다.`;
+      });
     },
   },
   created() {

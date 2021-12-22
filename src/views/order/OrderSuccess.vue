@@ -20,6 +20,7 @@
       </div>
       <v-expand-transition>
         <div v-show="showDelivery" style="margin-left: 90px" class="mb-2">
+          <v-divider></v-divider>
           <v-card-text class="pa-0" style="color: #5d5d5d">
             {{order.otel}}<br />
             {{order.oaddress1}}<br />
@@ -30,7 +31,7 @@
 
       <!--주문완료 상품 정보-->
       <div class="d-flex mb-3">
-        <div style="width: 90px; font-weight: bold"></div>
+        <div style="width: 90px; font-weight: bold">상품 정보</div>
         <div v-for="itemName of orderItems" :key="itemName.pid" class="d-inline-block text-truncate" style="max-width: 200px">
           <span v-if="productsInfo.find((x) => x.pid === itemName.pid) !== undefined">
             {{productsInfo.find((x) => x.pid === itemName.pid).pname}}
