@@ -474,17 +474,20 @@ export default {
         this.isApplyPoint = false;
         this.isUsePointAll = true;
         this.isPointInput = true;
-
-        this.atotalPrice -= parseInt(this.order.ousedmileage);
-        this.discountPrice += parseInt(this.order.ousedmileage);
+        if(this.order.ousedmileage != ''){
+          this.atotalPrice -= parseInt(this.order.ousedmileage);
+          this.discountPrice += parseInt(this.order.ousedmileage);
+        }
         return;
       } else {
         this.isApplyPoint = true;
         this.isUsePointAll = false;
         this.isPointInput = false;
+        if(this.order.ousedmileage != ''){
+          this.atotalPrice += parseInt(this.order.ousedmileage);
+          this.discountPrice -= parseInt(this.order.ousedmileage);
 
-        this.atotalPrice += parseInt(this.order.ousedmileage);
-        this.discountPrice -= parseInt(this.order.ousedmileage);
+        }
         return;
       }
     },
