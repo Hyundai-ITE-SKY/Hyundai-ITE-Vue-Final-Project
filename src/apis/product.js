@@ -6,7 +6,7 @@ function getCategory(clarge) {
 
 function getProduct(pid) {
   const promise = axios.get(`http://kosa1.iptime.org:50202/product/${pid}`);
-  return promise; 
+  return promise;
 }
 
 function getProductList(large, medium, small, pageNo = 1) {
@@ -42,8 +42,18 @@ function getNewProductList(large, medium) {
   }
 }
 
-function updateStock(stock){
+function updateStock(stock) {
   const promise = axios.post(`http://kosa1.iptime.org:50202/product/updatestock`, stock);
+  return promise;
+}
+
+function createReview(review) {
+  const promise = axios.post(`http://kosa1.iptime.org:50202/product/review/create`, review);
+  return promise;
+}
+
+function getReview(pid) {
+  const promise = axios.get(`http://kosa1.iptime.org:50202/product/review?pid=${pid}`);
   return promise;
 }
 
@@ -55,4 +65,6 @@ export default {
   getBestProductList,
   getNewProductList,
   updateStock,
+  createReview,
+  getReview,
 };

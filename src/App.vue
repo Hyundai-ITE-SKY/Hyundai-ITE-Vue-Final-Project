@@ -82,6 +82,7 @@
             $store.state.gnb.currentPage === 'mypage' ||
             $store.state.gnb.currentPage === 'productdetail' ||
             $store.state.gnb.currentPage === 'productdetailbuy' ||
+            $store.state.gnb.currentPage === 'productreview' ||
             $store.state.gnb.currentPage === 'order' ||
             $store.state.gnb.currentPage === 'orderlist' ||
             $store.state.gnb.currentPage === 'orderdetail' ||
@@ -298,7 +299,6 @@ export default {
   data: () => ({
     drawer: false,
     bottomsheet: false,
-    categoryState: 0,
     selectedColor: "none",
     selectedSize: "none",
     inputAmount: 1,
@@ -452,6 +452,8 @@ export default {
         return "주문 상세내역";
       } else if (page === "ordersuccess") {
         return "주문완료";
+      } else if (page === "productreview") {
+        return "리뷰 작성";
       }
     },
     movePage(page) {

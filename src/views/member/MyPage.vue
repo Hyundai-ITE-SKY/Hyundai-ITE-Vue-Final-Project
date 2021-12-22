@@ -9,7 +9,7 @@
       </div>
       <div>
         <div style="font-size: 1.5rem; font-weight: bolder">
-          홍길동<span style="font-size: 1rem">님 안녕하세요!</span>
+          {{ member.mname }}<span style="font-size: 1rem">님 안녕하세요!</span>
         </div>
         <div style="font-size: 0.875rem; color: #6f6f6f">
           회원님의 등급은

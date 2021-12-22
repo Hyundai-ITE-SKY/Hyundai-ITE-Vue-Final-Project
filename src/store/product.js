@@ -50,6 +50,7 @@ export default {
     },
     sizeList: {},
     colorList: [],
+    reviewImage: "",
   },
   // 상태값을 읽는 메소드 정의(Getter)
   getters: {
@@ -70,6 +71,9 @@ export default {
     },
     getGradeSale(state) {
       return state.gradeSale;
+    },
+    getReviewImage(state) {
+      return state.reviewImage;
     },
   },
   // 상태값을 변경하는 동기 메소드 정의(Setter)
@@ -92,6 +96,9 @@ export default {
     },
     setGradeSale(state, payload) {
       state.gradeSale = payload;
+    },
+    setReviewImage(state, payload) {
+      state.reviewImage = payload;
     },
   },
   // 상태값을 변경하는 비동기 메소드 정의(Setter)

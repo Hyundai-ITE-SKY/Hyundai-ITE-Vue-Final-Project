@@ -11,7 +11,7 @@ function getOrderListItem(oid){
 }
 
 function createOrderList(orderList){
-  const promise = axios.post(`http://localhost/order/createorderlist`, orderList);
+  const promise = axios.post(`http://kosa1.iptime.org:50211/order/createorderlist`, orderList);
   return promise;
 }
 
