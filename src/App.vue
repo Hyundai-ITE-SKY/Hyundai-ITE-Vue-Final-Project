@@ -58,8 +58,16 @@
           HANDSOME
         </div>
       </v-spacer>
-      <v-btn icon @click="movePage('cartWithNoSave')">
-        <v-icon color="white">mdi-cart-outline</v-icon>
+      <v-btn icon @click="movePage('cartWithNoSave')"  v-if="$store.state.login.userId !== ''">
+        <v-badge
+            bordered
+            color="red darken-2"
+            bottom
+            overlap
+          >
+          <span slot="badge">{{cartAmount}}</span>
+          <v-icon color="white">mdi-cart-outline</v-icon>
+        </v-badge>
       </v-btn>
       <template v-slot:extension>
         <v-tabs v-show="$store.state.gnb.currentPage === 'main'" align-with-title>
@@ -302,6 +310,7 @@ export default {
     selectedColor: "none",
     selectedSize: "none",
     inputAmount: 1,
+    cartAmount : 0,
     category: [
       {
         clarge: "WOMEN",
@@ -467,12 +476,15 @@ export default {
       } else if (page === "order") {
         this.$router.push("/order/order").catch(() => {});
       } else if (page === "cart") {
+        this.getCartAmount();
         this.createCartitem(); //장바구니 추가
       } else if (page === "cartWithNoSave") {
         this.resetInput();
+        this.getCartAmount();
         this.$router.push("/member/cart").catch(() => {});
       } else if (page === "ordersuccess") {
         this.$refs.childRef.orderSuccess();
+        this.getCartAmount();
         this.$store.commit("cart/setProductToBuy", []);
       }
     },
@@ -515,9 +527,16 @@ export default {
           console.log(error);
         });
     },
+    async getCartAmount(){
+      await apiMember.getMycartAmount()
+      .then((response)=>{
+        this.cartAmount = response.data;
+      });
+    }
   },
   created() {
     this.$store.dispatch("login/loadAuth");
+    this.getCartAmount();
   },
   watch: {
     bottomsheet: function () {
@@ -529,7 +548,7 @@ export default {
     },
     selectedColor: function () {
       this.selectedSize = "none";
-    },
+    }
   },
 };
 </script>
