@@ -47,6 +47,11 @@ function updateStock(stock){
   return promise;
 }
 
+function getExhibition(){
+  const promise = axios.get(`http://kosa1.iptime.org:50202/product/exhibition/list`);
+  return promise;
+}
+
 export default {
   getCategory,
   getProduct,
@@ -55,4 +60,5 @@ export default {
   getBestProductList,
   getNewProductList,
   updateStock,
+  getExhibition,
 };

@@ -1,251 +1,256 @@
 <!--컴포넌트 UI 정의-->
 <template>
   <div>
-    <v-card class="mx-auto mt-5 mb-5" outlined>
-      <div class="d-flex justify-space-between">
-        <h4 class="pa-0 pl-3 pt-3 pb-3">주문자 정보</h4>
-        <span class="px-3 pt-3" style="font-size: 14px">
-          {{ member.mname }} &nbsp;|&nbsp; {{ member.mtel }}
-        </span>
-      </div>
-    </v-card>
-
-    <v-card class="mx-auto mb-5" outlined>
-      <div class="d-flex justify-space-between align-center">
-        <h4 class="px-3 py-3">배송지</h4>
-        <span class="py-3 px-3">
-          <delivery-component
-            :oreceiver="member.mname"
-            :otel="member.mtel"
-            @HandleDelivery="SetDelivery"
-          ></delivery-component>
-          <v-icon class="" @click="showDelivery = !showDelivery">
-            {{ showDelivery ? "mdi-chevron-up" : "mdi-chevron-down" }}</v-icon
-          >
-        </span>
-      </div>
-      <v-expand-transition>
-        <div v-show="showDelivery">
-          <v-divider></v-divider>
-          <v-card-text class="font-weight-black text-subtitle-2">
-            수령인 &nbsp; {{ order.oreceiver }} <br />
-            번호 &nbsp; {{ order.otel }}<br />
-            우편번호 &nbsp; {{ order.ozipcode }} <br />
-            주소 &nbsp; {{ order.oaddress1 }} {{ order.oaddress2 }}<br />
-          </v-card-text>
+    <div v-if="!loading">
+      <v-card class="mx-auto mt-5 mb-5" outlined>
+        <div class="d-flex justify-space-between">
+          <h4 class="pa-0 pl-3 pt-3 pb-3">주문자 정보</h4>
+          <span class="px-3 pt-3" style="font-size: 14px">
+            {{ member.mname }} &nbsp;|&nbsp; {{ member.mtel }}
+          </span>
         </div>
-      </v-expand-transition>
-    </v-card>
-    <v-card class="mx-auto mb-5" outlined>
-      <div class="d-flex justify-space-between pa-3">
-        <h4>상품 정보</h4>
-        <v-icon @click="showProduct = !showProduct">
-          {{ showProduct ? "mdi-chevron-up" : "mdi-chevron-down" }}</v-icon
-        >
-      </div>
-      <v-expand-transition>
-        <div v-show="showProduct">
-          <v-divider></v-divider>
-          <template v-for="item of orderItems">
-            <div
-              class="pa-1 d-flex justify-center align-center"
-              v-if="productsInfo.find((x) => x.pid === item.pid) !== undefined"
-              :key="item.pid"
-            >
-              <div style="width: 65px">
-                <v-img
-                  :src="`${productsInfo.find((x) => x.pid === item.pid).cimage1}`"
-                  height="100%"
-                >
-                </v-img>
-              </div>
-              <v-card-text
-                style="font-size: 11px; width: 55%; whitespace: nowrap"
-                class="pa-0 pl-2 font-weight-bold text-subtitle-2"
-              >
-                {{ productsInfo.find((x) => x.pid === item.pid).bname }}<br />
-                {{ productsInfo.find((x) => x.pid === item.pid).pname }}<br />
-                <v-card-subtitle
-                  style="font-size: 10px; color: grey; whitespace: nowrap"
-                  class="pa-0 font-weight-bold text-subtitle-2"
-                >
-                  옵션 : {{ item.pcolor }} / {{ item.psize }}<br />
-                  수량 {{ item.pamount }}개</v-card-subtitle
-                >
-              </v-card-text>
-              <div class="d-flex flex-column justify-center">
-                <div class="font-weight-bold text-subtitle-2">
-                  {{
-                    (
-                      (productsInfo.find((x) => x.pid === item.pid).pprice *
-                        item.pamount *
-                        (100 - sales)) /
-                      100
-                    ).toLocaleString()
-                  }}
-                  원
-                </div>
-                <div class="text-decoration-line-through text-subtitle-2 grey--text">
-                  {{
-                    (
-                      productsInfo.find((x) => x.pid === item.pid).pprice * item.pamount
-                    ).toLocaleString()
-                  }}원
-                </div>
-                <div class="text-subtitle-2" style="font-weight: bolder; color: #eb7c4c">
-                  {{ sales }}% 할인
-                </div>
-              </div>
-            </div>
-          </template>
-        </div>
-      </v-expand-transition>
-    </v-card>
+      </v-card>
 
-    <v-card class="mx-auto mb-5" outlined>
-      <div class="d-flex justify-space-between pa-3">
-        <h4>쿠폰/할인/적립금</h4>
-        <v-icon @click="showDiscount = !showDiscount">
-          {{ showDiscount ? "mdi-chevron-up" : "mdi-chevron-down" }}
-        </v-icon>
-      </div>
-      <v-expand-transition>
-        <div v-show="showDiscount">
-          <v-divider></v-divider>
-          <v-card-text>
-            <v-row no-gutters class="d-flex justify-space-between align-center">
-              <v-col cols="8" class="mb-3">
-                <div class="text-subtitle-1 font-weight-black">
-                  쿠폰 전체 {{ coupons.length }}장 &nbsp;
-                </div>
-                <div class="text-subtitle-2 font-weight-black" v-if="isUsedCoupon">
-                  {{ coupons.cname }} | 쿠폰 코드
-                  <span style="color: #eb7c4c"> {{ order.ousedcoupon }} </span>
-                </div>
-              </v-col>
-              <v-col cols="3">
-                <coupon-component
-                  :coupons="coupons"
-                  @HandleCoupon="SetUseCoupon"
-                ></coupon-component>
-              </v-col>
-            </v-row>
-          </v-card-text>
-          <v-divider></v-divider>
-          <v-card-text>
-            <v-row no-gutters class="d-flex justify-space-between align-center">
-              <v-col cols="12">
-                <v-text-field
-                  label="포인트"
-                  type="number"
-                  v-model="order.ousedmileage"
-                  :disabled="isPointInput"
-                ></v-text-field>
-              </v-col>
-              <v-col cols="6" class="text-subtitle-2 font-weight-black">
-                잔여 포인트 &nbsp; {{ member.mpoint.toLocaleString() }} P <br />
-                적립금 1,000
-              </v-col>
-              <v-col cols="6" class="d-flex flex-row-reverse">
-                <v-btn v-if="isApplyPoint" dark class="px-2" @click="applyPoint">적용</v-btn>
-                <v-btn v-if="!isApplyPoint" dark class="px-2" @click="applyPoint">적용 취소</v-btn>
-                <v-btn dark class="px-2 mr-1" @click="useAllPoint" :disabled="isUsePointAll"
-                  >모두 사용</v-btn
-                >
-              </v-col>
-            </v-row>
-          </v-card-text>
+      <v-card class="mx-auto mb-5" outlined>
+        <div class="d-flex justify-space-between align-center">
+          <h4 class="px-3 py-3">배송지</h4>
+          <span class="py-3 px-3">
+            <delivery-component
+              :oreceiver="member.mname"
+              :otel="member.mtel"
+              @HandleDelivery="SetDelivery"
+            ></delivery-component>
+            <v-icon class="" @click="showDelivery = !showDelivery">
+              {{ showDelivery ? "mdi-chevron-up" : "mdi-chevron-down" }}</v-icon
+            >
+          </span>
         </div>
-      </v-expand-transition>
-    </v-card>
-
-    <v-card class="mx-auto mb-5" outlined>
-      <div class="d-flex justify-space-between pa-3">
-        <h4>결제 정보</h4>
-        <v-icon @click="showPayment = !showPayment">
-          {{ showPayment ? "mdi-chevron-up" : "mdi-chevron-down" }}
-        </v-icon>
-      </div>
-      <v-expand-transition>
-        <div v-show="showPayment">
-          <v-divider></v-divider>
-          <div class="d-flex justify-space-around pt-3">
-            <v-btn
-              class="ma-0"
-              outlined
-              :color="cardColor"
-              width="45%"
-              height="40"
-              @click="paymentClick('card')"
-            >
-              신용카드
-            </v-btn>
-            <v-btn
-              class="ma-0"
-              outlined
-              :color="accountColor"
-              width="45%"
-              height="40"
-              @click="paymentClick('account')"
-            >
-              가상계좌
-            </v-btn>
+        <v-expand-transition>
+          <div v-show="showDelivery">
+            <v-divider></v-divider>
+            <v-card-text class="font-weight-black text-subtitle-2">
+              수령인 &nbsp; {{ order.oreceiver }} <br />
+              번호 &nbsp; {{ order.otel }}<br />
+              우편번호 &nbsp; {{ order.ozipcode }} <br />
+              주소 &nbsp; {{ order.oaddress1 }} {{ order.oaddress2 }}<br />
+            </v-card-text>
           </div>
-          <v-col v-if="isCard" class="d-flex" cols="12" sm="6">
-            <v-select
-              v-model="selectCard"
-              :items="cards"
-              label="카드를 선택하세요"
-              dense
-              solo
-              color="indigo darken-3"
-              item-color="indigo darken-3"
-            ></v-select>
-          </v-col>
-          <v-col v-if="isAccount" class="d-flex" cols="12" sm="6">
-            <v-select
-              v-model="selectAccount"
-              :items="accounts"
-              label="계좌를 선택하세요"
-              dense
-              solo
-              color="indigo darken-3"
-              item-color="indigo darken-3"
-            ></v-select>
-          </v-col>
-        </div>
-      </v-expand-transition>
-    </v-card>
-
-    <v-card class="mx-auto mb-5" outlined>
-      <div class="d-flex justify-space-between align-center">
-        <h3 class="px-3 py-3">결제 금액</h3>
-        <h3 class="blue--text px-3 py-3">{{ atotalPrice.toLocaleString() }} 원</h3>
-      </div>
-
-      <v-divider></v-divider>
-      <v-card-text>
-        <div class="d-flex justify-space-between align-center">
-          <span class="text-subtitle-1 font-weight-black">총 상품 금액</span>
-          <span class="text-subtitle-1 font-weight-black"
-            >{{ btotalPrice.toLocaleString() }} 원</span
+        </v-expand-transition>
+      </v-card>
+      <v-card class="mx-auto mb-5" outlined>
+        <div class="d-flex justify-space-between pa-3">
+          <h4>상품 정보</h4>
+          <v-icon @click="showProduct = !showProduct">
+            {{ showProduct ? "mdi-chevron-up" : "mdi-chevron-down" }}</v-icon
           >
         </div>
-        <div class="d-flex justify-space-between align-center">
-          <span class="text-subtitle-1 font-weight-black">할인 금액</span>
-          <span class="text-subtitle-1 font-weight-black" style="color: #eb7c4c"
-            >- {{ discountPrice.toLocaleString() }} 원</span
-          >
-        </div>
-      </v-card-text>
-    </v-card>
+        <v-expand-transition>
+          <div v-show="showProduct">
+            <v-divider></v-divider>
+            <template v-for="item of orderItems">
+              <div
+                class="pa-1 d-flex justify-center align-center"
+                v-if="productsInfo.find((x) => x.pid === item.pid) !== undefined"
+                :key="item.pid"
+              >
+                <div style="width: 65px">
+                  <v-img
+                    :src="`${productsInfo.find((x) => x.pid === item.pid).cimage1}`"
+                    height="100%"
+                  >
+                  </v-img>
+                </div>
+                <v-card-text
+                  style="font-size: 11px; width: 55%; whitespace: nowrap"
+                  class="pa-0 pl-2 font-weight-bold text-subtitle-2"
+                >
+                  {{ productsInfo.find((x) => x.pid === item.pid).bname }}<br />
+                  {{ productsInfo.find((x) => x.pid === item.pid).pname }}<br />
+                  <v-card-subtitle
+                    style="font-size: 10px; color: grey; whitespace: nowrap"
+                    class="pa-0 font-weight-bold text-subtitle-2"
+                  >
+                    옵션 : {{ item.pcolor }} / {{ item.psize }}<br />
+                    수량 {{ item.pamount }}개</v-card-subtitle
+                  >
+                </v-card-text>
+                <div class="d-flex flex-column justify-center">
+                  <div class="font-weight-bold text-subtitle-2">
+                    {{
+                      (
+                        (productsInfo.find((x) => x.pid === item.pid).pprice *
+                          item.pamount *
+                          (100 - sales)) /
+                        100
+                      ).toLocaleString()
+                    }}
+                    원
+                  </div>
+                  <div class="text-decoration-line-through text-subtitle-2 grey--text">
+                    {{
+                      (
+                        productsInfo.find((x) => x.pid === item.pid).pprice * item.pamount
+                      ).toLocaleString()
+                    }}원
+                  </div>
+                  <div class="text-subtitle-2" style="font-weight: bolder; color: #eb7c4c">
+                    {{ sales }}% 할인
+                  </div>
+                </div>
+              </div>
+            </template>
+          </div>
+        </v-expand-transition>
+      </v-card>
 
-    <v-snackbar v-model="snackbar">
-      {{ snackbarText }}
-      <template v-slot:action="{ attrs }">
-        <v-btn color="pink" text v-bind="attrs" @click="toMain"> Close </v-btn>
-      </template>
-    </v-snackbar>
+      <v-card class="mx-auto mb-5" outlined>
+        <div class="d-flex justify-space-between pa-3">
+          <h4>쿠폰/할인/적립금</h4>
+          <v-icon @click="showDiscount = !showDiscount">
+            {{ showDiscount ? "mdi-chevron-up" : "mdi-chevron-down" }}
+          </v-icon>
+        </div>
+        <v-expand-transition>
+          <div v-show="showDiscount">
+            <v-divider></v-divider>
+            <v-card-text>
+              <v-row no-gutters class="d-flex justify-space-between align-center">
+                <v-col cols="8" class="mb-3">
+                  <div class="text-subtitle-1 font-weight-black">
+                    쿠폰 전체 {{ coupons.length }}장 &nbsp;
+                  </div>
+                  <div class="text-subtitle-2 font-weight-black" v-if="isUsedCoupon">
+                    {{ coupons.cname }} | 쿠폰 코드
+                    <span style="color: #eb7c4c"> {{ order.ousedcoupon }} </span>
+                  </div>
+                </v-col>
+                <v-col cols="3">
+                  <coupon-component
+                    :coupons="coupons"
+                    @HandleCoupon="SetUseCoupon"
+                  ></coupon-component>
+                </v-col>
+              </v-row>
+            </v-card-text>
+            <v-divider></v-divider>
+            <v-card-text>
+              <v-row no-gutters class="d-flex justify-space-between align-center">
+                <v-col cols="12">
+                  <v-text-field
+                    label="포인트"
+                    type="number"
+                    v-model="order.ousedmileage"
+                    :disabled="isPointInput"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="6" class="text-subtitle-2 font-weight-black">
+                  잔여 포인트 &nbsp; {{ member.mpoint.toLocaleString() }} P <br />
+                  적립금 1,000
+                </v-col>
+                <v-col cols="6" class="d-flex flex-row-reverse">
+                  <v-btn v-if="isApplyPoint" dark class="px-2" @click="applyPoint">적용</v-btn>
+                  <v-btn v-if="!isApplyPoint" dark class="px-2" @click="applyPoint"
+                    >적용 취소</v-btn
+                  >
+                  <v-btn dark class="px-2 mr-1" @click="useAllPoint" :disabled="isUsePointAll"
+                    >모두 사용</v-btn
+                  >
+                </v-col>
+              </v-row>
+            </v-card-text>
+          </div>
+        </v-expand-transition>
+      </v-card>
+
+      <v-card class="mx-auto mb-5" outlined>
+        <div class="d-flex justify-space-between pa-3">
+          <h4>결제 정보</h4>
+          <v-icon @click="showPayment = !showPayment">
+            {{ showPayment ? "mdi-chevron-up" : "mdi-chevron-down" }}
+          </v-icon>
+        </div>
+        <v-expand-transition>
+          <div v-show="showPayment">
+            <v-divider></v-divider>
+            <div class="d-flex justify-space-around pt-3">
+              <v-btn
+                class="ma-0"
+                outlined
+                :color="cardColor"
+                width="45%"
+                height="40"
+                @click="paymentClick('card')"
+              >
+                신용카드
+              </v-btn>
+              <v-btn
+                class="ma-0"
+                outlined
+                :color="accountColor"
+                width="45%"
+                height="40"
+                @click="paymentClick('account')"
+              >
+                가상계좌
+              </v-btn>
+            </div>
+            <v-col v-if="isCard" class="d-flex" cols="12" sm="6">
+              <v-select
+                v-model="selectCard"
+                :items="cards"
+                label="카드를 선택하세요"
+                dense
+                solo
+                color="indigo darken-3"
+                item-color="indigo darken-3"
+              ></v-select>
+            </v-col>
+            <v-col v-if="isAccount" class="d-flex" cols="12" sm="6">
+              <v-select
+                v-model="selectAccount"
+                :items="accounts"
+                label="계좌를 선택하세요"
+                dense
+                solo
+                color="indigo darken-3"
+                item-color="indigo darken-3"
+              ></v-select>
+            </v-col>
+          </div>
+        </v-expand-transition>
+      </v-card>
+      <v-card class="mx-auto mb-5" outlined>
+        <div class="d-flex justify-space-between align-center">
+          <h3 class="px-3 py-3">결제 금액</h3>
+          <h3 class="blue--text px-3 py-3">{{ atotalPrice.toLocaleString() }} 원</h3>
+        </div>
+
+        <v-divider></v-divider>
+        <v-card-text>
+          <div class="d-flex justify-space-between align-center">
+            <span class="text-subtitle-1 font-weight-black">총 상품 금액</span>
+            <span class="text-subtitle-1 font-weight-black"
+              >{{ btotalPrice.toLocaleString() }} 원</span
+            >
+          </div>
+          <div class="d-flex justify-space-between align-center">
+            <span class="text-subtitle-1 font-weight-black">할인 금액</span>
+            <span class="text-subtitle-1 font-weight-black" style="color: #eb7c4c"
+              >- {{ discountPrice.toLocaleString() }} 원</span
+            >
+          </div>
+        </v-card-text>
+      </v-card>
+      <v-snackbar v-model="snackbar">
+        {{ snackbarText }}
+        <template v-slot:action="{ attrs }">
+          <v-btn color="pink" text v-bind="attrs" @click="toMain"> Close </v-btn>
+        </template>
+      </v-snackbar>
+    </div>
+    <div v-if="loading">
+      <order-success-component></order-success-component>
+    </div>
   </div>
 </template>
 <script>
@@ -254,6 +259,7 @@ import apiOrder from "@/apis/order";
 import apiProduct from "@/apis/product";
 import DeliveryComponent from "./DeliveryComponent.vue";
 import CouponComponent from "./CouponComponent.vue";
+import OrderSuccessComponent from "./OrderSuccessComponent.vue";
 
 export default {
   //컴포넌트의 대표 이름(devtools에 나오는 이름)
@@ -262,6 +268,7 @@ export default {
   components: {
     DeliveryComponent,
     CouponComponent,
+    OrderSuccessComponent,
   },
   //컴포넌트 데이터 정의
   data() {
@@ -350,6 +357,8 @@ export default {
       testArr: [{ value: 1 }, 2, 3],
       snackbar: false,
       snackbarText: "",
+      isStockLack: false,
+      loading: false,
     };
   },
   //컴포넌트 메서드 정의
@@ -465,17 +474,20 @@ export default {
         this.isApplyPoint = false;
         this.isUsePointAll = true;
         this.isPointInput = true;
-
-        this.atotalPrice -= parseInt(this.order.ousedmileage);
-        this.discountPrice += parseInt(this.order.ousedmileage);
+        if(this.order.ousedmileage != ''){
+          this.atotalPrice -= parseInt(this.order.ousedmileage);
+          this.discountPrice += parseInt(this.order.ousedmileage);
+        }
         return;
       } else {
         this.isApplyPoint = true;
         this.isUsePointAll = false;
         this.isPointInput = false;
+        if(this.order.ousedmileage != ''){
+          this.atotalPrice += parseInt(this.order.ousedmileage);
+          this.discountPrice -= parseInt(this.order.ousedmileage);
 
-        this.atotalPrice += parseInt(this.order.ousedmileage);
-        this.discountPrice -= parseInt(this.order.ousedmileage);
+        }
         return;
       }
     },
@@ -534,10 +546,12 @@ export default {
           console.log(error);
         });
     },
-    toMain(){
+    toMain() {
       this.$router.push("/");
     },
     async orderSuccess() {
+      this.loading = true;
+      this.$store.commit("gnb/setCurrentPage", "ordersuccess");
       /* orderList 삽입 데이터 세팅 */
       this.order.odiscounted = this.discountPrice;
       this.order.odate = new Date();
@@ -569,27 +583,30 @@ export default {
       orderList.append("ototal", this.atotalPrice);
       orderList.append("orderItem", this.atotalPrice);
 
-      this.order.ototal=this.atotalPrice;
+      this.order.ototal = this.atotalPrice;
       //product 재고 수정 (재고 없을 경우 종료)
-      for(let item of this.orderItems){
-         const stock = new FormData();
-         stock.append("pid", item.pid);
-         stock.append("ccolorcode", item.pcolor);
-         stock.append("ssize", item.psize);
-         stock.append("samount", item.pamount);
-         
-         apiProduct.updateStock(stock)
-        .then((response) => {
-          console.log(response.data+typeof(response.data));
-          if(response.data===0){
-            this.snackbar = true;
-            this.snackbarText = "상품의 수량이 부족합니다.";
-            return;
-          }
-        }).catch((error) => {
-          console.log(error);
-        })
-       }
+      for (let item of this.orderItems) {
+        const stock = new FormData();
+        stock.append("pid", item.pid);
+        stock.append("ccolorcode", item.pcolor);
+        stock.append("ssize", item.psize);
+        stock.append("samount", item.pamount);
+
+        apiProduct
+          .updateStock(stock)
+          .then((response) => {
+            console.log(response.data + typeof response.data);
+            if (response.data === 0) {
+              this.snackbar = true;
+              this.snackbarText = "상품의 수량이 부족합니다.";
+              this.isStockLack = true;
+              return;
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
 
       await apiOrder
         .createOrderList(orderList)
@@ -630,8 +647,18 @@ export default {
         })
         .catch((error) => {
           console.log(error);
+        })
+        .finally(() => {
+           setTimeout(()=>{
+             this.loading=false;
+             if (!this.isStockLack) {
+               //재고가 부족하지 않은 경우
+               this.$router.push("/order/success").catch(() => {});
+              }else{
+                this.$store.commit("gnb/setCurrentPage", "order");
+              }
+          }, 3000);
         });
-        this.$router.push("/order/success").catch(() => {});
     },
   },
   created() {
