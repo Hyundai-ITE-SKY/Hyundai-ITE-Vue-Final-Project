@@ -11,7 +11,7 @@ function updateEvent(eventFormData){
 }
 
 function getEvents(){
-  const promise = axios.get(`http://localhost/event/list`);
+  const promise = axios.get(`http://kosa1.iptime.org:50207/event/list`);
   return promise;
 }
 
