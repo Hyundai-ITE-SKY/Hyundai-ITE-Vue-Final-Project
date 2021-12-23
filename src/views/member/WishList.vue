@@ -3,7 +3,7 @@
   <div>
     <v-row no-gutters>
       <v-col align-self="auto" v-for="product in products" :key="product.pno" cols="6">
-        <div class>
+        <div>
           <product-item
             :bname="product.bname"
             :pname="product.pname"
@@ -16,6 +16,13 @@
         </div>
       </v-col>
     </v-row>
+    <div
+      v-if="products.length === 0"
+      class="text-center text--disabled my-6"
+      style="font-size: 0.875rem"
+    >
+      등록된 상품이 없습니다.
+    </div>
   </div>
 </template>
 

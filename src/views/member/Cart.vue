@@ -12,6 +12,13 @@
         <a class="grey--text" style="font-size: 14px" @click="CartSelectedDelete">선택삭제</a>
       </div>
     </div>
+    <div
+      v-show="products.length === 0"
+      class="text-center text--disabled my-6"
+      style="font-size: 0.875rem"
+    >
+      등록된 상품이 없습니다.
+    </div>
     <!--반복되는 부분-->
     <div v-for="(product, i) of products" :key="i">
       <div v-if="infos.find((x) => x.pid === product.pid) !== undefined">
@@ -82,9 +89,6 @@
                       &nbsp;{{ $store.state.product.gradeSale }}%
                     </span>
                   </div>
-                  <!-- <v-col cols="12" class="font-weight-black ma-0 pt-2"
-                      >{{ (info.pprice * product.pamount).toLocaleString() }} 원</v-col
-                    > -->
                 </v-row>
               </v-col>
 
