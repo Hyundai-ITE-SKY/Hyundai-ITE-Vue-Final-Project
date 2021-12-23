@@ -15,7 +15,7 @@
           </template>
         </v-img>
       </div>
-      <div class="px-3">
+      <div class="px-3 text-truncate">
         <div class="text-truncate" style="font-size: 0.875rem; font-weight: bolder">
           {{ product.bname }}
         </div>
@@ -43,8 +43,8 @@
         </div>
       </div>
       <div
-        class="ml-auto"
-        style="font-size: 0.7rem; color: #1c1c1c"
+        class="ml-auto text-right"
+        style="font-size: 0.7rem; color: #1c1c1c; width: 100px"
         @click="moveToCreateReview(product, order)"
       >
         리뷰 작성

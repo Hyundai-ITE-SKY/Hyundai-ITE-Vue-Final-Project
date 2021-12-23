@@ -103,7 +103,14 @@
     <v-divider class="mt-3 mb-3"></v-divider>
     <div>
       <div class="px-3 mb-4">
-        <product-review v-for="review of reviewArray" :key="review.rno" :review="review"></product-review>
+        <product-review
+          v-for="review of reviewArray"
+          :key="review.rno"
+          :review="review"
+        ></product-review>
+        <div v-if="reviewArray.length === 0" class="text-center text--disabled my-6" style="font-size: 0.875rem">
+          등록된 상품평이 없습니다.
+        </div>
       </div>
     </div>
   </div>

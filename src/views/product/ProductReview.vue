@@ -29,10 +29,21 @@
         <div>{{ rcomfortable[review.rcomfortable] }}</div>
       </div>
     </div>
-    <div style="background-color: #eeeeee" class="mt-1 pa-3">
+    <div style="background-color: #eeeeee; border-radius: 4px" class="mt-1 pa-3">
       <div class="mb-1" style="font-weight: bolder">{{ review.rtitle }}</div>
       <div>
         {{ review.rcontent }}
+      </div>
+    </div>
+    <div v-if="review.ranswer !== null" class="d-flex mt-2">
+      <div>
+        <v-icon>mdi-arrow-right-bottom-bold</v-icon>
+      </div>
+      <div style="background-color: #fcfaeb; border-radius: 4px; width: 100%">
+        <div class="pa-3">
+          <div style="font-weight: bolder">판매자</div>
+          <div>{{review.ranswer}}</div>
+        </div>
       </div>
     </div>
   </div>
