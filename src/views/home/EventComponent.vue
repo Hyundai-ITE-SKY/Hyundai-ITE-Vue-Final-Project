@@ -4,7 +4,7 @@
     <v-card shaped>
       <!--<v-system-bar lights-out></v-system-bar>-->
       <v-carousel cycle :show-arrows="false" hide-delimiter-background delimiter-icon="mdi-minus">
-        <v-carousel-item  v-for="event in events" :key="event.eid">
+        <v-carousel-item  v-for="(event, index) in events" :key="index">
           <div>
             <event-banner :imgUrl="event.eimage" :eid="event.eid"></event-banner>
           </div>
@@ -41,16 +41,16 @@ export default {
     return {
       events: [
         {
-          eamount: 9,
-          edetail: "MATIN KIM BLACK FRIDAY SALE! 최대 60% 할인 쿠폰 발급",
-          eenddate: "2021-11-26T15:00:00.000+00:00",
+          eamount: 10,
+          edetail: "",
+          eenddate: "",
           eid: 1,
           eimage:
-            "https://user-images.githubusercontent.com/55488114/143763321-b8823939-2506-4eb3-a9fa-05e42ee57f58.jpg",
+            "",
           elimit: 10,
-          ename: "MATIN KIM BLACK FRIDAY",
+          ename: "",
           eorder: 0,
-          estartdate: "2021-11-23T15:00:00.000+00:00",
+          estartdate: "",
         },
       ],
     };
