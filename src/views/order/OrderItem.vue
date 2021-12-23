@@ -33,8 +33,13 @@
             ).toLocaleString()
           }}<span style="font-size: 0.875rem; font-weight: bolder">원/ {{ order.oamount }}개</span>
         </div>
-        <div class="mt-3" style="font-size: 0.875rem; font-weight: bolder; color: #ea7740">
-          주문접수
+        <div>
+          <span v-if="ostatus!=5" class="mt-3" style="font-size: 0.875rem; font-weight: bolder; color: #ea7740">
+            주문접수
+          </span>
+          <span v-if="ostatus==5" class="mt-3" style="font-size: 0.875rem; font-weight: bolder; color: #ff0000">
+            주문취소
+          </span>
         </div>
       </div>
       <div
@@ -73,6 +78,7 @@ export default {
   props: {
     product: Object,
     order: Object,
+    ostatus: Number,
   },
 };
 </script>

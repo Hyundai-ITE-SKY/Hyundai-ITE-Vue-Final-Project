@@ -57,11 +57,14 @@
         <div style="font-weight: bolder; font-size: 0.875rem">{{ getKoreanTime(order.odate) }}</div>
         <div class="mx-2" style="font-size: 0.875rem; color: #a9a9a9">/</div>
         <div style="font-size: 0.875rem; color: #636363">{{ order.oid }}</div>
-        <v-icon class="ml-auto" @click="moveToOrderDetail(order.oid)">mdi-chevron-right</v-icon>
+        <div class="ml-auto d-flex">
+          <div v-if="order.ostatus != 5" class="ml-1" style="font-size: 0.875rem; color: #636363" @click="deleteOrder(order.oid)">주문취소</div>
+          <v-icon @click="moveToOrderDetail(order.oid)">mdi-chevron-right</v-icon>
+        </div>
       </div>
       <div v-for="(item, j) of order.orderitem" :key="j" style="border-top: solid 2px #ededed">
         <div v-if="products.find((x) => x.pid === item.pid) !== undefined">
-          <order-item :order="item" :product="products.find((x) => x.pid === item.pid)">
+          <order-item :order="item" :product="products.find((x) => x.pid === item.pid)" :ostatus="order.ostatus">
           </order-item>
         </div>
       </div>
@@ -89,6 +92,7 @@ export default {
         { status: "배송", value: 0 },
         { status: "배송완료", value: 0 },
         { status: "구매확정", value: 0 },
+        { status: "구매취소", value: 0 },
       ],
       orderState: [],
       orderlist: null,
@@ -119,6 +123,7 @@ export default {
           this.orderState = response.data;
 
           for (let item of this.orderState) {
+            console.log(item.ostatus+","+item.count);
             this.orders[item.ostatus].value = item.count;
           }
         })
@@ -166,6 +171,15 @@ export default {
         var resultText = document.querySelector("#searchText");
         resultText.innerHTML = `총 ${this.orderlist.length}건의 결과가 검색되었습니다.`;
       });
+    },
+    async deleteOrder(oid) {
+      await apiOrder.cancelOrder(oid)
+        .then((response)=>{
+          console.log(response);
+        }).catch((error)=>{
+          console.log(error);
+        });
+        window.location.reload();
     },
   },
   created() {

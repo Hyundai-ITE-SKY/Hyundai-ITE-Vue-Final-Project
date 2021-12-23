@@ -10,7 +10,13 @@ function updateEvent(eventFormData){
   return promise;
 }
 
+function getEvents(){
+  const promise = axios.get(`http://localhost/event/list`);
+  return promise;
+}
+
 export default{
   getEvent,
   updateEvent,
+  getEvents,
 }

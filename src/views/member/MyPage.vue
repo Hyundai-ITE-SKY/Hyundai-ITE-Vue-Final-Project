@@ -130,6 +130,7 @@ export default {
         { status: "배송", value: 0 },
         { status: "배송완료", value: 0 },
         { status: "구매확정", value: 0 },
+        { status: "구매취소", value: 0 },
       ],
       orderState: [],
     };

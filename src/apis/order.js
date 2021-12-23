@@ -30,11 +30,17 @@ function getOrderListByOdate(start, end){
   return promise;
 }
 
+function cancelOrder(oid){
+  const promise = axios.post(`http://kosa1.iptime.org:50211/order/cancelorder/${oid}`);
+  return promise;
+}
+
 export default{
   getOrderState,
   getOrderListItem,
   createOrderList,
   createOrderItem,
   getOrderList,
-  getOrderListByOdate
+  getOrderListByOdate,
+  cancelOrder,
 }
