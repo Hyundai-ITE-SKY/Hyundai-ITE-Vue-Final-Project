@@ -3,7 +3,7 @@
   <div>
     <v-img
       lazy-src="@/assets/images/event/eventloader.jpg"
-      v-bind:src="require(`@/assets/images/event/${imgUrl}`)"
+      v-bind:src="imgUrl"
       @click="eventClick(`${eid}`)"
       :aspect-ratio="78 / 100"
     >
