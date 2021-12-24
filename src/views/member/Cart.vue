@@ -1,15 +1,18 @@
 <!-- 컴포넌트 UI 정의
     주의할 점 : 루트 Element가 하나만 있어야한다. -->
 <template>
-  <div>
-    <div class="d-flex justify-space-between mt-5 ml-4 mr-4 mb-0">
-      <v-checkbox color="black" class="mt-0 pt-0" v-model="selectedAll">
-        <template v-slot:label class="mb-0">
-          <div style="font-size: 14px">전체선택</div>
-        </template>
-      </v-checkbox>
-      <div class="align-center">
-        <a class="grey--text" style="font-size: 14px" @click="CartSelectedDelete">선택삭제</a>
+  <div style="font-size: 0.875rem">
+    <div
+      class="d-flex align-center justify-space-between pa-3"
+      style="border-bottom: 10px solid #eeeeee"
+    >
+      <div class="d-flex align-center">
+        <v-checkbox class="pa-0 ma-0" hide-details="auto" color="black" v-model="selectedAll">
+        </v-checkbox>
+        <div>전체선택</div>
+      </div>
+      <div>
+        <a class="grey--text" @click="CartSelectedDelete">선택삭제</a>
       </div>
     </div>
     <div
@@ -20,155 +23,176 @@
       등록된 상품이 없습니다.
     </div>
     <!--반복되는 부분-->
-    <div v-for="(product, i) of products" :key="i">
+    <div
+      class="pa-3"
+      v-for="(product, i) of products"
+      :key="i"
+      style="border-bottom: 1px solid #eeeeee"
+    >
       <div v-if="infos.find((x) => x.pid === product.pid) !== undefined">
-        <div>
-          <v-divider></v-divider>
-          <div class="white d-flex ma-0 pa-0 mb-2 mt-5">
-            <v-row class="ma-0">
-              <v-col cols="1">
-                <v-checkbox color="black" v-model="selected" :value="i"></v-checkbox>
-              </v-col>
-              <v-col cols="3" class="pa-0 pl-3" @click="moveProductDetail(product.pid)">
-                <div style="width: 80px">
-                  <v-img :src="images[infos.findIndex((x) => x.pid === product.pid)]" contain />
-                </div>
-              </v-col>
-              <v-col class="ml-2">
-                <v-row>
-                  <v-col
-                    cols="10"
-                    class="pa-0 font-weight-black text-truncate"
-                    style="font-size: 15px"
-                    >{{ infos.find((x) => x.pid === product.pid).bname }}
-                  </v-col>
-                  <v-col cols="2" class="pa-0 pr-1"
-                    ><v-icon @click="CartitemDelete(product.pid, product.pcolor, product.psize)"
-                      >mdi-close</v-icon
-                    ></v-col
-                  >
-                  <v-col
-                    cols="12"
-                    class="pa-0 text-truncate"
-                    style="font-size: 15px"
-                    @click="moveProductDetail(product.pid)"
-                  >
-                    {{ infos.find((x) => x.pid === product.pid).pname }}
-                  </v-col>
-                  <v-col cols="12" class="pa-0" style="font-size: 14px; color: grey"
-                    >옵션 : {{ product.pcolor }}_{{ product.psize }}</v-col
-                  >
-                  <v-col cols="12" class="pa-0" style="font-size: 14px; color: grey"
-                    >수량 : {{ product.pamount }} 개</v-col
-                  >
-                  <div class="pt-2">
-                    <div class="text-truncate" style="font-size: 1rem; font-weight: bolder">
-                      {{
-                        (
-                          ((infos.find((x) => x.pid === product.pid).pprice *
-                            (100 - $store.state.product.gradeSale)) /
-                            100) *
-                          product.pamount
-                        ).toLocaleString()
-                      }}원
-                    </div>
-                    <span
-                      class="text-decoration-line-through ml-auto text--disabled text-truncate"
-                      style="font-size: 0.875rem; font-weight: bolder"
-                    >
-                      {{
-                        (
-                          infos.find((x) => x.pid === product.pid).pprice * product.pamount
-                        ).toLocaleString()
-                      }}원
-                    </span>
-                    <span
-                      class="ml-auto"
-                      style="font-size: 0.8rem; font-weight: bolder; color: #eb7c4c"
-                    >
-                      &nbsp;{{ $store.state.product.gradeSale }}%
-                    </span>
-                  </div>
-                </v-row>
-              </v-col>
-
-              <v-layout class="justify-center">
-                <v-card-actions class="mb-3 mt-3 pt-0">
-                  <v-btn dark class="mr-3" outlined color="black" @click="clickOption(i)">
+        <div class="d-flex align-center">
+          <v-checkbox
+            class="pa-0 ma-0"
+            color="black"
+            v-model="selected"
+            hide-details="auto"
+            :value="i"
+          ></v-checkbox>
+          <div>선택</div>
+          <v-icon
+            class="ml-auto"
+            @click="CartitemDelete(product.pid, product.pcolor, product.psize)"
+            >mdi-close</v-icon
+          >
+        </div>
+        <div class="d-flex align-center py-3">
+          <div @click="moveProductDetail(product.pid)">
+            <div style="width: 80px">
+              <v-img :src="images[infos.findIndex((x) => x.pid === product.pid)]" contain />
+            </div>
+          </div>
+          <div class="px-3">
+            <div class="pa-0 font-weight-black text-truncate" style="font-size: 0.875rem">
+              {{ infos.find((x) => x.pid === product.pid).bname }}
+            </div>
+            <div
+              class="pa-0 text-truncate"
+              style="font-size: 0.875rem"
+              @click="moveProductDetail(product.pid)"
+            >
+              {{ infos.find((x) => x.pid === product.pid).pname }}
+            </div>
+            <div class="pa-0" style="font-size: 0.75rem; color: grey">
+              옵션: {{ product.pcolor }}_{{ product.psize }}
+            </div>
+            <div class="mt-2 mb-1">
+              <v-layout>
+                <v-card-actions class="pa-0">
+                  <v-btn dark color="black" @click="clickOption(i)" small style="font-size: 0.7rem">
                     옵션/수량
                     <v-icon>{{ show[i] ? "mdi-chevron-up" : "mdi-chevron-down" }}</v-icon>
                   </v-btn>
-                  <v-btn dark @click="buyNow(product)" outlined color="black">바로 구매</v-btn>
                 </v-card-actions>
               </v-layout>
-            </v-row>
+            </div>
+            <v-btn
+              v-if="false"
+              dark
+              @click="buyNow(product)"
+              color="black"
+              small
+              style="font-size: 0.7rem"
+              >구매</v-btn
+            >
           </div>
-          <v-expand-transition>
-            <div v-show="show[i]">
-              <div style="border: 1px solid" class="ml-1 mr-1 mb-3">
-                <div class="ma-6">
-                  <v-select
-                    :items="colors[infos.findIndex((x) => x.pid === product.pid)]"
-                    v-model="selectedColor"
-                    label="COLOR 선택"
-                    dense
-                    solo
-                    outlined
-                  ></v-select>
-                  <v-select
-                    :items="sizes[infos.findIndex((x) => x.pid === product.pid)][selectedColor]"
-                    v-model="selectedSize"
-                    label="SIZE 선택"
-                    dense
-                    solo
-                    outlined
-                  ></v-select>
-                  <div class="mb-5 d-flex justify-space-between">
-                    <div>수량</div>
-                    <div class="d-flex">
-                      <v-btn x-small dark color="black" fab @click="countPamount('minus', i)">
-                        <v-icon dark> mdi-minus </v-icon>
-                      </v-btn>
-                      <div class="ml-2 mr-2">{{ amounts[i] }}</div>
-                      <v-btn x-small dark color="black" fab @click="countPamount('plus', i)">
-                        <v-icon dark> mdi-plus </v-icon>
-                      </v-btn>
-                    </div>
-                  </div>
-                  <div class="d-flex justify-center">
-                    <div class="mr-2">
-                      <v-btn @click="show[i] = !show[i]" outlined>취소</v-btn>
-                    </div>
-                    <div>
-                      <v-btn
-                        @click="updateCartItem(product.pid, product.pcolor, product.psize, i)"
-                        color="black"
-                        dark
-                        >변경사항 저장</v-btn
-                      >
-                    </div>
-                  </div>
+          <div class="text-right ml-auto mr-1 mb-1">
+            <div class="ml-auto" style="font-size: 0.75rem; font-weight: bolder; color: #eb7c4c">
+              {{ $store.state.product.gradeSale }}%
+            </div>
+            <div
+              class="text-decoration-line-through ml-auto text--disabled text-truncate"
+              style="font-size: 0.75rem; font-weight: bolder"
+            >
+              {{ infos.find((x) => x.pid === product.pid).pprice.toLocaleString() }}원
+            </div>
+            <div class="text-truncate" style="font-size: 0.875rem; font-weight: bolder">
+              {{
+                (
+                  (infos.find((x) => x.pid === product.pid).pprice *
+                    (100 - $store.state.product.gradeSale)) /
+                  100
+                ).toLocaleString()
+              }}원
+            </div>
+            <div class="pa-0" style="font-size: 0.75rem; color: grey">
+              수량: {{ product.pamount }}개
+            </div>
+            <div class="text-truncate mt-1" style="font-size: 1rem; font-weight: bolder">
+              {{
+                (
+                  ((infos.find((x) => x.pid === product.pid).pprice *
+                    (100 - $store.state.product.gradeSale)) /
+                    100) *
+                  product.pamount
+                ).toLocaleString()
+              }}원
+            </div>
+          </div>
+        </div>
+      </div>
+      <v-expand-transition>
+        <div v-show="show[i]">
+          <div style="border: 1px solid #1c1c1c" class="ml-1 mr-1 mb-3">
+            <div class="pa-6">
+              <div class="d-flex mb-4">
+                <v-select
+                  :items="colors[infos.findIndex((x) => x.pid === product.pid)]"
+                  v-model="selectedColor"
+                  label="COLOR 선택"
+                  dense
+                  solo
+                  outlined
+                  hide-details="auto"
+                  class="mr-2"
+                ></v-select>
+                <v-select
+                  :items="sizes[infos.findIndex((x) => x.pid === product.pid)][selectedColor]"
+                  v-model="selectedSize"
+                  label="SIZE 선택"
+                  dense
+                  solo
+                  outlined
+                  hide-details="auto"
+                ></v-select>
+              </div>
+              <div class="mb-5 d-flex justify-space-between align-center">
+                <div>수량</div>
+                <div class="d-flex align-center">
+                  <v-btn x-small dark color="black" fab @click="countPamount('minus', i)">
+                    <v-icon dark> mdi-minus </v-icon>
+                  </v-btn>
+                  <div class="ml-2 mr-2">{{ amounts[i] }}</div>
+                  <v-btn x-small dark color="black" fab @click="countPamount('plus', i)">
+                    <v-icon dark> mdi-plus </v-icon>
+                  </v-btn>
+                </div>
+              </div>
+              <div class="d-flex justify-center">
+                <div class="mr-2">
+                  <v-btn @click="show[i] = !show[i]" outlined style="font-size: 0.7rem" small
+                    >취소</v-btn
+                  >
+                </div>
+                <div>
+                  <v-btn
+                    @click="updateCartItem(product.pid, product.pcolor, product.psize, i)"
+                    color="black"
+                    dark
+                    style="font-size: 0.7rem"
+                    small
+                    >변경사항 저장</v-btn
+                  >
                 </div>
               </div>
             </div>
-          </v-expand-transition>
+          </div>
         </div>
-      </div>
+      </v-expand-transition>
     </div>
     <!--반복 끝-->
-    <div class="mb-15 ml-7 mr-7 mt-8">
-      <div class="mb-2 d-flex justify-space-between" style="font-size: 14px">
+    <div class="pa-3" style="border-top: 9px solid #eeeeee">
+      <div class="mb-2 d-flex justify-space-between" style="font-size: 0.875rem">
         <div>총 상품금액</div>
-        <div>{{ totalSum.toLocaleString() }} 원</div>
+        <div>{{ totalSum.toLocaleString() }}원</div>
       </div>
-      <div class="mb-2 d-flex justify-space-between" style="font-size: 14px">
+      <div class="mb-2 d-flex justify-space-between" style="font-size: 0.875rem">
         <div>총 배송비</div>
-        <div>0 원</div>
+        <div>0원</div>
       </div>
       <v-divider></v-divider>
       <div class="mb-3 mt-3 d-flex justify-space-between" style="font-weight: bold">
         <div>총 주문금액</div>
-        <div>{{ totalSum.toLocaleString() }} 원</div>
+        <div>{{ totalSum.toLocaleString() }}원</div>
       </div>
     </div>
   </div>
