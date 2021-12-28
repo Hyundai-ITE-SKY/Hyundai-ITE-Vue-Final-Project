@@ -53,7 +53,6 @@ export default {
       this.$store.commit("product/setUserWishList", wishlist.data);
 
       this.productIds = this.$store.getters["product/getUserWishList"];
-      console.log(this.productIds.data);
       this.getProduct();
     },
     /* 찜의 product들을 가져온다. */

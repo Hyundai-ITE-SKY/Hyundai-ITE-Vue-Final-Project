@@ -123,7 +123,6 @@ export default {
           this.orderState = response.data;
 
           for (let item of this.orderState) {
-            console.log(item.ostatus+","+item.count);
             this.orders[item.ostatus].value = item.count;
           }
         })

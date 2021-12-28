@@ -4,7 +4,7 @@
     <v-card shaped>
       <!--<v-system-bar lights-out></v-system-bar>-->
       <v-carousel cycle :show-arrows="false" hide-delimiter-background delimiter-icon="mdi-minus">
-        <v-carousel-item  v-for="(event, index) in events" :key="index">
+        <v-carousel-item v-for="(event, index) in events" :key="index">
           <div>
             <event-banner :imgUrl="event.eimage" :eid="event.eid"></event-banner>
           </div>
@@ -45,8 +45,7 @@ export default {
           edetail: "",
           eenddate: "",
           eid: 1,
-          eimage:
-            "",
+          eimage: "",
           elimit: 10,
           ename: "",
           eorder: 0,
@@ -58,16 +57,12 @@ export default {
   // 컴포넌트 메소드 정의
   methods: {
     async getEvents() {
-      await apiEvent.getEvents().then((res) => {
-          console.log(res.data);
+      await apiEvent
+        .getEvents()
+        .then((res) => {
           this.events = [];
-          
-          console.log("event" + this.events);
-          for(let event of res.data){
+          for (let event of res.data) {
             this.events.push(event);
-            console.log(event);
-            console.log(event.eid);
-            console.log(event.eimage);
           }
         })
         .catch((err) => {

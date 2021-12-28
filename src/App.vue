@@ -60,20 +60,24 @@
       </v-spacer>
       <v-btn icon @click="movePage('cartWithNoSave')">
         <v-badge
-            bordered
-            color="red darken-2"
-            bottom
-            overlap
-            v-if="$store.state.login.userId !== ''"
-          >
-          <span slot="badge">{{cartAmount}}</span>
+          bordered
+          color="red darken-2"
+          bottom
+          overlap
+          v-if="$store.state.login.userId !== ''"
+        >
+          <span slot="badge">{{ cartAmount }}</span>
           <v-icon color="white">mdi-cart-outline</v-icon>
         </v-badge>
       </v-btn>
       <template v-slot:extension>
-
         <v-tabs v-show="$store.state.gnb.currentPage === 'main'" align-with-title>
-          <v-tab v-for="(exhibition) in exhibitions" :key="exhibition.exid" style="font-size: 0.7rem; font-weight: bolder" @click="changeMainPage(exhibition.exid)">
+          <v-tab
+            v-for="exhibition in exhibitions"
+            :key="exhibition.exid"
+            style="font-size: 0.7rem; font-weight: bolder"
+            @click="changeMainPage(exhibition.exid)"
+          >
             {{ exhibition.exid }}
           </v-tab>
         </v-tabs>
@@ -308,7 +312,7 @@ export default {
     selectedColor: "none",
     selectedSize: "none",
     inputAmount: 1,
-    cartAmount : 0,
+    cartAmount: 0,
     category: [
       {
         clarge: "WOMEN",
@@ -433,12 +437,13 @@ export default {
         ],
       },
     ],
-    exhibitions:[
+    exhibitions: [
       {
         exid: "EVENT",
         orderno: 0,
-        eximg: "https://user-images.githubusercontent.com/55488114/145777063-c003d4ce-41db-41db-b078-cc599650643d.jpg"
-      }
+        eximg:
+          "https://user-images.githubusercontent.com/55488114/145777063-c003d4ce-41db-41db-b078-cc599650643d.jpg",
+      },
     ],
   }),
   methods: {
@@ -483,7 +488,6 @@ export default {
       } else if (page === "order") {
         this.$router.push("/order/order").catch(() => {});
       } else if (page === "cart") {
-        this.getCartAmount();
         this.createCartitem(); //장바구니 추가
       } else if (page === "cartWithNoSave") {
         this.resetInput();
@@ -523,37 +527,39 @@ export default {
       formData.append("pcolor", this.selectedColor);
       formData.append("psize", this.selectedSize);
       formData.append("pamount", this.inputAmount);
+
       await apiMember
         .createCartitem(formData)
         .then((response) => {
           console.log(response.data);
           this.resetInput();
+          this.getCartAmount();
           this.$router.push("/member/cart").catch(() => {});
         })
         .catch((error) => {
           console.log(error);
         });
     },
-    async getExhibition(){
-      await apiProduct.getExhibition()
-        .then((response)=>{
+    async getExhibition() {
+      await apiProduct
+        .getExhibition()
+        .then((response) => {
           this.exhibitions = [];
           let res = response.data;
-          console.log(response.data);
-          for(let data of res){
+          for (let data of res) {
             this.exhibitions.push(data);
           }
         })
-        .catch((error)=>{
+        .catch((error) => {
           console.log(error);
-        })
+        });
     },
-    async getCartAmount(){
-      await apiMember.getMycartAmount()
-      .then((response)=>{
+    async getCartAmount() {
+      await apiMember.getMycartAmount().then((response) => {
         this.cartAmount = response.data;
+        console.log("찍힙니다.", this.cartAmount);
       });
-    }
+    },
   },
   created() {
     this.$store.dispatch("login/loadAuth");
@@ -570,7 +576,7 @@ export default {
     },
     selectedColor: function () {
       this.selectedSize = "none";
-    }
+    },
   },
 };
 </script>

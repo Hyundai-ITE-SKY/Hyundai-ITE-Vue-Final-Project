@@ -506,16 +506,6 @@ export default {
         this.order.opayment = 1;
       }
     },
-    async getOrderListByMid() {
-      await apiOrder
-        .getOrderList()
-        .then((response) => {
-          console.log("getOrderListByMid", response.data);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    },
     async CartitemDelete(pid, pcolor, psize) {
       await apiMember
         .deleteCartitem(pid, pcolor, psize)
@@ -595,7 +585,6 @@ export default {
         apiProduct
           .updateStock(stock)
           .then((response) => {
-            console.log(response.data + typeof response.data);
             if (response.data === 0) {
               this.snackbar = true;
               this.snackbarText = "상품의 수량이 부족합니다.";
