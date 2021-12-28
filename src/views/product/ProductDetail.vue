@@ -275,7 +275,6 @@ export default {
     apiProduct
       .getReview(pid)
       .then((response) => {
-        console.log(response.data);
         this.reviewArray = response.data;
       })
       .catch((error) => {

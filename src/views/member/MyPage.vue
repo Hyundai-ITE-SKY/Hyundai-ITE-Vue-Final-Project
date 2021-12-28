@@ -44,9 +44,11 @@
           </div>
         </div>
         <div class="text-center" style="width: 30vw">
-          <v-icon :size="36" color="#6F6F6F">mdi-forum</v-icon>
-          <div style="font-size: 0.875rem; color: #6f6f6f">내 문의</div>
-          <div class="mt-2 text-truncate" style="font-size: 1rem; font-weight: bolder">0건</div>
+          <v-icon :size="36" color="#6F6F6F">mdi-package-variant-closed</v-icon>
+          <div style="font-size: 0.875rem; color: #6f6f6f">구매상품</div>
+          <div class="mt-2 text-truncate" style="font-size: 1rem; font-weight: bolder">
+            {{ orders[0].value }}건
+          </div>
         </div>
       </div>
     </div>
@@ -68,29 +70,29 @@
     </div>
     <div class="px-3 pt-3 pb-6">
       <div class="text-center" style="font-size: 0.875rem; font-weight: bolder; color: black">
-        고객센터
+        바로가기
       </div>
       <div
         class="text-center mt-5 justify-center align-center"
         style="display: flex; font-size: 0.875rem; color: #6f6f6f"
       >
-        <div style="width: 20vw">
+        <div style="width: 20vw" @click="movePage('cart')">
           <div>
-            <v-icon :size="36">mdi-bulletin-board</v-icon>
+            <v-icon :size="36">mdi-cart-check</v-icon>
           </div>
-          <div>공지사항</div>
+          <div>장바구니</div>
         </div>
-        <div style="width: 20vw">
+        <div style="width: 20vw" @click="movePage('wishlist')">
           <div>
-            <v-icon :size="36">mdi-account-question-outline</v-icon>
+            <v-icon :size="36">mdi-account-heart-outline</v-icon>
           </div>
-          <div>FAQ</div>
+          <div>위시리스트</div>
         </div>
-        <div style="width: 20vw">
+        <div style="width: 20vw" @click="movePage('orderlist')">
           <div>
             <v-icon :size="36">mdi-pencil-box-multiple-outline</v-icon>
           </div>
-          <div>1:1문의</div>
+          <div>주문내역</div>
         </div>
         <div style="width: 20vw">
           <div>
@@ -137,6 +139,15 @@ export default {
   },
   //컴포넌트 메서드 정의
   methods: {
+    movePage(page) {
+      if (page === "wishlist") {
+        this.$router.push("/member/wishlist").catch(() => {});
+      } else if (page === "orderlist") {
+        this.$router.push("/order/list").catch(() => {});
+      } else if (page === "cart") {
+        this.$router.push("/member/cart").catch(() => {});
+      }
+    },
     handleLogout() {
       this.$store.dispatch("login/deleteAuth");
       this.$router.push("/home/event");
