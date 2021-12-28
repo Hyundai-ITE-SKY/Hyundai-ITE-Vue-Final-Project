@@ -1,4 +1,4 @@
-# MSA 기반 PWA 온라인 쇼핑몰 프로젝트
+# MSA 기반 PWA 온라인 쇼핑몰 프로젝트 readme 작성 예정
 
 ### 활용 기술
 - Vue(Vuex)
