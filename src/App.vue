@@ -456,6 +456,7 @@ export default {
       } else if (page === "cart") {
         return "장바구니";
       } else if (page === "mypage") {
+        this.getCartAmount();
         return "마이페이지";
       } else if (page === "login") {
         return "로그인";
@@ -557,7 +558,6 @@ export default {
     async getCartAmount() {
       await apiMember.getMycartAmount().then((response) => {
         this.cartAmount = response.data;
-        console.log("찍힙니다.", this.cartAmount);
       });
     },
   },

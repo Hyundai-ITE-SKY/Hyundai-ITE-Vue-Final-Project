@@ -20,9 +20,27 @@
       </div>
       <v-icon class="ml-auto" color="white">mdi-chevron-right</v-icon>
     </div>
-    <div class="pa-3 align-center" style="display: flex; height: 49px">
+    <div class="pa-3 align-center" style="display: flex; height: 49px; border-bottom: solid 2px #333333">
       <div style="color: white; font-size: 0.875rem; font-weight: bolder">
         <span style="color: yellow">야구 좋아하면 필수!</span> 폴로 & 엠엘비 발매
+      </div>
+      <v-icon class="ml-auto" color="white">mdi-chevron-right</v-icon>
+    </div>
+    <div class="pa-3 align-center" style="display: flex; height: 49px; border-bottom: solid 2px #333333">
+      <div style="color: white; font-size: 0.875rem; font-weight: bolder">
+        <span>예일 크리스마스 홈웨어 컬렉션 한정 발매</span> 최대 26% 할인
+      </div>
+      <v-icon class="ml-auto" color="white">mdi-chevron-right</v-icon>
+    </div>
+    <div class="pa-3 align-center" style="display: flex; height: 49px; border-bottom: solid 2px #333333">
+      <div style="color: white; font-size: 0.875rem; font-weight: bolder">
+        <span style="color: yellow">아메리칸 캐주얼 패밀리 위크</span> 단독 최대 71% 할인
+      </div>
+      <v-icon class="ml-auto" color="white">mdi-chevron-right</v-icon>
+    </div>
+    <div class="pa-3 align-center" style="display: flex; height: 49px">
+      <div style="color: white; font-size: 0.875rem; font-weight: bolder">
+        <span style="color: yellow">니트부터 스웨트까지 최대 60% 할인</span> #스톤아일랜드 #겐조
       </div>
       <v-icon class="ml-auto" color="white">mdi-chevron-right</v-icon>
     </div>

@@ -158,11 +158,6 @@
                 </div>
               </div>
               <div class="d-flex justify-center">
-                <div class="mr-2">
-                  <v-btn @click="show[i] = !show[i]" outlined style="font-size: 0.7rem" small
-                    >취소</v-btn
-                  >
-                </div>
                 <div>
                   <v-btn
                     @click="updateCartItem(product.pid, product.pcolor, product.psize, i)"

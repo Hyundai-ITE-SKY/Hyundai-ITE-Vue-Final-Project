@@ -69,7 +69,6 @@ export default {
 
         const wishlist = await apiMember.getWishList();
         this.$store.commit("product/setUserWishList", wishlist.data);
-
         this.$router.push("/member/mypage");
       } catch (err) {
         try {
